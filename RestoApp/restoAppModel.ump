@@ -1,0 +1,68 @@
+class Table
+{
+  int numberOfSeats;
+  int numberOfEmptySeats;
+  int id;
+  boolean isReserved;
+  boolean isInUse;
+  location;
+}
+
+class RestoApp
+{
+  1 <@>- * Table tables;
+  1 <@>- * Menu menues;
+  1 <@>- * MenuItem menuitems;
+  1 <@>- * Reservation reservations;
+  1 <@>- * Bill bills;
+  1 <@>- * Order orders;
+  1 <@>- * Seat seats;
+}
+
+class Reservation
+{
+   
+  customerName;
+Date date;
+Time time;
+int numberOfCustomers;
+phoneNumber;
+emailAddress;
+int reservationNumber;
+0..1-- 1..* Table;
+}
+
+class Bill
+{
+  boolean isPaid;
+double totalPrice;
+
+  0..1 -<@> 1 Seat;
+}
+
+class Menu
+{
+  1 -- * MenuItem;
+}
+
+class Order
+{
+  boolean isCancelled;
+* -- 1 Seat;
+}
+
+class MenuItem
+{
+  int sharedBy;
+itemCategory;
+double price;
+name;
+1..* -- * Order;
+}
+
+class Seat
+{
+    int seatNumber;
+* -- 1 Table;
+  
+}
