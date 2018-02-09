@@ -1,26 +1,33 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
 
-
+package ca.mcgill.ecse223.resto.model;
 import java.sql.Date;
-import java.sql.Time;
 import java.util.*;
 
-// line 22 "restoAppModel.ump"
+// line 15 "../../../../../../../../ump/tmp531402/model.ump"
+// line 78 "../../../../../../../../ump/tmp531402/model.ump"
 public class Reservation
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextReservationNumber = 1;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Reservation Attributes
-  private String customerName;
-  private Date date;
-  private Time time;
-  private int numberOfCustomers;
-  private String phoneNumber;
-  private String emailAddress;
+  private Date dateTime;
+  private int numberInParty;
+  private String contactName;
+  private String contactEmailAddress;
+  private String contactPhoneNumber;
+
+  //Autounique Attributes
   private int reservationNumber;
 
   //Reservation Associations
@@ -31,15 +38,14 @@ public class Reservation
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(String aCustomerName, Date aDate, Time aTime, int aNumberOfCustomers, String aPhoneNumber, String aEmailAddress, int aReservationNumber, RestoApp aRestoApp, Table... allTables)
+  public Reservation(Date aDateTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, RestoApp aRestoApp, Table... allTables)
   {
-    customerName = aCustomerName;
-    date = aDate;
-    time = aTime;
-    numberOfCustomers = aNumberOfCustomers;
-    phoneNumber = aPhoneNumber;
-    emailAddress = aEmailAddress;
-    reservationNumber = aReservationNumber;
+    dateTime = aDateTime;
+    numberInParty = aNumberInParty;
+    contactName = aContactName;
+    contactEmailAddress = aContactEmailAddress;
+    contactPhoneNumber = aContactPhoneNumber;
+    reservationNumber = nextReservationNumber++;
     tables = new ArrayList<Table>();
     boolean didAddTables = setTables(allTables);
     if (!didAddTables)
@@ -57,103 +63,85 @@ public class Reservation
   // INTERFACE
   //------------------------
 
-  public boolean setCustomerName(String aCustomerName)
+  public boolean setDateTime(Date aDateTime)
   {
     boolean wasSet = false;
-    customerName = aCustomerName;
+    dateTime = aDateTime;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setDate(Date aDate)
+  public boolean setNumberInParty(int aNumberInParty)
   {
     boolean wasSet = false;
-    date = aDate;
+    numberInParty = aNumberInParty;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setTime(Time aTime)
+  public boolean setContactName(String aContactName)
   {
     boolean wasSet = false;
-    time = aTime;
+    contactName = aContactName;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setNumberOfCustomers(int aNumberOfCustomers)
+  public boolean setContactEmailAddress(String aContactEmailAddress)
   {
     boolean wasSet = false;
-    numberOfCustomers = aNumberOfCustomers;
+    contactEmailAddress = aContactEmailAddress;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setPhoneNumber(String aPhoneNumber)
+  public boolean setContactPhoneNumber(String aContactPhoneNumber)
   {
     boolean wasSet = false;
-    phoneNumber = aPhoneNumber;
+    contactPhoneNumber = aContactPhoneNumber;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean setEmailAddress(String aEmailAddress)
+  public Date getDateTime()
   {
-    boolean wasSet = false;
-    emailAddress = aEmailAddress;
-    wasSet = true;
-    return wasSet;
+    return dateTime;
   }
 
-  public boolean setReservationNumber(int aReservationNumber)
+  public int getNumberInParty()
   {
-    boolean wasSet = false;
-    reservationNumber = aReservationNumber;
-    wasSet = true;
-    return wasSet;
+    return numberInParty;
   }
 
-  public String getCustomerName()
+  public String getContactName()
   {
-    return customerName;
+    return contactName;
   }
 
-  public Date getDate()
+  public String getContactEmailAddress()
   {
-    return date;
+    return contactEmailAddress;
   }
 
-  public Time getTime()
+  public String getContactPhoneNumber()
   {
-    return time;
-  }
-
-  public int getNumberOfCustomers()
-  {
-    return numberOfCustomers;
-  }
-
-  public String getPhoneNumber()
-  {
-    return phoneNumber;
-  }
-
-  public String getEmailAddress()
-  {
-    return emailAddress;
+    return contactPhoneNumber;
   }
 
   public int getReservationNumber()
   {
     return reservationNumber;
   }
-
+  /* Code from template association_GetMany */
   public Table getTable(int index)
   {
     Table aTable = tables.get(index);
     return aTable;
   }
 
+  /**
+   * only from currentTables
+   */
   public List<Table> getTables()
   {
     List<Table> newTables = Collections.unmodifiableList(tables);
@@ -177,116 +165,114 @@ public class Reservation
     int index = tables.indexOf(aTable);
     return index;
   }
-
+  /* Code from template association_GetOne */
   public RestoApp getRestoApp()
   {
     return restoApp;
   }
-
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfTablesValid()
+  {
+    boolean isValid = numberOfTables() >= minimumNumberOfTables();
+    return isValid;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfTables()
   {
     return 1;
   }
-
+  /* Code from template association_AddManyToManyMethod */
   public boolean addTable(Table aTable)
   {
     boolean wasAdded = false;
     if (tables.contains(aTable)) { return false; }
-    Reservation existingReservation = aTable.getReservation();
-    if (existingReservation != null && existingReservation.numberOfTables() <= minimumNumberOfTables())
-    {
-      return wasAdded;
-    }
-    else if (existingReservation != null)
-    {
-      existingReservation.tables.remove(aTable);
-    }
     tables.add(aTable);
-    setReservation(aTable,this);
-    wasAdded = true;
+    if (aTable.indexOfReservation(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aTable.addReservation(this);
+      if (!wasAdded)
+      {
+        tables.remove(aTable);
+      }
+    }
     return wasAdded;
   }
-
+  /* Code from template association_AddMStarToMany */
   public boolean removeTable(Table aTable)
   {
     boolean wasRemoved = false;
-    if (tables.contains(aTable) && numberOfTables() > minimumNumberOfTables())
+    if (!tables.contains(aTable))
     {
-      tables.remove(aTable);
-      setReservation(aTable,null);
+      return wasRemoved;
+    }
+
+    if (numberOfTables() <= minimumNumberOfTables())
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = tables.indexOf(aTable);
+    tables.remove(oldIndex);
+    if (aTable.indexOfReservation(this) == -1)
+    {
       wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aTable.removeReservation(this);
+      if (!wasRemoved)
+      {
+        tables.add(oldIndex,aTable);
+      }
     }
     return wasRemoved;
   }
-
+  /* Code from template association_SetMStarToMany */
   public boolean setTables(Table... newTables)
   {
     boolean wasSet = false;
-    if (newTables.length < minimumNumberOfTables())
+    ArrayList<Table> verifiedTables = new ArrayList<Table>();
+    for (Table aTable : newTables)
+    {
+      if (verifiedTables.contains(aTable))
+      {
+        continue;
+      }
+      verifiedTables.add(aTable);
+    }
+
+    if (verifiedTables.size() != newTables.length || verifiedTables.size() < minimumNumberOfTables())
     {
       return wasSet;
     }
 
-    ArrayList<Table> checkNewTables = new ArrayList<Table>();
-    HashMap<Reservation,Integer> reservationToNewTables = new HashMap<Reservation,Integer>();
-    for (Table aTable : newTables)
-    {
-      if (checkNewTables.contains(aTable))
-      {
-        return wasSet;
-      }
-      else if (aTable.getReservation() != null && !this.equals(aTable.getReservation()))
-      {
-        Reservation existingReservation = aTable.getReservation();
-        if (!reservationToNewTables.containsKey(existingReservation))
-        {
-          reservationToNewTables.put(existingReservation, new Integer(existingReservation.numberOfTables()));
-        }
-        Integer currentCount = reservationToNewTables.get(existingReservation);
-        int nextCount = currentCount - 1;
-        if (nextCount < 1)
-        {
-          return wasSet;
-        }
-        reservationToNewTables.put(existingReservation, new Integer(nextCount));
-      }
-      checkNewTables.add(aTable);
-    }
-
-    tables.removeAll(checkNewTables);
-
-    for (Table orphan : tables)
-    {
-      setReservation(orphan, null);
-    }
+    ArrayList<Table> oldTables = new ArrayList<Table>(tables);
     tables.clear();
-    for (Table aTable : newTables)
+    for (Table aNewTable : verifiedTables)
     {
-      if (aTable.getReservation() != null)
+      tables.add(aNewTable);
+      if (oldTables.contains(aNewTable))
       {
-        aTable.getReservation().tables.remove(aTable);
+        oldTables.remove(aNewTable);
       }
-      setReservation(aTable, this);
-      tables.add(aTable);
+      else
+      {
+        aNewTable.addReservation(this);
+      }
+    }
+
+    for (Table anOldTable : oldTables)
+    {
+      anOldTable.removeReservation(this);
     }
     wasSet = true;
     return wasSet;
   }
-
-  private void setReservation(Table aTable, Reservation aReservation)
-  {
-    try
-    {
-      java.lang.reflect.Field mentorField = aTable.getClass().getDeclaredField("reservation");
-      mentorField.setAccessible(true);
-      mentorField.set(aTable, aReservation);
-    }
-    catch (Exception e)
-    {
-      throw new RuntimeException("Issue internally setting aReservation to aTable", e);
-    }
-  }
-
+  /* Code from template association_AddIndexControlFunctions */
   public boolean addTableAt(Table aTable, int index)
   {  
     boolean wasAdded = false;
@@ -318,7 +304,7 @@ public class Reservation
     }
     return wasAdded;
   }
-
+  /* Code from template association_SetOneToMany */
   public boolean setRestoApp(RestoApp aRestoApp)
   {
     boolean wasSet = false;
@@ -340,11 +326,12 @@ public class Reservation
 
   public void delete()
   {
-    for(Table aTable : tables)
-    {
-      setReservation(aTable,null);
-    }
+    ArrayList<Table> copyOfTables = new ArrayList<Table>(tables);
     tables.clear();
+    for(Table aTable : copyOfTables)
+    {
+      aTable.removeReservation(this);
+    }
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
     if(placeholderRestoApp != null)
@@ -357,13 +344,12 @@ public class Reservation
   public String toString()
   {
     return super.toString() + "["+
-            "customerName" + ":" + getCustomerName()+ "," +
-            "numberOfCustomers" + ":" + getNumberOfCustomers()+ "," +
-            "phoneNumber" + ":" + getPhoneNumber()+ "," +
-            "emailAddress" + ":" + getEmailAddress()+ "," +
-            "reservationNumber" + ":" + getReservationNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "reservationNumber" + ":" + getReservationNumber()+ "," +
+            "numberInParty" + ":" + getNumberInParty()+ "," +
+            "contactName" + ":" + getContactName()+ "," +
+            "contactEmailAddress" + ":" + getContactEmailAddress()+ "," +
+            "contactPhoneNumber" + ":" + getContactPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

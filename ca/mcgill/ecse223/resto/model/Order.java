@@ -1,126 +1,386 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
 
-
+package ca.mcgill.ecse223.resto.model;
+import java.sql.Date;
 import java.util.*;
 
-// line 48 "restoAppModel.ump"
+// line 38 "../../../../../../../../ump/tmp531402/model.ump"
+// line 93 "../../../../../../../../ump/tmp531402/model.ump"
 public class Order
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextNumber = 1;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Order Attributes
-  private boolean isCancelled;
+  private Date dateTime;
+
+  //Autounique Attributes
+  private int number;
 
   //Order Associations
-  private Seat seat;
+  private List<Table> tables;
+  private List<OrderItem> orderItems;
   private RestoApp restoApp;
-  private List<MenuItem> menuItems;
+  private List<Bill> bills;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(boolean aIsCancelled, Seat aSeat, RestoApp aRestoApp, MenuItem... allMenuItems)
+  public Order(Date aDateTime, RestoApp aRestoApp, Table... allTables)
   {
-    isCancelled = aIsCancelled;
-    boolean didAddSeat = setSeat(aSeat);
-    if (!didAddSeat)
+    dateTime = aDateTime;
+    number = nextNumber++;
+    tables = new ArrayList<Table>();
+    boolean didAddTables = setTables(allTables);
+    if (!didAddTables)
     {
-      throw new RuntimeException("Unable to create order due to seat");
+      throw new RuntimeException("Unable to create Order, must have at least 1 tables");
     }
+    orderItems = new ArrayList<OrderItem>();
     boolean didAddRestoApp = setRestoApp(aRestoApp);
     if (!didAddRestoApp)
     {
       throw new RuntimeException("Unable to create order due to restoApp");
     }
-    menuItems = new ArrayList<MenuItem>();
-    boolean didAddMenuItems = setMenuItems(allMenuItems);
-    if (!didAddMenuItems)
-    {
-      throw new RuntimeException("Unable to create Order, must have at least 1 menuItems");
-    }
+    bills = new ArrayList<Bill>();
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setIsCancelled(boolean aIsCancelled)
+  public boolean setDateTime(Date aDateTime)
   {
     boolean wasSet = false;
-    isCancelled = aIsCancelled;
+    dateTime = aDateTime;
     wasSet = true;
     return wasSet;
   }
 
-  public boolean getIsCancelled()
+  public Date getDateTime()
   {
-    return isCancelled;
+    return dateTime;
   }
 
-  public Seat getSeat()
+  public int getNumber()
   {
-    return seat;
+    return number;
+  }
+  /* Code from template association_GetMany */
+  public Table getTable(int index)
+  {
+    Table aTable = tables.get(index);
+    return aTable;
   }
 
+  /**
+   * only from currentTables for currentOrders
+   */
+  public List<Table> getTables()
+  {
+    List<Table> newTables = Collections.unmodifiableList(tables);
+    return newTables;
+  }
+
+  public int numberOfTables()
+  {
+    int number = tables.size();
+    return number;
+  }
+
+  public boolean hasTables()
+  {
+    boolean has = tables.size() > 0;
+    return has;
+  }
+
+  public int indexOfTable(Table aTable)
+  {
+    int index = tables.indexOf(aTable);
+    return index;
+  }
+  /* Code from template association_GetMany */
+  public OrderItem getOrderItem(int index)
+  {
+    OrderItem aOrderItem = orderItems.get(index);
+    return aOrderItem;
+  }
+
+  public List<OrderItem> getOrderItems()
+  {
+    List<OrderItem> newOrderItems = Collections.unmodifiableList(orderItems);
+    return newOrderItems;
+  }
+
+  public int numberOfOrderItems()
+  {
+    int number = orderItems.size();
+    return number;
+  }
+
+  public boolean hasOrderItems()
+  {
+    boolean has = orderItems.size() > 0;
+    return has;
+  }
+
+  public int indexOfOrderItem(OrderItem aOrderItem)
+  {
+    int index = orderItems.indexOf(aOrderItem);
+    return index;
+  }
+  /* Code from template association_GetOne */
   public RestoApp getRestoApp()
   {
     return restoApp;
   }
-
-  public MenuItem getMenuItem(int index)
+  /* Code from template association_GetMany */
+  public Bill getBill(int index)
   {
-    MenuItem aMenuItem = menuItems.get(index);
-    return aMenuItem;
+    Bill aBill = bills.get(index);
+    return aBill;
   }
 
-  public List<MenuItem> getMenuItems()
+  public List<Bill> getBills()
   {
-    List<MenuItem> newMenuItems = Collections.unmodifiableList(menuItems);
-    return newMenuItems;
+    List<Bill> newBills = Collections.unmodifiableList(bills);
+    return newBills;
   }
 
-  public int numberOfMenuItems()
+  public int numberOfBills()
   {
-    int number = menuItems.size();
+    int number = bills.size();
     return number;
   }
 
-  public boolean hasMenuItems()
+  public boolean hasBills()
   {
-    boolean has = menuItems.size() > 0;
+    boolean has = bills.size() > 0;
     return has;
   }
 
-  public int indexOfMenuItem(MenuItem aMenuItem)
+  public int indexOfBill(Bill aBill)
   {
-    int index = menuItems.indexOf(aMenuItem);
+    int index = bills.indexOf(aBill);
     return index;
   }
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfTablesValid()
+  {
+    boolean isValid = numberOfTables() >= minimumNumberOfTables();
+    return isValid;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfTables()
+  {
+    return 1;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  public boolean addTable(Table aTable)
+  {
+    boolean wasAdded = false;
+    if (tables.contains(aTable)) { return false; }
+    tables.add(aTable);
+    if (aTable.indexOfOrder(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aTable.addOrder(this);
+      if (!wasAdded)
+      {
+        tables.remove(aTable);
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_AddMStarToMany */
+  public boolean removeTable(Table aTable)
+  {
+    boolean wasRemoved = false;
+    if (!tables.contains(aTable))
+    {
+      return wasRemoved;
+    }
 
-  public boolean setSeat(Seat aSeat)
+    if (numberOfTables() <= minimumNumberOfTables())
+    {
+      return wasRemoved;
+    }
+
+    int oldIndex = tables.indexOf(aTable);
+    tables.remove(oldIndex);
+    if (aTable.indexOfOrder(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aTable.removeOrder(this);
+      if (!wasRemoved)
+      {
+        tables.add(oldIndex,aTable);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_SetMStarToMany */
+  public boolean setTables(Table... newTables)
   {
     boolean wasSet = false;
-    if (aSeat == null)
+    ArrayList<Table> verifiedTables = new ArrayList<Table>();
+    for (Table aTable : newTables)
+    {
+      if (verifiedTables.contains(aTable))
+      {
+        continue;
+      }
+      verifiedTables.add(aTable);
+    }
+
+    if (verifiedTables.size() != newTables.length || verifiedTables.size() < minimumNumberOfTables())
     {
       return wasSet;
     }
 
-    Seat existingSeat = seat;
-    seat = aSeat;
-    if (existingSeat != null && !existingSeat.equals(aSeat))
+    ArrayList<Table> oldTables = new ArrayList<Table>(tables);
+    tables.clear();
+    for (Table aNewTable : verifiedTables)
     {
-      existingSeat.removeOrder(this);
+      tables.add(aNewTable);
+      if (oldTables.contains(aNewTable))
+      {
+        oldTables.remove(aNewTable);
+      }
+      else
+      {
+        aNewTable.addOrder(this);
+      }
     }
-    seat.addOrder(this);
+
+    for (Table anOldTable : oldTables)
+    {
+      anOldTable.removeOrder(this);
+    }
     wasSet = true;
     return wasSet;
   }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addTableAt(Table aTable, int index)
+  {  
+    boolean wasAdded = false;
+    if(addTable(aTable))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTables()) { index = numberOfTables() - 1; }
+      tables.remove(aTable);
+      tables.add(index, aTable);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
 
+  public boolean addOrMoveTableAt(Table aTable, int index)
+  {
+    boolean wasAdded = false;
+    if(tables.contains(aTable))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfTables()) { index = numberOfTables() - 1; }
+      tables.remove(aTable);
+      tables.add(index, aTable);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addTableAt(aTable, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfOrderItems()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public OrderItem addOrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Seat... allSeats)
+  {
+    return new OrderItem(aQuantity, aPricedMenuItem, this, allSeats);
+  }
+
+  public boolean addOrderItem(OrderItem aOrderItem)
+  {
+    boolean wasAdded = false;
+    if (orderItems.contains(aOrderItem)) { return false; }
+    Order existingOrder = aOrderItem.getOrder();
+    boolean isNewOrder = existingOrder != null && !this.equals(existingOrder);
+    if (isNewOrder)
+    {
+      aOrderItem.setOrder(this);
+    }
+    else
+    {
+      orderItems.add(aOrderItem);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeOrderItem(OrderItem aOrderItem)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aOrderItem, as it must always have a order
+    if (!this.equals(aOrderItem.getOrder()))
+    {
+      orderItems.remove(aOrderItem);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addOrderItemAt(OrderItem aOrderItem, int index)
+  {  
+    boolean wasAdded = false;
+    if(addOrderItem(aOrderItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
+      orderItems.remove(aOrderItem);
+      orderItems.add(index, aOrderItem);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveOrderItemAt(OrderItem aOrderItem, int index)
+  {
+    boolean wasAdded = false;
+    if(orderItems.contains(aOrderItem))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
+      orderItems.remove(aOrderItem);
+      orderItems.add(index, aOrderItem);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addOrderItemAt(aOrderItem, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_SetOneToMany */
   public boolean setRestoApp(RestoApp aRestoApp)
   {
     boolean wasSet = false;
@@ -139,160 +399,104 @@ public class Order
     wasSet = true;
     return wasSet;
   }
-
-  public boolean isNumberOfMenuItemsValid()
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfBills()
   {
-    boolean isValid = numberOfMenuItems() >= minimumNumberOfMenuItems();
-    return isValid;
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public Bill addBill(RestoApp aRestoApp, Seat... allIssuedForSeats)
+  {
+    return new Bill(this, aRestoApp, allIssuedForSeats);
   }
 
-  public static int minimumNumberOfMenuItems()
-  {
-    return 1;
-  }
-
-  public boolean addMenuItem(MenuItem aMenuItem)
+  public boolean addBill(Bill aBill)
   {
     boolean wasAdded = false;
-    if (menuItems.contains(aMenuItem)) { return false; }
-    menuItems.add(aMenuItem);
-    if (aMenuItem.indexOfOrder(this) != -1)
+    if (bills.contains(aBill)) { return false; }
+    Order existingOrder = aBill.getOrder();
+    boolean isNewOrder = existingOrder != null && !this.equals(existingOrder);
+    if (isNewOrder)
     {
-      wasAdded = true;
+      aBill.setOrder(this);
     }
     else
     {
-      wasAdded = aMenuItem.addOrder(this);
-      if (!wasAdded)
-      {
-        menuItems.remove(aMenuItem);
-      }
+      bills.add(aBill);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeMenuItem(MenuItem aMenuItem)
+  public boolean removeBill(Bill aBill)
   {
     boolean wasRemoved = false;
-    if (!menuItems.contains(aMenuItem))
+    //Unable to remove aBill, as it must always have a order
+    if (!this.equals(aBill.getOrder()))
     {
-      return wasRemoved;
-    }
-
-    if (numberOfMenuItems() <= minimumNumberOfMenuItems())
-    {
-      return wasRemoved;
-    }
-
-    int oldIndex = menuItems.indexOf(aMenuItem);
-    menuItems.remove(oldIndex);
-    if (aMenuItem.indexOfOrder(this) == -1)
-    {
+      bills.remove(aBill);
       wasRemoved = true;
-    }
-    else
-    {
-      wasRemoved = aMenuItem.removeOrder(this);
-      if (!wasRemoved)
-      {
-        menuItems.add(oldIndex,aMenuItem);
-      }
     }
     return wasRemoved;
   }
-
-  public boolean setMenuItems(MenuItem... newMenuItems)
-  {
-    boolean wasSet = false;
-    ArrayList<MenuItem> verifiedMenuItems = new ArrayList<MenuItem>();
-    for (MenuItem aMenuItem : newMenuItems)
-    {
-      if (verifiedMenuItems.contains(aMenuItem))
-      {
-        continue;
-      }
-      verifiedMenuItems.add(aMenuItem);
-    }
-
-    if (verifiedMenuItems.size() != newMenuItems.length || verifiedMenuItems.size() < minimumNumberOfMenuItems())
-    {
-      return wasSet;
-    }
-
-    ArrayList<MenuItem> oldMenuItems = new ArrayList<MenuItem>(menuItems);
-    menuItems.clear();
-    for (MenuItem aNewMenuItem : verifiedMenuItems)
-    {
-      menuItems.add(aNewMenuItem);
-      if (oldMenuItems.contains(aNewMenuItem))
-      {
-        oldMenuItems.remove(aNewMenuItem);
-      }
-      else
-      {
-        aNewMenuItem.addOrder(this);
-      }
-    }
-
-    for (MenuItem anOldMenuItem : oldMenuItems)
-    {
-      anOldMenuItem.removeOrder(this);
-    }
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean addMenuItemAt(MenuItem aMenuItem, int index)
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addBillAt(Bill aBill, int index)
   {  
     boolean wasAdded = false;
-    if(addMenuItem(aMenuItem))
+    if(addBill(aBill))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfMenuItems()) { index = numberOfMenuItems() - 1; }
-      menuItems.remove(aMenuItem);
-      menuItems.add(index, aMenuItem);
+      if(index > numberOfBills()) { index = numberOfBills() - 1; }
+      bills.remove(aBill);
+      bills.add(index, aBill);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveMenuItemAt(MenuItem aMenuItem, int index)
+  public boolean addOrMoveBillAt(Bill aBill, int index)
   {
     boolean wasAdded = false;
-    if(menuItems.contains(aMenuItem))
+    if(bills.contains(aBill))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfMenuItems()) { index = numberOfMenuItems() - 1; }
-      menuItems.remove(aMenuItem);
-      menuItems.add(index, aMenuItem);
+      if(index > numberOfBills()) { index = numberOfBills() - 1; }
+      bills.remove(aBill);
+      bills.add(index, aBill);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addMenuItemAt(aMenuItem, index);
+      wasAdded = addBillAt(aBill, index);
     }
     return wasAdded;
   }
 
   public void delete()
   {
-    Seat placeholderSeat = seat;
-    this.seat = null;
-    if(placeholderSeat != null)
+    ArrayList<Table> copyOfTables = new ArrayList<Table>(tables);
+    tables.clear();
+    for(Table aTable : copyOfTables)
     {
-      placeholderSeat.removeOrder(this);
+      aTable.removeOrder(this);
     }
+    while (orderItems.size() > 0)
+    {
+      OrderItem aOrderItem = orderItems.get(orderItems.size() - 1);
+      aOrderItem.delete();
+      orderItems.remove(aOrderItem);
+    }
+    
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;
     if(placeholderRestoApp != null)
     {
       placeholderRestoApp.removeOrder(this);
     }
-    ArrayList<MenuItem> copyOfMenuItems = new ArrayList<MenuItem>(menuItems);
-    menuItems.clear();
-    for(MenuItem aMenuItem : copyOfMenuItems)
+    for(int i=bills.size(); i > 0; i--)
     {
-      aMenuItem.removeOrder(this);
+      Bill aBill = bills.get(i - 1);
+      aBill.delete();
     }
   }
 
@@ -300,8 +504,8 @@ public class Order
   public String toString()
   {
     return super.toString() + "["+
-            "isCancelled" + ":" + getIsCancelled()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "seat = "+(getSeat()!=null?Integer.toHexString(System.identityHashCode(getSeat())):"null") + System.getProperties().getProperty("line.separator") +
+            "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
   }
 }

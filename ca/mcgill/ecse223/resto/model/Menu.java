@@ -1,10 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
 
-
+package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 43 "restoAppModel.ump"
+// line 51 "../../../../../../../../ump/tmp531402/model.ump"
+// line 103 "../../../../../../../../ump/tmp531402/model.ump"
 public class Menu
 {
 
@@ -23,17 +24,23 @@ public class Menu
   public Menu(RestoApp aRestoApp)
   {
     menuItems = new ArrayList<MenuItem>();
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
+    if (aRestoApp == null || aRestoApp.getMenu() != null)
     {
-      throw new RuntimeException("Unable to create menue due to restoApp");
+      throw new RuntimeException("Unable to create Menu due to aRestoApp");
     }
+    restoApp = aRestoApp;
+  }
+
+  public Menu()
+  {
+    menuItems = new ArrayList<MenuItem>();
+    restoApp = new RestoApp(this);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-
+  /* Code from template association_GetMany */
   public MenuItem getMenuItem(int index)
   {
     MenuItem aMenuItem = menuItems.get(index);
@@ -63,20 +70,20 @@ public class Menu
     int index = menuItems.indexOf(aMenuItem);
     return index;
   }
-
+  /* Code from template association_GetOne */
   public RestoApp getRestoApp()
   {
     return restoApp;
   }
-
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfMenuItems()
   {
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public MenuItem addMenuItem(int aSharedBy, String aItemCategory, double aPrice, String aName, RestoApp aRestoApp)
+  public MenuItem addMenuItem(String aName)
   {
-    return new MenuItem(aSharedBy, aItemCategory, aPrice, aName, aRestoApp, this);
+    return new MenuItem(aName, this);
   }
 
   public boolean addMenuItem(MenuItem aMenuItem)
@@ -108,7 +115,7 @@ public class Menu
     }
     return wasRemoved;
   }
-
+  /* Code from template association_AddIndexControlFunctions */
   public boolean addMenuItemAt(MenuItem aMenuItem, int index)
   {  
     boolean wasAdded = false;
@@ -141,37 +148,20 @@ public class Menu
     return wasAdded;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeMenue(this);
-    }
-    restoApp.addMenue(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
-    for(int i=menuItems.size(); i > 0; i--)
+    while (menuItems.size() > 0)
     {
-      MenuItem aMenuItem = menuItems.get(i - 1);
+      MenuItem aMenuItem = menuItems.get(menuItems.size() - 1);
       aMenuItem.delete();
+      menuItems.remove(aMenuItem);
     }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
+    
+    RestoApp existingRestoApp = restoApp;
+    restoApp = null;
+    if (existingRestoApp != null)
     {
-      placeholderRestoApp.removeMenue(this);
+      existingRestoApp.delete();
     }
   }
 

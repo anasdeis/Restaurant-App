@@ -1,44 +1,50 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3728.d139ed893 modeling language!*/
+/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
 
-
+package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 54 "restoAppModel.ump"
+// line 55 "../../../../../../../../ump/tmp531402/model.ump"
+// line 108 "../../../../../../../../ump/tmp531402/model.ump"
 public class MenuItem
 {
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum ItemCategory { Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage }
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static Map<String, MenuItem> menuitemsByName = new HashMap<String, MenuItem>();
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //MenuItem Attributes
-  private int sharedBy;
-  private String itemCategory;
-  private double price;
   private String name;
+  private ItemCategory itemCategory;
 
   //MenuItem Associations
-  private List<Order> orders;
-  private RestoApp restoApp;
+  private List<PricedMenuItem> pricedMenuItems;
+  private PricedMenuItem currentPricedMenuItem;
   private Menu menu;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public MenuItem(int aSharedBy, String aItemCategory, double aPrice, String aName, RestoApp aRestoApp, Menu aMenu)
+  public MenuItem(String aName, Menu aMenu)
   {
-    sharedBy = aSharedBy;
-    itemCategory = aItemCategory;
-    price = aPrice;
-    name = aName;
-    orders = new ArrayList<Order>();
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
+    if (!setName(aName))
     {
-      throw new RuntimeException("Unable to create menuitem due to restoApp");
+      throw new RuntimeException("Cannot create due to duplicate name");
     }
+    pricedMenuItems = new ArrayList<PricedMenuItem>();
     boolean didAddMenu = setMenu(aMenu);
     if (!didAddMenu)
     {
@@ -50,15 +56,23 @@ public class MenuItem
   // INTERFACE
   //------------------------
 
-  public boolean setSharedBy(int aSharedBy)
+  public boolean setName(String aName)
   {
     boolean wasSet = false;
-    sharedBy = aSharedBy;
+    String anOldName = getName();
+    if (hasWithName(aName)) {
+      return wasSet;
+    }
+    name = aName;
     wasSet = true;
+    if (anOldName != null) {
+      menuitemsByName.remove(anOldName);
+    }
+    menuitemsByName.put(aName, this);
     return wasSet;
   }
 
-  public boolean setItemCategory(String aItemCategory)
+  public boolean setItemCategory(ItemCategory aItemCategory)
   {
     boolean wasSet = false;
     itemCategory = aItemCategory;
@@ -66,183 +80,172 @@ public class MenuItem
     return wasSet;
   }
 
-  public boolean setPrice(double aPrice)
-  {
-    boolean wasSet = false;
-    price = aPrice;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setName(String aName)
-  {
-    boolean wasSet = false;
-    name = aName;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public int getSharedBy()
-  {
-    return sharedBy;
-  }
-
-  public String getItemCategory()
-  {
-    return itemCategory;
-  }
-
-  public double getPrice()
-  {
-    return price;
-  }
-
   public String getName()
   {
     return name;
   }
-
-  public Order getOrder(int index)
+  /* Code from template attribute_GetUnique */
+  public static MenuItem getWithName(String aName)
   {
-    Order aOrder = orders.get(index);
-    return aOrder;
+    return menuitemsByName.get(aName);
+  }
+  /* Code from template attribute_HasUnique */
+  public static boolean hasWithName(String aName)
+  {
+    return getWithName(aName) != null;
   }
 
-  public List<Order> getOrders()
+  public ItemCategory getItemCategory()
   {
-    List<Order> newOrders = Collections.unmodifiableList(orders);
-    return newOrders;
+    return itemCategory;
+  }
+  /* Code from template association_GetMany */
+  public PricedMenuItem getPricedMenuItem(int index)
+  {
+    PricedMenuItem aPricedMenuItem = pricedMenuItems.get(index);
+    return aPricedMenuItem;
   }
 
-  public int numberOfOrders()
+  public List<PricedMenuItem> getPricedMenuItems()
   {
-    int number = orders.size();
+    List<PricedMenuItem> newPricedMenuItems = Collections.unmodifiableList(pricedMenuItems);
+    return newPricedMenuItems;
+  }
+
+  public int numberOfPricedMenuItems()
+  {
+    int number = pricedMenuItems.size();
     return number;
   }
 
-  public boolean hasOrders()
+  public boolean hasPricedMenuItems()
   {
-    boolean has = orders.size() > 0;
+    boolean has = pricedMenuItems.size() > 0;
     return has;
   }
 
-  public int indexOfOrder(Order aOrder)
+  public int indexOfPricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
-    int index = orders.indexOf(aOrder);
+    int index = pricedMenuItems.indexOf(aPricedMenuItem);
     return index;
   }
-
-  public RestoApp getRestoApp()
+  /* Code from template association_GetOne */
+  public PricedMenuItem getCurrentPricedMenuItem()
   {
-    return restoApp;
+    return currentPricedMenuItem;
   }
 
+  public boolean hasCurrentPricedMenuItem()
+  {
+    boolean has = currentPricedMenuItem != null;
+    return has;
+  }
+  /* Code from template association_GetOne */
   public Menu getMenu()
   {
     return menu;
   }
-
-  public static int minimumNumberOfOrders()
+  /* Code from template association_IsNumberOfValidMethod */
+  public boolean isNumberOfPricedMenuItemsValid()
   {
-    return 0;
+    boolean isValid = numberOfPricedMenuItems() >= minimumNumberOfPricedMenuItems();
+    return isValid;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfPricedMenuItems()
+  {
+    return 1;
+  }
+  /* Code from template association_AddMandatoryManyToOne */
+  public PricedMenuItem addPricedMenuItem(double aPrice, RestoApp aRestoApp)
+  {
+    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, aRestoApp, this);
+    return aNewPricedMenuItem;
   }
 
-  public boolean addOrder(Order aOrder)
+  public boolean addPricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
     boolean wasAdded = false;
-    if (orders.contains(aOrder)) { return false; }
-    orders.add(aOrder);
-    if (aOrder.indexOfMenuItem(this) != -1)
+    if (pricedMenuItems.contains(aPricedMenuItem)) { return false; }
+    MenuItem existingMenuItem = aPricedMenuItem.getMenuItem();
+    boolean isNewMenuItem = existingMenuItem != null && !this.equals(existingMenuItem);
+
+    if (isNewMenuItem && existingMenuItem.numberOfPricedMenuItems() <= minimumNumberOfPricedMenuItems())
     {
-      wasAdded = true;
+      return wasAdded;
+    }
+    if (isNewMenuItem)
+    {
+      aPricedMenuItem.setMenuItem(this);
     }
     else
     {
-      wasAdded = aOrder.addMenuItem(this);
-      if (!wasAdded)
-      {
-        orders.remove(aOrder);
-      }
+      pricedMenuItems.add(aPricedMenuItem);
     }
+    wasAdded = true;
     return wasAdded;
   }
 
-  public boolean removeOrder(Order aOrder)
+  public boolean removePricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
     boolean wasRemoved = false;
-    if (!orders.contains(aOrder))
+    //Unable to remove aPricedMenuItem, as it must always have a menuItem
+    if (this.equals(aPricedMenuItem.getMenuItem()))
     {
       return wasRemoved;
     }
 
-    int oldIndex = orders.indexOf(aOrder);
-    orders.remove(oldIndex);
-    if (aOrder.indexOfMenuItem(this) == -1)
+    //menuItem already at minimum (1)
+    if (numberOfPricedMenuItems() <= minimumNumberOfPricedMenuItems())
     {
-      wasRemoved = true;
+      return wasRemoved;
     }
-    else
-    {
-      wasRemoved = aOrder.removeMenuItem(this);
-      if (!wasRemoved)
-      {
-        orders.add(oldIndex,aOrder);
-      }
-    }
+
+    pricedMenuItems.remove(aPricedMenuItem);
+    wasRemoved = true;
     return wasRemoved;
   }
-
-  public boolean addOrderAt(Order aOrder, int index)
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addPricedMenuItemAt(PricedMenuItem aPricedMenuItem, int index)
   {  
     boolean wasAdded = false;
-    if(addOrder(aOrder))
+    if(addPricedMenuItem(aPricedMenuItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
+      if(index > numberOfPricedMenuItems()) { index = numberOfPricedMenuItems() - 1; }
+      pricedMenuItems.remove(aPricedMenuItem);
+      pricedMenuItems.add(index, aPricedMenuItem);
       wasAdded = true;
     }
     return wasAdded;
   }
 
-  public boolean addOrMoveOrderAt(Order aOrder, int index)
+  public boolean addOrMovePricedMenuItemAt(PricedMenuItem aPricedMenuItem, int index)
   {
     boolean wasAdded = false;
-    if(orders.contains(aOrder))
+    if(pricedMenuItems.contains(aPricedMenuItem))
     {
       if(index < 0 ) { index = 0; }
-      if(index > numberOfOrders()) { index = numberOfOrders() - 1; }
-      orders.remove(aOrder);
-      orders.add(index, aOrder);
+      if(index > numberOfPricedMenuItems()) { index = numberOfPricedMenuItems() - 1; }
+      pricedMenuItems.remove(aPricedMenuItem);
+      pricedMenuItems.add(index, aPricedMenuItem);
       wasAdded = true;
     } 
     else 
     {
-      wasAdded = addOrderAt(aOrder, index);
+      wasAdded = addPricedMenuItemAt(aPricedMenuItem, index);
     }
     return wasAdded;
   }
-
-  public boolean setRestoApp(RestoApp aRestoApp)
+  /* Code from template association_SetUnidirectionalOptionalOne */
+  public boolean setCurrentPricedMenuItem(PricedMenuItem aNewCurrentPricedMenuItem)
   {
     boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeMenuitem(this);
-    }
-    restoApp.addMenuitem(this);
+    currentPricedMenuItem = aNewCurrentPricedMenuItem;
     wasSet = true;
     return wasSet;
   }
-
+  /* Code from template association_SetOneToMany */
   public boolean setMenu(Menu aMenu)
   {
     boolean wasSet = false;
@@ -264,25 +267,13 @@ public class MenuItem
 
   public void delete()
   {
-    ArrayList<Order> copyOfOrders = new ArrayList<Order>(orders);
-    orders.clear();
-    for(Order aOrder : copyOfOrders)
+    menuitemsByName.remove(getName());
+    for(int i=pricedMenuItems.size(); i > 0; i--)
     {
-      if (aOrder.numberOfMenuItems() <= Order.minimumNumberOfMenuItems())
-      {
-        aOrder.delete();
-      }
-      else
-      {
-        aOrder.removeMenuItem(this);
-      }
+      PricedMenuItem aPricedMenuItem = pricedMenuItems.get(i - 1);
+      aPricedMenuItem.delete();
     }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeMenuitem(this);
-    }
+    currentPricedMenuItem = null;
     Menu placeholderMenu = menu;
     this.menu = null;
     if(placeholderMenu != null)
@@ -295,11 +286,9 @@ public class MenuItem
   public String toString()
   {
     return super.toString() + "["+
-            "sharedBy" + ":" + getSharedBy()+ "," +
-            "itemCategory" + ":" + getItemCategory()+ "," +
-            "price" + ":" + getPrice()+ "," +
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "itemCategory" + "=" + (getItemCategory() != null ? !getItemCategory().equals(this)  ? getItemCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "menu = "+(getMenu()!=null?Integer.toHexString(System.identityHashCode(getMenu())):"null");
   }
 }
