@@ -1,12 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.sql.Date;
 import java.util.*;
 
-// line 38 "../../../../../../../../ump/tmp531402/model.ump"
-// line 93 "../../../../../../../../ump/tmp531402/model.ump"
+// line 37 "../../../../../../restoAppModel.ump"
 public class Order
 {
 
@@ -28,15 +27,13 @@ public class Order
 
   //Order Associations
   private List<Table> tables;
-  private List<OrderItem> orderItems;
-  private RestoApp restoApp;
   private List<Bill> bills;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(Date aDateTime, RestoApp aRestoApp, Table... allTables)
+  public Order(Date aDateTime, Table... allTables)
   {
     dateTime = aDateTime;
     number = nextNumber++;
@@ -45,12 +42,6 @@ public class Order
     if (!didAddTables)
     {
       throw new RuntimeException("Unable to create Order, must have at least 1 tables");
-    }
-    orderItems = new ArrayList<OrderItem>();
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create order due to restoApp");
     }
     bills = new ArrayList<Bill>();
   }
@@ -76,7 +67,7 @@ public class Order
   {
     return number;
   }
-  /* Code from template association_GetMany */
+
   public Table getTable(int index)
   {
     Table aTable = tables.get(index);
@@ -109,42 +100,7 @@ public class Order
     int index = tables.indexOf(aTable);
     return index;
   }
-  /* Code from template association_GetMany */
-  public OrderItem getOrderItem(int index)
-  {
-    OrderItem aOrderItem = orderItems.get(index);
-    return aOrderItem;
-  }
 
-  public List<OrderItem> getOrderItems()
-  {
-    List<OrderItem> newOrderItems = Collections.unmodifiableList(orderItems);
-    return newOrderItems;
-  }
-
-  public int numberOfOrderItems()
-  {
-    int number = orderItems.size();
-    return number;
-  }
-
-  public boolean hasOrderItems()
-  {
-    boolean has = orderItems.size() > 0;
-    return has;
-  }
-
-  public int indexOfOrderItem(OrderItem aOrderItem)
-  {
-    int index = orderItems.indexOf(aOrderItem);
-    return index;
-  }
-  /* Code from template association_GetOne */
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
-  }
-  /* Code from template association_GetMany */
   public Bill getBill(int index)
   {
     Bill aBill = bills.get(index);
@@ -174,18 +130,18 @@ public class Order
     int index = bills.indexOf(aBill);
     return index;
   }
-  /* Code from template association_IsNumberOfValidMethod */
+
   public boolean isNumberOfTablesValid()
   {
     boolean isValid = numberOfTables() >= minimumNumberOfTables();
     return isValid;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfTables()
   {
     return 1;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addTable(Table aTable)
   {
     boolean wasAdded = false;
@@ -205,7 +161,7 @@ public class Order
     }
     return wasAdded;
   }
-  /* Code from template association_AddMStarToMany */
+
   public boolean removeTable(Table aTable)
   {
     boolean wasRemoved = false;
@@ -235,7 +191,7 @@ public class Order
     }
     return wasRemoved;
   }
-  /* Code from template association_SetMStarToMany */
+
   public boolean setTables(Table... newTables)
   {
     boolean wasSet = false;
@@ -276,7 +232,7 @@ public class Order
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addTableAt(Table aTable, int index)
   {  
     boolean wasAdded = false;
@@ -308,106 +264,15 @@ public class Order
     }
     return wasAdded;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfOrderItems()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public OrderItem addOrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Seat... allSeats)
-  {
-    return new OrderItem(aQuantity, aPricedMenuItem, this, allSeats);
-  }
 
-  public boolean addOrderItem(OrderItem aOrderItem)
-  {
-    boolean wasAdded = false;
-    if (orderItems.contains(aOrderItem)) { return false; }
-    Order existingOrder = aOrderItem.getOrder();
-    boolean isNewOrder = existingOrder != null && !this.equals(existingOrder);
-    if (isNewOrder)
-    {
-      aOrderItem.setOrder(this);
-    }
-    else
-    {
-      orderItems.add(aOrderItem);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeOrderItem(OrderItem aOrderItem)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aOrderItem, as it must always have a order
-    if (!this.equals(aOrderItem.getOrder()))
-    {
-      orderItems.remove(aOrderItem);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addOrderItemAt(OrderItem aOrderItem, int index)
-  {  
-    boolean wasAdded = false;
-    if(addOrderItem(aOrderItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
-      orderItems.remove(aOrderItem);
-      orderItems.add(index, aOrderItem);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveOrderItemAt(OrderItem aOrderItem, int index)
-  {
-    boolean wasAdded = false;
-    if(orderItems.contains(aOrderItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
-      orderItems.remove(aOrderItem);
-      orderItems.add(index, aOrderItem);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addOrderItemAt(aOrderItem, index);
-    }
-    return wasAdded;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeOrder(this);
-    }
-    restoApp.addOrder(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfBills()
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
-  public Bill addBill(RestoApp aRestoApp, Seat... allIssuedForSeats)
+
+  public Bill addBill(Seat... allIssuedForSeats)
   {
-    return new Bill(this, aRestoApp, allIssuedForSeats);
+    return new Bill(this, allIssuedForSeats);
   }
 
   public boolean addBill(Bill aBill)
@@ -439,7 +304,7 @@ public class Order
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addBillAt(Bill aBill, int index)
   {  
     boolean wasAdded = false;
@@ -480,19 +345,6 @@ public class Order
     {
       aTable.removeOrder(this);
     }
-    while (orderItems.size() > 0)
-    {
-      OrderItem aOrderItem = orderItems.get(orderItems.size() - 1);
-      aOrderItem.delete();
-      orderItems.remove(aOrderItem);
-    }
-    
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeOrder(this);
-    }
     for(int i=bills.size(); i > 0; i--)
     {
       Bill aBill = bills.get(i - 1);
@@ -503,9 +355,18 @@ public class Order
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
+            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 41 ../../../../../../restoAppModel.ump
+  //1 <@>- * OrderItem orderItems ;
+
+  
 }

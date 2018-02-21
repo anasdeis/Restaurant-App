@@ -1,11 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 45 "../../../../../../../../ump/tmp531402/model.ump"
-// line 98 "../../../../../../../../ump/tmp531402/model.ump"
+// line 44 "../../../../../../restoAppModel.ump"
 public class OrderItem
 {
 
@@ -19,13 +18,12 @@ public class OrderItem
   //OrderItem Associations
   private PricedMenuItem pricedMenuItem;
   private List<Seat> seats;
-  private Order order;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public OrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Order aOrder, Seat... allSeats)
+  public OrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Seat... allSeats)
   {
     quantity = aQuantity;
     boolean didAddPricedMenuItem = setPricedMenuItem(aPricedMenuItem);
@@ -38,11 +36,6 @@ public class OrderItem
     if (!didAddSeats)
     {
       throw new RuntimeException("Unable to create OrderItem, must have at least 1 seats");
-    }
-    boolean didAddOrder = setOrder(aOrder);
-    if (!didAddOrder)
-    {
-      throw new RuntimeException("Unable to create orderItem due to order");
     }
   }
 
@@ -62,12 +55,12 @@ public class OrderItem
   {
     return quantity;
   }
-  /* Code from template association_GetOne */
+
   public PricedMenuItem getPricedMenuItem()
   {
     return pricedMenuItem;
   }
-  /* Code from template association_GetMany */
+
   public Seat getSeat(int index)
   {
     Seat aSeat = seats.get(index);
@@ -100,12 +93,7 @@ public class OrderItem
     int index = seats.indexOf(aSeat);
     return index;
   }
-  /* Code from template association_GetOne */
-  public Order getOrder()
-  {
-    return order;
-  }
-  /* Code from template association_SetOneToMany */
+
   public boolean setPricedMenuItem(PricedMenuItem aPricedMenuItem)
   {
     boolean wasSet = false;
@@ -124,18 +112,18 @@ public class OrderItem
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_IsNumberOfValidMethod */
+
   public boolean isNumberOfSeatsValid()
   {
     boolean isValid = numberOfSeats() >= minimumNumberOfSeats();
     return isValid;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfSeats()
   {
     return 1;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addSeat(Seat aSeat)
   {
     boolean wasAdded = false;
@@ -155,7 +143,7 @@ public class OrderItem
     }
     return wasAdded;
   }
-  /* Code from template association_AddMStarToMany */
+
   public boolean removeSeat(Seat aSeat)
   {
     boolean wasRemoved = false;
@@ -185,7 +173,7 @@ public class OrderItem
     }
     return wasRemoved;
   }
-  /* Code from template association_SetMStarToMany */
+
   public boolean setSeats(Seat... newSeats)
   {
     boolean wasSet = false;
@@ -226,7 +214,7 @@ public class OrderItem
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addSeatAt(Seat aSeat, int index)
   {  
     boolean wasAdded = false;
@@ -258,54 +246,27 @@ public class OrderItem
     }
     return wasAdded;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setOrder(Order aOrder)
-  {
-    boolean wasSet = false;
-    if (aOrder == null)
-    {
-      return wasSet;
-    }
-
-    Order existingOrder = order;
-    order = aOrder;
-    if (existingOrder != null && !existingOrder.equals(aOrder))
-    {
-      existingOrder.removeOrderItem(this);
-    }
-    order.addOrderItem(this);
-    wasSet = true;
-    return wasSet;
-  }
 
   public void delete()
   {
     PricedMenuItem placeholderPricedMenuItem = pricedMenuItem;
     this.pricedMenuItem = null;
-    if(placeholderPricedMenuItem != null)
-    {
-      placeholderPricedMenuItem.removeOrderItem(this);
-    }
+    placeholderPricedMenuItem.removeOrderItem(this);
     ArrayList<Seat> copyOfSeats = new ArrayList<Seat>(seats);
     seats.clear();
     for(Seat aSeat : copyOfSeats)
     {
       aSeat.removeOrderItem(this);
     }
-    Order placeholderOrder = order;
-    this.order = null;
-    if(placeholderOrder != null)
-    {
-      placeholderOrder.removeOrderItem(this);
-    }
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "quantity" + ":" + getQuantity()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "pricedMenuItem = "+(getPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
+            "  " + "pricedMenuItem = "+(getPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getPricedMenuItem())):"null")
+     + outputString;
   }
 }

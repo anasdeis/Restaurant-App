@@ -1,11 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 35 "../../../../../../../../ump/tmp531402/model.ump"
-// line 88 "../../../../../../../../ump/tmp531402/model.ump"
+// line 34 "../../../../../../restoAppModel.ump"
 public class Seat
 {
 
@@ -14,7 +13,6 @@ public class Seat
   //------------------------
 
   //Seat Associations
-  private Table table;
   private List<OrderItem> orderItems;
   private List<Bill> bills;
 
@@ -22,13 +20,8 @@ public class Seat
   // CONSTRUCTOR
   //------------------------
 
-  public Seat(Table aTable)
+  public Seat()
   {
-    boolean didAddTable = setTable(aTable);
-    if (!didAddTable)
-    {
-      throw new RuntimeException("Unable to create seat due to table");
-    }
     orderItems = new ArrayList<OrderItem>();
     bills = new ArrayList<Bill>();
   }
@@ -36,12 +29,7 @@ public class Seat
   //------------------------
   // INTERFACE
   //------------------------
-  /* Code from template association_GetOne */
-  public Table getTable()
-  {
-    return table;
-  }
-  /* Code from template association_GetMany */
+
   public OrderItem getOrderItem(int index)
   {
     OrderItem aOrderItem = orderItems.get(index);
@@ -71,7 +59,7 @@ public class Seat
     int index = orderItems.indexOf(aOrderItem);
     return index;
   }
-  /* Code from template association_GetMany */
+
   public Bill getBill(int index)
   {
     Bill aBill = bills.get(index);
@@ -101,42 +89,12 @@ public class Seat
     int index = bills.indexOf(aBill);
     return index;
   }
-  /* Code from template association_SetOneToMandatoryMany */
-  public boolean setTable(Table aTable)
-  {
-    boolean wasSet = false;
-    //Must provide table to seat
-    if (aTable == null)
-    {
-      return wasSet;
-    }
 
-    if (table != null && table.numberOfSeats() <= Table.minimumNumberOfSeats())
-    {
-      return wasSet;
-    }
-
-    Table existingTable = table;
-    table = aTable;
-    if (existingTable != null && !existingTable.equals(aTable))
-    {
-      boolean didRemove = existingTable.removeSeat(this);
-      if (!didRemove)
-      {
-        table = existingTable;
-        return wasSet;
-      }
-    }
-    table.addSeat(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfOrderItems()
   {
     return 0;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addOrderItem(OrderItem aOrderItem)
   {
     boolean wasAdded = false;
@@ -156,7 +114,7 @@ public class Seat
     }
     return wasAdded;
   }
-  /* Code from template association_RemoveMany */
+
   public boolean removeOrderItem(OrderItem aOrderItem)
   {
     boolean wasRemoved = false;
@@ -181,7 +139,7 @@ public class Seat
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addOrderItemAt(OrderItem aOrderItem, int index)
   {  
     boolean wasAdded = false;
@@ -213,12 +171,12 @@ public class Seat
     }
     return wasAdded;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfBills()
   {
     return 0;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addBill(Bill aBill)
   {
     boolean wasAdded = false;
@@ -238,7 +196,7 @@ public class Seat
     }
     return wasAdded;
   }
-  /* Code from template association_RemoveMany */
+
   public boolean removeBill(Bill aBill)
   {
     boolean wasRemoved = false;
@@ -263,7 +221,7 @@ public class Seat
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addBillAt(Bill aBill, int index)
   {  
     boolean wasAdded = false;
@@ -298,12 +256,6 @@ public class Seat
 
   public void delete()
   {
-    Table placeholderTable = table;
-    this.table = null;
-    if(placeholderTable != null)
-    {
-      placeholderTable.removeSeat(this);
-    }
     ArrayList<OrderItem> copyOfOrderItems = new ArrayList<OrderItem>(orderItems);
     orderItems.clear();
     for(OrderItem aOrderItem : copyOfOrderItems)

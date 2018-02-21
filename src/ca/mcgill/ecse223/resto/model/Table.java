@@ -1,11 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 25 "../../../../../../../../ump/tmp531402/model.ump"
-// line 83 "../../../../../../../../ump/tmp531402/model.ump"
+// line 24 "../../../../../../restoAppModel.ump"
 public class Table
 {
 
@@ -27,9 +26,7 @@ public class Table
   private int length;
 
   //Table Associations
-  private List<Seat> seats;
   private List<Seat> currentSeats;
-  private RestoApp restoApp;
   private List<Reservation> reservations;
   private List<Order> orders;
 
@@ -37,7 +34,7 @@ public class Table
   // CONSTRUCTOR
   //------------------------
 
-  public Table(int aNumber, int aX, int aY, int aWidth, int aLength, RestoApp aRestoApp)
+  public Table(int aNumber, int aX, int aY, int aWidth, int aLength)
   {
     x = aX;
     y = aY;
@@ -47,13 +44,7 @@ public class Table
     {
       throw new RuntimeException("Cannot create due to duplicate number");
     }
-    seats = new ArrayList<Seat>();
     currentSeats = new ArrayList<Seat>();
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create table due to restoApp");
-    }
     reservations = new ArrayList<Reservation>();
     orders = new ArrayList<Order>();
   }
@@ -65,13 +56,13 @@ public class Table
   public boolean setNumber(int aNumber)
   {
     boolean wasSet = false;
-    Integer anOldNumber = getNumber();
+    int anOldNumber = getNumber();
     if (hasWithNumber(aNumber)) {
       return wasSet;
     }
     number = aNumber;
     wasSet = true;
-    if (anOldNumber != null) {
+    if (anOldNumber != 0) {
       tablesByNumber.remove(anOldNumber);
     }
     tablesByNumber.put(aNumber, this);
@@ -114,12 +105,12 @@ public class Table
   {
     return number;
   }
-  /* Code from template attribute_GetUnique */
+
   public static Table getWithNumber(int aNumber)
   {
     return tablesByNumber.get(aNumber);
   }
-  /* Code from template attribute_HasUnique */
+
   public static boolean hasWithNumber(int aNumber)
   {
     return getWithNumber(aNumber) != null;
@@ -144,37 +135,7 @@ public class Table
   {
     return length;
   }
-  /* Code from template association_GetMany */
-  public Seat getSeat(int index)
-  {
-    Seat aSeat = seats.get(index);
-    return aSeat;
-  }
 
-  public List<Seat> getSeats()
-  {
-    List<Seat> newSeats = Collections.unmodifiableList(seats);
-    return newSeats;
-  }
-
-  public int numberOfSeats()
-  {
-    int number = seats.size();
-    return number;
-  }
-
-  public boolean hasSeats()
-  {
-    boolean has = seats.size() > 0;
-    return has;
-  }
-
-  public int indexOfSeat(Seat aSeat)
-  {
-    int index = seats.indexOf(aSeat);
-    return index;
-  }
-  /* Code from template association_GetMany */
   public Seat getCurrentSeat(int index)
   {
     Seat aCurrentSeat = currentSeats.get(index);
@@ -207,12 +168,7 @@ public class Table
     int index = currentSeats.indexOf(aCurrentSeat);
     return index;
   }
-  /* Code from template association_GetOne */
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
-  }
-  /* Code from template association_GetMany */
+
   public Reservation getReservation(int index)
   {
     Reservation aReservation = reservations.get(index);
@@ -242,7 +198,7 @@ public class Table
     int index = reservations.indexOf(aReservation);
     return index;
   }
-  /* Code from template association_GetMany */
+
   public Order getOrder(int index)
   {
     Order aOrder = orders.get(index);
@@ -272,104 +228,12 @@ public class Table
     int index = orders.indexOf(aOrder);
     return index;
   }
-  /* Code from template association_IsNumberOfValidMethod */
-  public boolean isNumberOfSeatsValid()
-  {
-    boolean isValid = numberOfSeats() >= minimumNumberOfSeats();
-    return isValid;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfSeats()
-  {
-    return 1;
-  }
-  /* Code from template association_AddMandatoryManyToOne */
-  public Seat addSeat()
-  {
-    Seat aNewSeat = new Seat(this);
-    return aNewSeat;
-  }
 
-  public boolean addSeat(Seat aSeat)
-  {
-    boolean wasAdded = false;
-    if (seats.contains(aSeat)) { return false; }
-    Table existingTable = aSeat.getTable();
-    boolean isNewTable = existingTable != null && !this.equals(existingTable);
-
-    if (isNewTable && existingTable.numberOfSeats() <= minimumNumberOfSeats())
-    {
-      return wasAdded;
-    }
-    if (isNewTable)
-    {
-      aSeat.setTable(this);
-    }
-    else
-    {
-      seats.add(aSeat);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeSeat(Seat aSeat)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aSeat, as it must always have a table
-    if (this.equals(aSeat.getTable()))
-    {
-      return wasRemoved;
-    }
-
-    //table already at minimum (1)
-    if (numberOfSeats() <= minimumNumberOfSeats())
-    {
-      return wasRemoved;
-    }
-
-    seats.remove(aSeat);
-    wasRemoved = true;
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addSeatAt(Seat aSeat, int index)
-  {  
-    boolean wasAdded = false;
-    if(addSeat(aSeat))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfSeats()) { index = numberOfSeats() - 1; }
-      seats.remove(aSeat);
-      seats.add(index, aSeat);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveSeatAt(Seat aSeat, int index)
-  {
-    boolean wasAdded = false;
-    if(seats.contains(aSeat))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfSeats()) { index = numberOfSeats() - 1; }
-      seats.remove(aSeat);
-      seats.add(index, aSeat);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addSeatAt(aSeat, index);
-    }
-    return wasAdded;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfCurrentSeats()
   {
     return 0;
   }
-  /* Code from template association_AddUnidirectionalMany */
+
   public boolean addCurrentSeat(Seat aCurrentSeat)
   {
     boolean wasAdded = false;
@@ -389,7 +253,7 @@ public class Table
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addCurrentSeatAt(Seat aCurrentSeat, int index)
   {  
     boolean wasAdded = false;
@@ -421,31 +285,12 @@ public class Table
     }
     return wasAdded;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
 
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeTable(this);
-    }
-    restoApp.addTable(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfReservations()
   {
     return 0;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addReservation(Reservation aReservation)
   {
     boolean wasAdded = false;
@@ -465,7 +310,7 @@ public class Table
     }
     return wasAdded;
   }
-  /* Code from template association_RemoveMany */
+
   public boolean removeReservation(Reservation aReservation)
   {
     boolean wasRemoved = false;
@@ -490,7 +335,7 @@ public class Table
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addReservationAt(Reservation aReservation, int index)
   {  
     boolean wasAdded = false;
@@ -522,12 +367,12 @@ public class Table
     }
     return wasAdded;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfOrders()
   {
     return 0;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addOrder(Order aOrder)
   {
     boolean wasAdded = false;
@@ -547,7 +392,7 @@ public class Table
     }
     return wasAdded;
   }
-  /* Code from template association_RemoveMany */
+
   public boolean removeOrder(Order aOrder)
   {
     boolean wasRemoved = false;
@@ -572,7 +417,7 @@ public class Table
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addOrderAt(Order aOrder, int index)
   {  
     boolean wasAdded = false;
@@ -608,20 +453,7 @@ public class Table
   public void delete()
   {
     tablesByNumber.remove(getNumber());
-    while (seats.size() > 0)
-    {
-      Seat aSeat = seats.get(seats.size() - 1);
-      aSeat.delete();
-      seats.remove(aSeat);
-    }
-    
     currentSeats.clear();
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeTable(this);
-    }
     ArrayList<Reservation> copyOfReservations = new ArrayList<Reservation>(reservations);
     reservations.clear();
     for(Reservation aReservation : copyOfReservations)
@@ -653,12 +485,21 @@ public class Table
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "number" + ":" + getNumber()+ "," +
             "x" + ":" + getX()+ "," +
             "y" + ":" + getY()+ "," +
             "width" + ":" + getWidth()+ "," +
-            "length" + ":" + getLength()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
-  }
+            "length" + ":" + getLength()+ "]"
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 30 ../../../../../../restoAppModel.ump
+ // 1 <@>- 1..* Seat seats ;
+
+  
 }

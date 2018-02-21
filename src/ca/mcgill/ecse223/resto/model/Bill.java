@@ -1,11 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 67 "../../../../../../../../ump/tmp531402/model.ump"
-// line 118 "../../../../../../../../ump/tmp531402/model.ump"
+// line 66 "../../../../../../restoAppModel.ump"
 public class Bill
 {
 
@@ -16,13 +15,12 @@ public class Bill
   //Bill Associations
   private Order order;
   private List<Seat> issuedForSeats;
-  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Bill(Order aOrder, RestoApp aRestoApp, Seat... allIssuedForSeats)
+  public Bill(Order aOrder, Seat... allIssuedForSeats)
   {
     boolean didAddOrder = setOrder(aOrder);
     if (!didAddOrder)
@@ -35,22 +33,17 @@ public class Bill
     {
       throw new RuntimeException("Unable to create Bill, must have at least 1 issuedForSeats");
     }
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create bill due to restoApp");
-    }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-  /* Code from template association_GetOne */
+
   public Order getOrder()
   {
     return order;
   }
-  /* Code from template association_GetMany */
+
   public Seat getIssuedForSeat(int index)
   {
     Seat aIssuedForSeat = issuedForSeats.get(index);
@@ -83,12 +76,7 @@ public class Bill
     int index = issuedForSeats.indexOf(aIssuedForSeat);
     return index;
   }
-  /* Code from template association_GetOne */
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
-  }
-  /* Code from template association_SetOneToMany */
+
   public boolean setOrder(Order aOrder)
   {
     boolean wasSet = false;
@@ -107,18 +95,18 @@ public class Bill
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_IsNumberOfValidMethod */
+
   public boolean isNumberOfIssuedForSeatsValid()
   {
     boolean isValid = numberOfIssuedForSeats() >= minimumNumberOfIssuedForSeats();
     return isValid;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfIssuedForSeats()
   {
     return 1;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addIssuedForSeat(Seat aIssuedForSeat)
   {
     boolean wasAdded = false;
@@ -138,7 +126,7 @@ public class Bill
     }
     return wasAdded;
   }
-  /* Code from template association_AddMStarToMany */
+
   public boolean removeIssuedForSeat(Seat aIssuedForSeat)
   {
     boolean wasRemoved = false;
@@ -168,7 +156,7 @@ public class Bill
     }
     return wasRemoved;
   }
-  /* Code from template association_SetMStarToMany */
+
   public boolean setIssuedForSeats(Seat... newIssuedForSeats)
   {
     boolean wasSet = false;
@@ -209,7 +197,7 @@ public class Bill
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addIssuedForSeatAt(Seat aIssuedForSeat, int index)
   {  
     boolean wasAdded = false;
@@ -241,45 +229,17 @@ public class Bill
     }
     return wasAdded;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeBill(this);
-    }
-    restoApp.addBill(this);
-    wasSet = true;
-    return wasSet;
-  }
 
   public void delete()
   {
     Order placeholderOrder = order;
     this.order = null;
-    if(placeholderOrder != null)
-    {
-      placeholderOrder.removeBill(this);
-    }
+    placeholderOrder.removeBill(this);
     ArrayList<Seat> copyOfIssuedForSeats = new ArrayList<Seat>(issuedForSeats);
     issuedForSeats.clear();
     for(Seat aIssuedForSeat : copyOfIssuedForSeats)
     {
       aIssuedForSeat.removeBill(this);
-    }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeBill(this);
     }
   }
 
