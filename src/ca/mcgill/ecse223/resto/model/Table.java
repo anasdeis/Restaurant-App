@@ -2,10 +2,12 @@
 /*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 24 "../../../../../../restoAppModel.ump"
-public class Table
+// line 55 "../../../../../../RestoAppPersistence.ump"
+// line 26 "../../../../../../restoAppModel.ump"
+public class Table implements Serializable
 {
 
   //------------------------
@@ -498,8 +500,10 @@ public class Table
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 30 ../../../../../../restoAppModel.ump
- // 1 <@>- 1..* Seat seats ;
+  // line 58 ../../../../../../RestoAppPersistence.ump
+  private static final long serialVersionUID = -7403802787254467836L ;
+// line 32 ../../../../../../restoAppModel.ump
+//  1 <@>- 1..* Seat seats ;
 
   
 }

@@ -4,7 +4,7 @@
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 54 "../../../../../../restoAppModel.ump"
+// line 56 "../../../../../../restoAppModel.ump"
 public class MenuItem
 {
 
@@ -254,7 +254,7 @@ public class MenuItem
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 56 ../../../../../../restoAppModel.ump
+  // line 58 ../../../../../../restoAppModel.ump
   enum ItemCategory 
   {
     Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage

@@ -2,10 +2,12 @@
 /*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 3 "../../../../../../restoAppModel.ump"
-public class RestoApp
+// line 3 "../../../../../../RestoAppPersistence.ump"
+// line 5 "../../../../../../restoAppModel.ump"
+public class RestoApp implements Serializable
 {
 
   //------------------------
@@ -220,18 +222,20 @@ public class RestoApp
   // DEVELOPER CODE - PROVIDED AS-IS
   //------------------------
   
-  // line 4 ../../../../../../restoAppModel.ump
-  //1 <@>- * Reservation reservations ;
-// line 5 ../../../../../../restoAppModel.ump
-  //1 <@>- * Table tables ;
-// line 7 ../../../../../../restoAppModel.ump
-  //1 <@>- * Order orders ;
-// line 9 ../../../../../../restoAppModel.ump
-  //1 <@>- 1 Menu menu ;
-// line 10 ../../../../../../restoAppModel.ump
-  //1 <@>- * PricedMenuItem pricedMenuItems ;
-// line 11 ../../../../../../restoAppModel.ump
-  //1 <@>- * Bill bills ;
+  // line 6 ../../../../../../RestoAppPersistence.ump
+  private static final long serialVersionUID = -2683593616927798071L ;
+//// line 6 ../../../../../../restoAppModel.ump
+//  1 <@>- * Reservation reservations ;
+//// line 7 ../../../../../../restoAppModel.ump
+//  1 <@>- * Table tables ;
+//// line 9 ../../../../../../restoAppModel.ump
+//  1 <@>- * Order orders ;
+//// line 11 ../../../../../../restoAppModel.ump
+//  1 <@>- 1 Menu menu ;
+//// line 12 ../../../../../../restoAppModel.ump
+//  1 <@>- * PricedMenuItem pricedMenuItems ;
+//// line 13 ../../../../../../restoAppModel.ump
+//  1 <@>- * Bill bills ;
 
   
 }
