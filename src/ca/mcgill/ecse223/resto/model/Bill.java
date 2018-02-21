@@ -2,10 +2,12 @@
 /*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 66 "../../../../../../restoAppModel.ump"
-public class Bill
+// line 10 "../../../../../../RestoAppPersistence.ump"
+// line 68 "../../../../../../restoAppModel.ump"
+public class Bill implements Serializable
 {
 
   //------------------------
@@ -242,5 +244,13 @@ public class Bill
       aIssuedForSeat.removeBill(this);
     }
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 13 ../../../../../../RestoAppPersistence.ump
+  private static final long serialVersionUID = 2315072607928790501L ;
 
+  
 }

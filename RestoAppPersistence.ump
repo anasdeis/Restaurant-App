@@ -1,0 +1,59 @@
+external interface Serializable {}
+
+class RestoApp {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = -2683593616927798071L;
+  
+}
+
+class Bill {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = 2315072607928790501L;
+ 
+}
+
+class Menu {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = 8896099581655989380L;
+}
+
+class Order {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = 386717977557499839L;
+}
+
+class OrderItem {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = -3900912597282882073L;
+}
+
+class PricedMenuItem {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = 2045406856025012133L;
+  
+  
+}
+
+class Reservation {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = -7407702774454467836L;
+}
+
+class Seat {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = -7405602774454467836L;
+}
+
+class Table {
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = -7403802787254467836L;
+}

@@ -1,8 +1,11 @@
 package ca.mcgill.ecse223.resto.application;
 import ca.mcgill.ecse223.resto.model.RestoApp;
+import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 import ca.mcgill.ecse223.resto.view.RestoAppPage;
 
 public class RestoApplication {
+	
+	private static String filename = "data.restoapp";
 
 	private static RestoApp ra;
 	
@@ -21,12 +24,26 @@ public class RestoApplication {
 
 	public static RestoApp getBtms() {
 		if (ra == null) {
-			// load model
-			// TODO
-			// for now, we are just creating an empty BTMS
-			ra = new RestoApp();
+			
+		ra = load();	
+			
 		}
  		return ra;
+	}
+	
+	public static void save(){
+		PersistenceObjectStream.serialize(filename);
+		
+	}
+	
+	public static RestoApp load(){
+		PersistenceObjectStream.setFilename(filename);
+		ra = (RestoApp) PersistenceObjectStream.deserialize();
+		
+		if(ra == null){
+			ra = new RestoApp();
+		}
+		return ra;
 	}
 	
 }
