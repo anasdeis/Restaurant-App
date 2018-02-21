@@ -1,12 +1,11 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.sql.Date;
 import java.util.*;
 
-// line 15 "../../../../../../../../ump/tmp531402/model.ump"
-// line 78 "../../../../../../../../ump/tmp531402/model.ump"
+// line 14 "../../../../../../restoAppModel.ump"
 public class Reservation
 {
 
@@ -32,13 +31,12 @@ public class Reservation
 
   //Reservation Associations
   private List<Table> tables;
-  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(Date aDateTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, RestoApp aRestoApp, Table... allTables)
+  public Reservation(Date aDateTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table... allTables)
   {
     dateTime = aDateTime;
     numberInParty = aNumberInParty;
@@ -51,11 +49,6 @@ public class Reservation
     if (!didAddTables)
     {
       throw new RuntimeException("Unable to create Reservation, must have at least 1 tables");
-    }
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create reservation due to restoApp");
     }
   }
 
@@ -132,7 +125,7 @@ public class Reservation
   {
     return reservationNumber;
   }
-  /* Code from template association_GetMany */
+
   public Table getTable(int index)
   {
     Table aTable = tables.get(index);
@@ -165,23 +158,18 @@ public class Reservation
     int index = tables.indexOf(aTable);
     return index;
   }
-  /* Code from template association_GetOne */
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
-  }
-  /* Code from template association_IsNumberOfValidMethod */
+
   public boolean isNumberOfTablesValid()
   {
     boolean isValid = numberOfTables() >= minimumNumberOfTables();
     return isValid;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfTables()
   {
     return 1;
   }
-  /* Code from template association_AddManyToManyMethod */
+
   public boolean addTable(Table aTable)
   {
     boolean wasAdded = false;
@@ -201,7 +189,7 @@ public class Reservation
     }
     return wasAdded;
   }
-  /* Code from template association_AddMStarToMany */
+
   public boolean removeTable(Table aTable)
   {
     boolean wasRemoved = false;
@@ -231,7 +219,7 @@ public class Reservation
     }
     return wasRemoved;
   }
-  /* Code from template association_SetMStarToMany */
+
   public boolean setTables(Table... newTables)
   {
     boolean wasSet = false;
@@ -272,7 +260,7 @@ public class Reservation
     wasSet = true;
     return wasSet;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addTableAt(Table aTable, int index)
   {  
     boolean wasAdded = false;
@@ -304,25 +292,6 @@ public class Reservation
     }
     return wasAdded;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeReservation(this);
-    }
-    restoApp.addReservation(this);
-    wasSet = true;
-    return wasSet;
-  }
 
   public void delete()
   {
@@ -332,24 +301,19 @@ public class Reservation
     {
       aTable.removeReservation(this);
     }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removeReservation(this);
-    }
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "reservationNumber" + ":" + getReservationNumber()+ "," +
             "numberInParty" + ":" + getNumberInParty()+ "," +
             "contactName" + ":" + getContactName()+ "," +
             "contactEmailAddress" + ":" + getContactEmailAddress()+ "," +
             "contactPhoneNumber" + ":" + getContactPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
+            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
   }
 }

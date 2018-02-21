@@ -1,19 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 55 "../../../../../../../../ump/tmp531402/model.ump"
-// line 108 "../../../../../../../../ump/tmp531402/model.ump"
+// line 54 "../../../../../../restoAppModel.ump"
 public class MenuItem
 {
-
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
-  public enum ItemCategory { Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage }
 
   //------------------------
   // STATIC VARIABLES
@@ -32,24 +25,18 @@ public class MenuItem
   //MenuItem Associations
   private List<PricedMenuItem> pricedMenuItems;
   private PricedMenuItem currentPricedMenuItem;
-  private Menu menu;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public MenuItem(String aName, Menu aMenu)
+  public MenuItem(String aName)
   {
     if (!setName(aName))
     {
       throw new RuntimeException("Cannot create due to duplicate name");
     }
     pricedMenuItems = new ArrayList<PricedMenuItem>();
-    boolean didAddMenu = setMenu(aMenu);
-    if (!didAddMenu)
-    {
-      throw new RuntimeException("Unable to create menuItem due to menu");
-    }
   }
 
   //------------------------
@@ -84,12 +71,12 @@ public class MenuItem
   {
     return name;
   }
-  /* Code from template attribute_GetUnique */
+
   public static MenuItem getWithName(String aName)
   {
     return menuitemsByName.get(aName);
   }
-  /* Code from template attribute_HasUnique */
+
   public static boolean hasWithName(String aName)
   {
     return getWithName(aName) != null;
@@ -99,7 +86,7 @@ public class MenuItem
   {
     return itemCategory;
   }
-  /* Code from template association_GetMany */
+
   public PricedMenuItem getPricedMenuItem(int index)
   {
     PricedMenuItem aPricedMenuItem = pricedMenuItems.get(index);
@@ -129,7 +116,7 @@ public class MenuItem
     int index = pricedMenuItems.indexOf(aPricedMenuItem);
     return index;
   }
-  /* Code from template association_GetOne */
+
   public PricedMenuItem getCurrentPricedMenuItem()
   {
     return currentPricedMenuItem;
@@ -140,26 +127,21 @@ public class MenuItem
     boolean has = currentPricedMenuItem != null;
     return has;
   }
-  /* Code from template association_GetOne */
-  public Menu getMenu()
-  {
-    return menu;
-  }
-  /* Code from template association_IsNumberOfValidMethod */
+
   public boolean isNumberOfPricedMenuItemsValid()
   {
     boolean isValid = numberOfPricedMenuItems() >= minimumNumberOfPricedMenuItems();
     return isValid;
   }
-  /* Code from template association_MinimumNumberOfMethod */
+
   public static int minimumNumberOfPricedMenuItems()
   {
     return 1;
   }
-  /* Code from template association_AddMandatoryManyToOne */
-  public PricedMenuItem addPricedMenuItem(double aPrice, RestoApp aRestoApp)
+
+  public PricedMenuItem addPricedMenuItem(double aPrice)
   {
-    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, aRestoApp, this);
+    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, this);
     return aNewPricedMenuItem;
   }
 
@@ -174,6 +156,7 @@ public class MenuItem
     {
       return wasAdded;
     }
+
     if (isNewMenuItem)
     {
       aPricedMenuItem.setMenuItem(this);
@@ -205,7 +188,7 @@ public class MenuItem
     wasRemoved = true;
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addPricedMenuItemAt(PricedMenuItem aPricedMenuItem, int index)
   {  
     boolean wasAdded = false;
@@ -237,30 +220,11 @@ public class MenuItem
     }
     return wasAdded;
   }
-  /* Code from template association_SetUnidirectionalOptionalOne */
+
   public boolean setCurrentPricedMenuItem(PricedMenuItem aNewCurrentPricedMenuItem)
   {
     boolean wasSet = false;
     currentPricedMenuItem = aNewCurrentPricedMenuItem;
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setMenu(Menu aMenu)
-  {
-    boolean wasSet = false;
-    if (aMenu == null)
-    {
-      return wasSet;
-    }
-
-    Menu existingMenu = menu;
-    menu = aMenu;
-    if (existingMenu != null && !existingMenu.equals(aMenu))
-    {
-      existingMenu.removeMenuItem(this);
-    }
-    menu.addMenuItem(this);
     wasSet = true;
     return wasSet;
   }
@@ -274,21 +238,27 @@ public class MenuItem
       aPricedMenuItem.delete();
     }
     currentPricedMenuItem = null;
-    Menu placeholderMenu = menu;
-    this.menu = null;
-    if(placeholderMenu != null)
-    {
-      placeholderMenu.removeMenuItem(this);
-    }
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "itemCategory" + "=" + (getItemCategory() != null ? !getItemCategory().equals(this)  ? getItemCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "menu = "+(getMenu()!=null?Integer.toHexString(System.identityHashCode(getMenu())):"null");
+            "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null")
+     + outputString;
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 56 ../../../../../../restoAppModel.ump
+  enum ItemCategory 
+  {
+    Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage
   }
+
+  
 }

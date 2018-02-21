@@ -1,11 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.27.0.3787.75fc740 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
 
-// line 63 "../../../../../../../../ump/tmp531402/model.ump"
-// line 113 "../../../../../../../../ump/tmp531402/model.ump"
+// line 62 "../../../../../../restoAppModel.ump"
 public class PricedMenuItem
 {
 
@@ -17,7 +16,6 @@ public class PricedMenuItem
   private double price;
 
   //PricedMenuItem Associations
-  private RestoApp restoApp;
   private List<OrderItem> orderItems;
   private MenuItem menuItem;
 
@@ -25,14 +23,9 @@ public class PricedMenuItem
   // CONSTRUCTOR
   //------------------------
 
-  public PricedMenuItem(double aPrice, RestoApp aRestoApp, MenuItem aMenuItem)
+  public PricedMenuItem(double aPrice, MenuItem aMenuItem)
   {
     price = aPrice;
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create pricedMenuItem due to restoApp");
-    }
     orderItems = new ArrayList<OrderItem>();
     boolean didAddMenuItem = setMenuItem(aMenuItem);
     if (!didAddMenuItem)
@@ -57,12 +50,7 @@ public class PricedMenuItem
   {
     return price;
   }
-  /* Code from template association_GetOne */
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
-  }
-  /* Code from template association_GetMany */
+
   public OrderItem getOrderItem(int index)
   {
     OrderItem aOrderItem = orderItems.get(index);
@@ -92,39 +80,20 @@ public class PricedMenuItem
     int index = orderItems.indexOf(aOrderItem);
     return index;
   }
-  /* Code from template association_GetOne */
+
   public MenuItem getMenuItem()
   {
     return menuItem;
   }
-  /* Code from template association_SetOneToMany */
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
 
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removePricedMenuItem(this);
-    }
-    restoApp.addPricedMenuItem(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfOrderItems()
   {
     return 0;
   }
-  /* Code from template association_AddManyToOne */
-  public OrderItem addOrderItem(int aQuantity, Order aOrder, Seat... allSeats)
+
+  public OrderItem addOrderItem(int aQuantity, Seat... allSeats)
   {
-    return new OrderItem(aQuantity, this, aOrder, allSeats);
+    return new OrderItem(aQuantity, this, allSeats);
   }
 
   public boolean addOrderItem(OrderItem aOrderItem)
@@ -156,7 +125,7 @@ public class PricedMenuItem
     }
     return wasRemoved;
   }
-  /* Code from template association_AddIndexControlFunctions */
+
   public boolean addOrderItemAt(OrderItem aOrderItem, int index)
   {  
     boolean wasAdded = false;
@@ -188,7 +157,7 @@ public class PricedMenuItem
     }
     return wasAdded;
   }
-  /* Code from template association_SetOneToMandatoryMany */
+
   public boolean setMenuItem(MenuItem aMenuItem)
   {
     boolean wasSet = false;
@@ -221,12 +190,6 @@ public class PricedMenuItem
 
   public void delete()
   {
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    if(placeholderRestoApp != null)
-    {
-      placeholderRestoApp.removePricedMenuItem(this);
-    }
     for(int i=orderItems.size(); i > 0; i--)
     {
       OrderItem aOrderItem = orderItems.get(i - 1);
@@ -234,18 +197,16 @@ public class PricedMenuItem
     }
     MenuItem placeholderMenuItem = menuItem;
     this.menuItem = null;
-    if(placeholderMenuItem != null)
-    {
-      placeholderMenuItem.removePricedMenuItem(this);
-    }
+    placeholderMenuItem.removePricedMenuItem(this);
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "price" + ":" + getPrice()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "menuItem = "+(getMenuItem()!=null?Integer.toHexString(System.identityHashCode(getMenuItem())):"null");
+            "  " + "menuItem = "+(getMenuItem()!=null?Integer.toHexString(System.identityHashCode(getMenuItem())):"null")
+     + outputString;
   }
 }
