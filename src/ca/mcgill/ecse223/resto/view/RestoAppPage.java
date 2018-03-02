@@ -2,23 +2,8 @@ package ca.mcgill.ecse223.resto.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.sql.Date;
-import java.util.HashMap;
+import javax.swing.*;
 
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import ca.mcgill.ecse.btms.controller.BtmsController;
-import ca.mcgill.ecse.btms.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.Table;
 
@@ -54,9 +39,7 @@ public class RestoAppPage extends JFrame {
 
 		initComponents();
 		refreshData();
-
 	}
-
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 */
@@ -143,13 +126,6 @@ public class RestoAppPage extends JFrame {
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
 								));
-
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {assignButton, assignmentDatePicker});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {repairButton, routeNumberTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addDriverButton, driverNameTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addRouteButton, routeNumberTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusButton, busLicencePlateTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {scheduleButton, routeNumberTextField});
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
@@ -178,26 +154,19 @@ public class RestoAppPage extends JFrame {
 						.addComponent(createTableButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(horizontalLineBottom))
-
 				);
-		
 		pack();
 	}
-
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
 		// clear error message
 		error = null;
-		
 		// call the controller
-		try {
-			RestoAppController.createTable(RestoAppController.getTables().size() + 1, );
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
-		
-		refreshData();
-		
+//		try {
+//			RestoAppController.createTable(RestoAppController.getTables().size() + 1 );
+//		} catch (InvalidInputException e) {
+//			error = e.getMessage();
+//		}
 	}
 
 	private void refreshData() {
@@ -224,12 +193,8 @@ public class RestoAppPage extends JFrame {
 			};
 			selectedTable = -1;
 			tableList.setSelectedIndex(selectedTable);
-
-
 		}
-
 		pack();
-		
 	}
 
 }
