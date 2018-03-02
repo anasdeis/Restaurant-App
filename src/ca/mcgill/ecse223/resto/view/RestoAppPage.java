@@ -1,21 +1,54 @@
 package ca.mcgill.ecse223.resto.view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.sql.Date;
+import java.util.HashMap;
 
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import ca.mcgill.ecse.btms.controller.BtmsController;
+import ca.mcgill.ecse.btms.controller.InvalidInputException;
+import ca.mcgill.ecse223.resto.controller.RestoAppController;
+import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoAppPage extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6463272516157863988L;
-	private JPanel contentPane;
 
+	// Error Message
+	private JLabel errorMessage;
+	
+	private String error = null;
+
+	//Create Table
+	private JButton createTableButton;
+	private JLabel numberOfSeatsLabel;
+	private JLabel xLocationLabel;
+	private JLabel yLocationLabel;
+	private JLabel lengthLabel;
+	private JLabel widthLabel;
+	private JTextField numberOfSeatsTextField;
+	private JTextField xLocationTextField;
+	private JTextField yLocationTextField;
+	private JTextField lengthTextField;
+	private JTextField widthTextField;
+
+	// Remove Table
+	private JComboBox<String> tableList;
+	private JLabel tablesLabel;
+	private JButton removeTableButton;
+	private Integer selectedTable = -1;
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
 
@@ -29,17 +62,174 @@ public class RestoAppPage extends JFrame {
 	 */
 	private void initComponents() {
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 1600, 950);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
+		// Error Message Elements
+		errorMessage = new JLabel();
+		errorMessage.setForeground(Color.RED);
 
+		// Create Driver Elements
+		createTableButton = new JButton();
+		numberOfSeatsLabel = new JLabel();
+		xLocationLabel = new JLabel();
+		yLocationLabel = new JLabel();
+		lengthLabel = new JLabel();
+		widthLabel = new JLabel();
+		numberOfSeatsTextField = new JTextField();
+		xLocationTextField = new JTextField();
+		yLocationTextField = new JTextField();
+		lengthTextField = new JTextField();
+		widthTextField = new JTextField();
+		
+		createTableButton.setText("Create Table: ");
+		numberOfSeatsLabel.setText("Number Of Seats: ");
+		xLocationLabel.setText("X Location: ");
+		yLocationLabel.setText("Y Location: ");
+		lengthLabel.setText("Length: ");
+		widthLabel.setText("Width: ");
+		
+		createTableButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt){
+				createTableButtonActionPerformed(evt);
+			}
+				
+		});
+		
+		// Delete Table Elements
+		tableList = new JComboBox<String>(new String[0]);
+		tablesLabel = new JLabel();
+		removeTableButton = new JButton();
+		
+		tableList.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		        JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+		        selectedTable = cb.getSelectedIndex();
+			}
+		});
+		tablesLabel.setText("Tables: ");
+		removeTableButton.setText("Remove Table");
+		
+		// horizontal line elements
+		JSeparator horizontalLineTop = new JSeparator();
+		JSeparator horizontalLineMiddle1 = new JSeparator();
+		JSeparator horizontalLineMiddle2 = new JSeparator();
+		JSeparator horizontalLineBottom = new JSeparator();
+
+		// layout
+		GroupLayout layout = new GroupLayout(getContentPane());
+		getContentPane().setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		layout.setHorizontalGroup(
+				layout.createParallelGroup()
+				.addComponent(errorMessage)
+				.addComponent(horizontalLineTop)
+				.addComponent(horizontalLineBottom)
+				.addGroup(layout.createSequentialGroup()
+						.addGroup(layout.createParallelGroup()
+								.addComponent(numberOfSeatsLabel)
+								.addComponent(widthLabel)
+								.addComponent(lengthLabel)
+								.addComponent(xLocationLabel)
+								.addComponent(yLocationLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(numberOfSeatsTextField, 200, 200, 400)
+								.addComponent(widthTextField, 200, 200, 400)
+								.addComponent(lengthTextField, 200, 200, 400)
+								.addComponent(yLocationTextField, 200, 200, 400)
+								.addComponent(xLocationTextField, 200, 200, 400)
+								.addComponent(createTableButton))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(tablesLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(tableList)
+								.addComponent(removeTableButton))
+								));
+
+//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {assignButton, assignmentDatePicker});
+//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {repairButton, routeNumberTextField});
+//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addDriverButton, driverNameTextField});
+//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addRouteButton, routeNumberTextField});
+//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusButton, busLicencePlateTextField});
+//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {scheduleButton, routeNumberTextField});
+		
+		layout.setVerticalGroup(
+				layout.createSequentialGroup()
+				.addComponent(errorMessage)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(horizontalLineTop))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(numberOfSeatsLabel)
+						.addComponent(numberOfSeatsTextField)
+						.addComponent(tablesLabel)
+						.addComponent(tableList))		
+				.addGroup(layout.createParallelGroup()
+						.addComponent(widthLabel)
+						.addComponent(widthTextField)
+						.addComponent(removeTableButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(lengthTextField)
+						.addComponent(lengthLabel))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(xLocationTextField)
+						.addComponent(xLocationLabel))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(yLocationTextField)
+						.addComponent(yLocationLabel))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(createTableButton))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(horizontalLineBottom))
+
+				);
+		
+		pack();
+	}
+
+
+	protected void createTableButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = null;
+		
+		// call the controller
+		try {
+			RestoAppController.createTable(RestoAppController.getTables().size() + 1, );
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		refreshData();
+		
 	}
 
 	private void refreshData() {
 
+		// error
+		errorMessage.setText(error);
+		if (error == null || error.length() == 0) {
+			// populate page with data
+			// number of seats
+			numberOfSeatsTextField.setText("");
+			// width
+			widthTextField.setText("");
+			// length
+			lengthTextField.setText("");
+			// xLocation
+			xLocationTextField.setText("");
+			// yLocation
+			yLocationTextField.setText("");
+			
+			// table list
+			tableList.removeAllItems();
+			for (Table table : RestoAppController.getTables()) {
+				tableList.addItem("#" + table.getNumber());
+			};
+			selectedTable = -1;
+			tableList.setSelectedIndex(selectedTable);
+
+
+		}
+
+		pack();
+		
 	}
 
 }
