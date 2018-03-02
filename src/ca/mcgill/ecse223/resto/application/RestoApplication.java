@@ -22,7 +22,7 @@ public class RestoApplication {
         
 	}
 
-	public static RestoApp getBtms() {
+	public static RestoApp getRestoApp() {
 		if (ra == null) {
 			
 		ra = load();	
