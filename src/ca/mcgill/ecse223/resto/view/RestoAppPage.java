@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.Table;
 
@@ -34,9 +35,9 @@ public class RestoAppPage extends JFrame {
 	private JLabel tablesLabel;
 	private JButton removeTableButton;
 	private Integer selectedTable = -1;
+	private RestoAppDisplay displayApp;
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
-
 		initComponents();
 		refreshData();
 	}
@@ -92,9 +93,10 @@ public class RestoAppPage extends JFrame {
 		
 		// horizontal line elements
 		JSeparator horizontalLineTop = new JSeparator();
-		JSeparator horizontalLineMiddle1 = new JSeparator();
-		JSeparator horizontalLineMiddle2 = new JSeparator();
 		JSeparator horizontalLineBottom = new JSeparator();
+		//initialize JPanel
+		displayApp = new RestoAppDisplay();
+
 
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -125,6 +127,7 @@ public class RestoAppPage extends JFrame {
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
+						.addComponent(displayApp)
 								));
 		
 		layout.setVerticalGroup(
@@ -154,7 +157,9 @@ public class RestoAppPage extends JFrame {
 						.addComponent(createTableButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(horizontalLineBottom))
+				.addComponent(displayApp)
 				);
+		
 		pack();
 	}
 
@@ -162,15 +167,16 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// call the controller
-//		try {
-//			RestoAppController.createTable(RestoAppController.getTables().size() + 1 );
-//		} catch (InvalidInputException e) {
-//			error = e.getMessage();
-//		}
+		try {
+			Table aTable = new Table(Integer.parseInt(numberOfSeatsTextField.getText()),Integer.parseInt(xLocationTextField.getText()),Integer.parseInt(yLocationTextField.getText()),Integer.parseInt(widthTextField.getText()),Integer.parseInt(lengthTextField.getText()));
+			RestoAppController.createTable(aTable);
+			System.out.println(RestoAppController.getTables().size());
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
 	}
 
 	private void refreshData() {
-
 		// error
 		errorMessage.setText(error);
 		if (error == null || error.length() == 0) {

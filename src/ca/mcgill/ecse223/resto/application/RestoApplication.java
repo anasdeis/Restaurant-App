@@ -33,11 +33,10 @@ public class RestoApplication {
 	
 	public static void save(){
 		PersistenceObjectStream.serialize(filename);
-		
-	}
 	
-	public static RestoApp load(){
 		PersistenceObjectStream.setFilename(filename);
+	}
+		public static RestoApp load(){
 		ra = (RestoApp) PersistenceObjectStream.deserialize();
 		
 		if(ra == null){
