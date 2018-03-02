@@ -103,11 +103,15 @@ public class RestoAppPage extends JFrame {
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
+		
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
+				.addGroup(layout.createParallelGroup())
+				.addComponent(displayApp)
 				.addComponent(errorMessage)
 				.addComponent(horizontalLineTop)
 				.addComponent(horizontalLineBottom)
+				
 				.addGroup(layout.createSequentialGroup()
 						.addGroup(layout.createParallelGroup()
 								.addComponent(numberOfSeatsLabel)
@@ -127,12 +131,16 @@ public class RestoAppPage extends JFrame {
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
-						.addComponent(displayApp)
+						
+
 								));
+		
+
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 				.addComponent(errorMessage)
+
 				.addGroup(layout.createParallelGroup()
 						.addComponent(horizontalLineTop))
 				.addGroup(layout.createParallelGroup()
@@ -157,10 +165,13 @@ public class RestoAppPage extends JFrame {
 						.addComponent(createTableButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(horizontalLineBottom))
-				.addComponent(displayApp)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(displayApp))
+
+				
 				);
-		
 		pack();
+		
 	}
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
@@ -174,6 +185,7 @@ public class RestoAppPage extends JFrame {
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
+		repaint();
 	}
 
 	private void refreshData() {
