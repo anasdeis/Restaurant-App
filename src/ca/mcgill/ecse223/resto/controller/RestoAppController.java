@@ -1,8 +1,10 @@
 package ca.mcgill.ecse223.resto.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
@@ -115,6 +117,17 @@ public class RestoAppController {
 			}
 		}
 		return false;
+	}
+	public static ArrayList<MenuItem> displayMenu(ItemCategory i) throws InvalidInputException {
+		if (i == null) throw new InvalidInputException("Empty category");
+		RestoApp resto = RestoApplication.getRestoApp();
+		ArrayList<MenuItem> item = new ArrayList<MenuItem>();
+		for (MenuItem currItem : resto.getItemCategory()) {
+		     if (currItem.hasPricedMenuItems() && currItem.getItemCategory() == i) {
+		         item.add(currItem);
+		      }
+		  }
+		return item;
 	}
 	
 }
