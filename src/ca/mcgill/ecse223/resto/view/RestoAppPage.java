@@ -17,8 +17,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import ca.mcgill.ecse.btms.controller.BtmsController;
-import ca.mcgill.ecse.btms.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.Table;
 
@@ -190,11 +188,11 @@ public class RestoAppPage extends JFrame {
 		error = null;
 		
 		// call the controller
-		try {
-			RestoAppController.createTable(RestoAppController.getTables().size() + 1, );
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
+//		try {
+//			RestoAppController.createTable(RestoAppController.getTables().size() + 1, );
+//		} catch (InvalidInputException e) {
+//			error = e.getMessage();
+//		}
 		
 		refreshData();
 		
