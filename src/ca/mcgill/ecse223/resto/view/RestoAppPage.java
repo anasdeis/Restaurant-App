@@ -2,6 +2,20 @@ package ca.mcgill.ecse223.resto.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.Date;
+import java.util.HashMap;
+
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
@@ -178,13 +192,17 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// call the controller
+
+		
+
+		
 		try {
-			Table aTable = new Table(Integer.parseInt(numberOfSeatsTextField.getText()),Integer.parseInt(xLocationTextField.getText()),Integer.parseInt(yLocationTextField.getText()),Integer.parseInt(widthTextField.getText()),Integer.parseInt(lengthTextField.getText()));
-			RestoAppController.createTable(aTable);
-			System.out.println(RestoAppController.getTables().size());
+			RestoAppController.createTable(RestoAppController.generateTableNumber(), Integer.parseInt(numberOfSeatsTextField.getText()), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()), Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
+
+	refreshData();
 		repaint();
 	}
 
