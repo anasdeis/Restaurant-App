@@ -197,9 +197,7 @@ public class RestoAppPage extends JFrame {
 
 		
 		try {
-			Table aTable = new Table(Integer.parseInt(numberOfSeatsTextField.getText()),Integer.parseInt(xLocationTextField.getText()),Integer.parseInt(yLocationTextField.getText()),Integer.parseInt(widthTextField.getText()),Integer.parseInt(lengthTextField.getText()));
-			RestoAppController.createTable(aTable);
-			System.out.println(RestoAppController.getTables().size());
+			RestoAppController.createTable(RestoAppController.generateTableNumber(), Integer.parseInt(numberOfSeatsTextField.getText()), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()), Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
