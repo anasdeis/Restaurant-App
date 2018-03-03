@@ -16,7 +16,9 @@ public class RestoApplication {
 		// start UI
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RestoAppPage().setVisible(true);
+                RestoAppPage restoAppPage = new RestoAppPage();
+                restoAppPage.setTitle("Add/Remove Table");
+                restoAppPage.setVisible(true);
             }
         });
         
