@@ -2,20 +2,7 @@ package ca.mcgill.ecse223.resto.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.sql.Date;
-import java.util.HashMap;
 
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
@@ -48,7 +35,8 @@ public class RestoAppPage extends JFrame {
 	private JComboBox<String> tableList;
 	private JLabel tablesLabel;
 	private JButton removeTableButton;
-	private Integer selectedTable = -1;
+	private Integer selectedTableIndex = -1;
+	private Integer selectedTableNumber = null;
 	private RestoAppDisplay displayApp;
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
@@ -59,7 +47,6 @@ public class RestoAppPage extends JFrame {
 	 * This method is called from within the constructor to initialize the form.
 	 */
 	private void initComponents() {
-
 		// Error Message Elements
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
@@ -84,22 +71,28 @@ public class RestoAppPage extends JFrame {
 		lengthLabel.setText("Length: ");
 		widthLabel.setText("Width: ");
 		
-		createTableButton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt){
-				createTableButtonActionPerformed(evt);
-			}
-				
-		});
-		
 		// Delete Table Elements
 		tableList = new JComboBox<String>(new String[0]);
 		tablesLabel = new JLabel();
 		removeTableButton = new JButton();
+		createTableButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt){
+				createTableButtonActionPerformed(evt);
+			}
+		});
 		
 		tableList.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 		        JComboBox<String> cb = (JComboBox<String>) evt.getSource();
-		        selectedTable = cb.getSelectedIndex();
+		        selectedTableIndex = cb.getSelectedIndex();
+		        if(selectedTableIndex != -1) {
+		        	selectedTableNumber = Integer.parseInt(cb.getSelectedItem().toString().charAt(1)+"");
+		        }
+			}
+		});
+		removeTableButton.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt){
+				removeTableButtonActionPerformed(evt);
 			}
 		});
 		tablesLabel.setText("Tables: ");
@@ -110,7 +103,6 @@ public class RestoAppPage extends JFrame {
 		JSeparator horizontalLineBottom = new JSeparator();
 		//initialize JPanel
 		displayApp = new RestoAppDisplay();
-
 
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
@@ -145,12 +137,8 @@ public class RestoAppPage extends JFrame {
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
-						
-
 								));
-		
 
-		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 				.addComponent(errorMessage)
@@ -181,8 +169,6 @@ public class RestoAppPage extends JFrame {
 						.addComponent(horizontalLineBottom))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(displayApp))
-
-				
 				);
 		pack();
 		
@@ -193,16 +179,27 @@ public class RestoAppPage extends JFrame {
 		error = null;
 		// call the controller
 
-		
-
-		
 		try {
-			RestoAppController.createTable(RestoAppController.generateTableNumber(), Integer.parseInt(numberOfSeatsTextField.getText()), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()), Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
+			RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()), Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
 
 	refreshData();
+		repaint();
+	}
+	protected void removeTableButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = null;
+		// call the controller
+		
+		try {
+			RestoAppController.removeTable(selectedTableNumber);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+		
+		refreshData();
 		repaint();
 	}
 
@@ -227,10 +224,9 @@ public class RestoAppPage extends JFrame {
 			for (Table table : RestoAppController.getTables()) {
 				tableList.addItem("#" + table.getNumber());
 			};
-			selectedTable = -1;
-			tableList.setSelectedIndex(selectedTable);
+			selectedTableIndex = -1;
+			tableList.setSelectedIndex(selectedTableIndex);
 		}
-		pack();
 	}
 
 }

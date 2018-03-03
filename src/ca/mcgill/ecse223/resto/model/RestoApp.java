@@ -117,7 +117,9 @@ public class RestoApp implements Serializable
     boolean wasRemoved = false;
     if (currentTables.contains(aCurrentTable))
     {
+      aCurrentTable.delete();
       currentTables.remove(aCurrentTable);
+
       wasRemoved = true;
     }
     return wasRemoved;

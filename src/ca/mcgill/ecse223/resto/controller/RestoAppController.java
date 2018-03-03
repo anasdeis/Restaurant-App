@@ -12,8 +12,9 @@ public class RestoAppController {
 	public static List<Table> getTables(){
 		return RestoApplication.getRestoApp().getCurrentTables();
 	}
-	public static void createTable(int number, int numberOfSeats, int x, int y, int width, int length) throws InvalidInputException {	
+	public static void createTable(int numberOfSeats, int x, int y, int width, int length) throws InvalidInputException {	
 		RestoApp ra = RestoApplication.getRestoApp();
+		int generatedTableNumber = RestoAppController.generateTableNumber();
 		
 		String error = "";
 		if (numberOfSeats <= 0) {
@@ -31,8 +32,8 @@ public class RestoAppController {
 		if (length <= 0) {
 			error = error + "The location must be non-negative. ";
 		}
-		if (isDuplicateTableNumber(number)){
-			error = error + "Table with table number " + number + " already exists. ";
+		if (isDuplicateTableNumber(generatedTableNumber)){
+			error = error + "Table with table number " + generatedTableNumber + " already exists. ";
 		}
 		if(isTableOverlapping(x,y,width,length)){
 			error = error + "Table will overlap with another table. ";
@@ -42,21 +43,41 @@ public class RestoAppController {
 		}
 		
 		try {
-			Table table = new Table(number, x, y, width, length);
+			Table table = new Table(generatedTableNumber, x, y, width, length);
 			for(int i = 0; i < numberOfSeats; i++){
 				table.addCurrentSeat(new Seat());
 			}
 			ra.addCurrentTable(table);
-			System.out.println(ra.getCurrentTables().size());
 		}
 		catch (Exception e) {
 			error = e.getMessage();
 			throw new InvalidInputException(e.getMessage());
 		}
 	}
+	public static void removeTable(Integer selectedTableNumber) throws InvalidInputException {
+		RestoApp ra = RestoApplication.getRestoApp();
+		String error = "";
+
+		try {
+			
+			for (Table table : ra.getCurrentTables()) {
+				if(selectedTableNumber.equals(table.getNumber())) {
+					ra.removeCurrentTable(table);
+				}
+			}
+		}
+		catch (Exception e) {
+			error = e.getMessage();
+			throw new InvalidInputException(e.getMessage());
+		}
+
+		
+	}
+
 	private static boolean isDuplicateTableNumber(int number) {
 		RestoApp ra = RestoApplication.getRestoApp();
 		List<Table> tables = ra.getCurrentTables();
+		System.out.println(tables.size());
 		for(int i = 0; i< tables.size(); i++){
 			if(tables.get(i).getNumber() == number){
 				return true;
