@@ -16,7 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
 
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.Table;
 
@@ -47,14 +49,12 @@ public class RestoAppPage extends JFrame {
 	private JLabel tablesLabel;
 	private JButton removeTableButton;
 	private Integer selectedTable = -1;
+	private RestoAppDisplay displayApp;
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
-
 		initComponents();
 		refreshData();
-
 	}
-
 	/**
 	 * This method is called from within the constructor to initialize the form.
 	 */
@@ -107,20 +107,25 @@ public class RestoAppPage extends JFrame {
 		
 		// horizontal line elements
 		JSeparator horizontalLineTop = new JSeparator();
-		JSeparator horizontalLineMiddle1 = new JSeparator();
-		JSeparator horizontalLineMiddle2 = new JSeparator();
 		JSeparator horizontalLineBottom = new JSeparator();
+		//initialize JPanel
+		displayApp = new RestoAppDisplay();
+
 
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
+		
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
+				.addGroup(layout.createParallelGroup())
+				.addComponent(displayApp)
 				.addComponent(errorMessage)
 				.addComponent(horizontalLineTop)
 				.addComponent(horizontalLineBottom)
+				
 				.addGroup(layout.createSequentialGroup()
 						.addGroup(layout.createParallelGroup()
 								.addComponent(numberOfSeatsLabel)
@@ -140,18 +145,16 @@ public class RestoAppPage extends JFrame {
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
-								));
+						
 
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {assignButton, assignmentDatePicker});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {repairButton, routeNumberTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addDriverButton, driverNameTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addRouteButton, routeNumberTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {addBusButton, busLicencePlateTextField});
-//		layout.linkSize(SwingConstants.HORIZONTAL, new java.awt.Component[] {scheduleButton, routeNumberTextField});
+								));
+		
+
 		
 		layout.setVerticalGroup(
 				layout.createSequentialGroup()
 				.addComponent(errorMessage)
+
 				.addGroup(layout.createParallelGroup()
 						.addComponent(horizontalLineTop))
 				.addGroup(layout.createParallelGroup()
@@ -176,30 +179,36 @@ public class RestoAppPage extends JFrame {
 						.addComponent(createTableButton))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(horizontalLineBottom))
+				.addGroup(layout.createParallelGroup()
+						.addComponent(displayApp))
 
+				
 				);
-		
 		pack();
+		
 	}
-
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
 		// clear error message
 		error = null;
-		
 		// call the controller
-//		try {
-//			RestoAppController.createTable(RestoAppController.getTables().size() + 1, );
-//		} catch (InvalidInputException e) {
-//			error = e.getMessage();
-//		}
+
 		
-		refreshData();
+
 		
+		try {
+			Table aTable = new Table(Integer.parseInt(numberOfSeatsTextField.getText()),Integer.parseInt(xLocationTextField.getText()),Integer.parseInt(yLocationTextField.getText()),Integer.parseInt(widthTextField.getText()),Integer.parseInt(lengthTextField.getText()));
+			RestoAppController.createTable(aTable);
+			System.out.println(RestoAppController.getTables().size());
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+
+	refreshData();
+		repaint();
 	}
 
 	private void refreshData() {
-
 		// error
 		errorMessage.setText(error);
 		if (error == null || error.length() == 0) {
@@ -222,12 +231,8 @@ public class RestoAppPage extends JFrame {
 			};
 			selectedTable = -1;
 			tableList.setSelectedIndex(selectedTable);
-
-
 		}
-
 		pack();
-		
 	}
 
 }
