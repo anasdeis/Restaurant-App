@@ -5,6 +5,7 @@ import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
@@ -45,9 +46,9 @@ public class RestoAppController {
 		}
 		
 		try {
-			Table table = new Table(generatedTableNumber, x, y, width, length);
+			Table table = new Table(generatedTableNumber, x, y, width, length, ra);
 			for(int i = 0; i < numberOfSeats; i++){
-				table.addCurrentSeat(new Seat());
+				table.addCurrentSeat(new Seat(table));
 			}
 			ra.addCurrentTable(table);
 		}
@@ -122,11 +123,11 @@ public class RestoAppController {
 		if (i == null) throw new InvalidInputException("Empty category");
 		RestoApp resto = RestoApplication.getRestoApp();
 		ArrayList<MenuItem> item = new ArrayList<MenuItem>();
-		for (MenuItem currItem : resto.getItemCategory()) {
-		     if (currItem.hasPricedMenuItems() && currItem.getItemCategory() == i) {
-		         item.add(currItem);
-		      }
-		  }
+//		for (MenuItem currItem : resto.getItemCategory()) {
+//		     if (currItem.hasPricedMenuItems() && currItem.getItemCategory() == i) {
+//		         item.add(currItem);
+//		      }
+//		  }
 		return item;
 	}
 	

@@ -446,6 +446,7 @@ public class RestoApp
     boolean wasRemoved = false;
     if (currentTables.contains(aCurrentTable))
     {
+      aCurrentTable.delete();
       currentTables.remove(aCurrentTable);
       wasRemoved = true;
     }
