@@ -38,6 +38,15 @@ public class RestoAppPage extends JFrame {
 	private Integer selectedTableIndex = -1;
 	private Integer selectedTableNumber = null;
 	private RestoAppDisplay displayApp;
+	
+	// Info Table Section
+	private JLabel numberSeatsLabel;
+	private JLabel tableLocationXLabel;
+	private JLabel tableLocationYLabel;
+	private JLabel tableWidthLabel;
+	private JLabel tableLengthLabel;
+
+	
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
 		initComponents();
@@ -58,6 +67,7 @@ public class RestoAppPage extends JFrame {
 		yLocationLabel = new JLabel();
 		lengthLabel = new JLabel();
 		widthLabel = new JLabel();
+
 		numberOfSeatsTextField = new JTextField();
 		xLocationTextField = new JTextField();
 		yLocationTextField = new JTextField();
@@ -75,6 +85,21 @@ public class RestoAppPage extends JFrame {
 		tableList = new JComboBox<String>(new String[0]);
 		tablesLabel = new JLabel();
 		removeTableButton = new JButton();
+		
+		// Table Info Elements
+		
+		numberSeatsLabel = new JLabel();
+		tableLocationXLabel = new JLabel();
+		tableLocationYLabel = new JLabel();
+		tableWidthLabel = new JLabel();
+		tableLengthLabel = new JLabel();
+		
+		numberSeatsLabel.setText("Seats: ");
+		tableLocationXLabel.setText("Location X: ");
+		tableLocationYLabel.setText("Location Y: ");
+		tableWidthLabel.setText("Width: ");
+		tableLengthLabel.setText("Length: ");
+		
 		createTableButton.addActionListener(new java.awt.event.ActionListener(){
 			public void actionPerformed(java.awt.event.ActionEvent evt){
 				createTableButtonActionPerformed(evt);
@@ -112,11 +137,12 @@ public class RestoAppPage extends JFrame {
 		
 		layout.setHorizontalGroup(
 				layout.createParallelGroup()
-				.addGroup(layout.createParallelGroup())
-				.addComponent(displayApp)
-				.addComponent(errorMessage)
-				.addComponent(horizontalLineTop)
-				.addComponent(horizontalLineBottom)
+				.addGroup(layout.createParallelGroup()
+						.addComponent(displayApp,800,800,800)
+						.addComponent(errorMessage)
+						.addComponent(horizontalLineTop)
+						.addComponent(horizontalLineBottom))
+				
 				
 				.addGroup(layout.createSequentialGroup()
 						.addGroup(layout.createParallelGroup()
@@ -125,6 +151,7 @@ public class RestoAppPage extends JFrame {
 								.addComponent(lengthLabel)
 								.addComponent(xLocationLabel)
 								.addComponent(yLocationLabel))
+						
 						.addGroup(layout.createParallelGroup()
 								.addComponent(numberOfSeatsTextField, 200, 200, 400)
 								.addComponent(widthTextField, 200, 200, 400)
@@ -132,43 +159,68 @@ public class RestoAppPage extends JFrame {
 								.addComponent(yLocationTextField, 200, 200, 400)
 								.addComponent(xLocationTextField, 200, 200, 400)
 								.addComponent(createTableButton))
+
 						.addGroup(layout.createParallelGroup()
-								.addComponent(tablesLabel))
+								.addComponent(tablesLabel)
+								.addComponent(numberSeatsLabel)
+								.addComponent(tableLocationXLabel)
+								.addComponent(tableLocationYLabel)
+								.addComponent(tableWidthLabel)
+								)
+						
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
+						.addComponent(tableWidthLabel)
+
+
 								));
 
 		layout.setVerticalGroup(
-				layout.createSequentialGroup()
-				.addComponent(errorMessage)
+				layout.createParallelGroup()
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(errorMessage)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(horizontalLineTop))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(numberOfSeatsLabel)
+								.addComponent(numberOfSeatsTextField)
+								.addComponent(tablesLabel)
+								.addComponent(tableList))
 
-				.addGroup(layout.createParallelGroup()
-						.addComponent(horizontalLineTop))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(numberOfSeatsLabel)
-						.addComponent(numberOfSeatsTextField)
-						.addComponent(tablesLabel)
-						.addComponent(tableList))		
-				.addGroup(layout.createParallelGroup()
-						.addComponent(widthLabel)
-						.addComponent(widthTextField)
-						.addComponent(removeTableButton))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(lengthTextField)
-						.addComponent(lengthLabel))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(xLocationTextField)
-						.addComponent(xLocationLabel))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(yLocationTextField)
-						.addComponent(yLocationLabel))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(createTableButton))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(horizontalLineBottom))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(displayApp))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(widthLabel)
+								.addComponent(widthTextField)
+								.addComponent(removeTableButton))
+
+						.addGroup(layout.createParallelGroup()
+								.addComponent(numberSeatsLabel)
+								.addComponent(lengthTextField)
+								.addComponent(lengthLabel))
+				
+						.addGroup(layout.createParallelGroup()
+								.addComponent(xLocationTextField)
+								.addComponent(xLocationLabel)
+								.addComponent(tableLocationXLabel))
+
+						.addGroup(layout.createParallelGroup()
+								.addComponent(yLocationTextField)
+								.addComponent(yLocationLabel)
+								.addComponent(tableLocationYLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(createTableButton)
+								.addComponent(tableWidthLabel)
+								
+								)
+				
+						.addGroup(layout.createParallelGroup()
+								.addComponent(horizontalLineBottom))
+				
+						.addGroup(layout.createParallelGroup()
+								.addComponent(displayApp,300,300,300)))
+				
+				
+				
 				);
 		pack();
 		
