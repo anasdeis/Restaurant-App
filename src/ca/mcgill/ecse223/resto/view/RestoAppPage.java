@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.resto.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 import javax.swing.*;
 
@@ -112,6 +113,18 @@ public class RestoAppPage extends JFrame {
 		        selectedTableIndex = cb.getSelectedIndex();
 		        if(selectedTableIndex != -1) {
 		        	selectedTableNumber = Integer.parseInt(cb.getSelectedItem().toString().charAt(1)+"");
+		        	List<Table> tables = RestoAppController.getTables();
+		        	for (Table table : tables) {
+						if(selectedTableNumber.equals(table.getNumber())) {
+							numberSeatsLabel.setText("Seats: " + table.numberOfSeats());
+							tableLocationXLabel.setText("Location X: " + table.getX());
+							tableLocationYLabel.setText("Location Y: " + table.getY());
+							tableWidthLabel.setText("Width: " + table.getWidth());
+							tableLengthLabel.setText("Length: " + table.getLength());
+						}
+					}
+		        	
+		        	
 		        }
 			}
 		});
@@ -166,15 +179,13 @@ public class RestoAppPage extends JFrame {
 								.addComponent(tableLocationXLabel)
 								.addComponent(tableLocationYLabel)
 								.addComponent(tableWidthLabel)
-								)
+								.addComponent(tableLengthLabel))
 						
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
 						.addComponent(tableWidthLabel)
-
-
-								));
+						));
 
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
@@ -214,7 +225,9 @@ public class RestoAppPage extends JFrame {
 								)
 				
 						.addGroup(layout.createParallelGroup()
-								.addComponent(horizontalLineBottom))
+						.addComponent(tableLengthLabel))
+						.addComponent(horizontalLineBottom)
+
 				
 						.addGroup(layout.createParallelGroup()
 								.addComponent(displayApp,300,300,300)))
@@ -228,13 +241,15 @@ public class RestoAppPage extends JFrame {
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
 		// clear error message
-		error = null;
+		String error = "Insert numbers into each text field";
 		// call the controller
 
 		try {
 			RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()), Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
-		} catch (InvalidInputException e) {
+		} catch (Exception e) {
 			error = e.getMessage();
+			//throw new InvalidInputException(e.getMessage());
+
 		}
 
 	refreshData();
@@ -272,6 +287,12 @@ public class RestoAppPage extends JFrame {
 			yLocationTextField.setText("");
 			
 			// table list
+			numberSeatsLabel.setText("Seats: ");
+			tableLocationXLabel.setText("Location X: ");
+			tableLocationYLabel.setText("Location Y: ");
+			tableWidthLabel.setText("Width: ");
+			tableLengthLabel.setText("Length: ");
+			
 			tableList.removeAllItems();
 			for (Table table : RestoAppController.getTables()) {
 				tableList.addItem("#" + table.getNumber());
