@@ -34,17 +34,20 @@ public class RestoApplication {
 	}
 	
 	public static void save(){
-		PersistenceObjectStream.serialize(filename);
-	
-		PersistenceObjectStream.setFilename(filename);
+		PersistenceObjectStream.serialize(ra);
 	}
-		public static RestoApp load(){
-		ra = (RestoApp) PersistenceObjectStream.deserialize();
+	public static RestoApp load(){
+		PersistenceObjectStream.setFilename(filename);
+		ra =  (RestoApp) PersistenceObjectStream.deserialize();
 		
 		if(ra == null){
 			ra = new RestoApp();
 		}
-		return ra;
+		else {
+			ra.reinitialize();
+		}
+		
+	return ra;
 	}
 	
 }

@@ -2,22 +2,27 @@
 /*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.util.*;
 
 // line 24 "../../../../../RestoApp v2.ump"
-public class Table
+public class Table implements Serializable
 {
+  // line 54 "RestoAppPersistence.ump"
+  private static final long serialVersionUID = -8896099581655989380L;
 
-  //------------------------
+//------------------------
   // STATIC VARIABLES
   //------------------------
-
+  private static int nextId = 1;
   private static Map<Integer, Table> tablesByNumber = new HashMap<Integer, Table>();
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
-
+  //Autounique Attributes
+  private int id;
+  
   //Table Attributes
   private int number;
   private int x;
@@ -42,6 +47,7 @@ public class Table
     y = aY;
     width = aWidth;
     length = aLength;
+    id = nextId++;
     if (!setNumber(aNumber))
     {
       throw new RuntimeException("Cannot create due to duplicate number");
@@ -61,7 +67,25 @@ public class Table
   // INTERFACE
   //------------------------
 
-  public boolean setNumber(int aNumber)
+  public static  void reinitializeAutouniqueID(List<Table> tables){
+	    nextId = 0; 
+	    for (Table table : tables) {
+	      if (table.getId() > nextId) {
+	        nextId = table.getId();
+	      }
+	    }
+	    nextId++;
+	  }
+  
+  public int getId() {
+	return id;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
+
+public boolean setNumber(int aNumber)
   {
     boolean wasSet = false;
     Integer anOldNumber = getNumber();

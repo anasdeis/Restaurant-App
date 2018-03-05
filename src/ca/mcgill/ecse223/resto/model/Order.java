@@ -2,12 +2,15 @@
 /*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
 
 // line 37 "../../../../../RestoApp v2.ump"
-public class Order
+public class Order implements Serializable
 {
+  // line 24 "RestoAppPersistence.ump"
+  private static final long serialVersionUID = 3900912597282882073L ;
 
   //------------------------
   // STATIC VARIABLES

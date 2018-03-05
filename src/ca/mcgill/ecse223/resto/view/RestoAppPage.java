@@ -240,16 +240,13 @@ public class RestoAppPage extends JFrame {
 	}
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
-		// clear error message
-		String error = "Insert numbers into each text field";
 		// call the controller
 
 		try {
 			RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()), Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
 		} catch (Exception e) {
-			error = e.getMessage();
+			 error = "Insert numbers into each text field";
 			//throw new InvalidInputException(e.getMessage());
-
 		}
 
 	refreshData();
@@ -292,6 +289,7 @@ public class RestoAppPage extends JFrame {
 			tableLocationYLabel.setText("Location Y: ");
 			tableWidthLabel.setText("Width: ");
 			tableLengthLabel.setText("Length: ");
+			
 			
 			tableList.removeAllItems();
 			for (Table table : RestoAppController.getTables()) {

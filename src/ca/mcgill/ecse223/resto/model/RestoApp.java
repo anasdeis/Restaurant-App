@@ -3,11 +3,15 @@
 
 package ca.mcgill.ecse223.resto.model;
 import java.util.*;
+
+import java.io.Serializable;
 import java.sql.Date;
 
 // line 3 "../../../../../RestoApp v2.ump"
-public class RestoApp
+public class RestoApp implements Serializable
 {
+  // line 6 "RestoAppPersistence.ump"
+  private static final long serialVersionUID = -2683593616927798071L;
 
   //------------------------
   // MEMBER VARIABLES
@@ -446,8 +450,8 @@ public class RestoApp
     boolean wasRemoved = false;
     if (currentTables.contains(aCurrentTable))
     {
-      aCurrentTable.delete();
       currentTables.remove(aCurrentTable);
+      aCurrentTable.delete();
       wasRemoved = true;
     }
     return wasRemoved;
@@ -804,5 +808,8 @@ public class RestoApp
     }
     
   }
+  public void reinitialize(){
+	    Table.reinitializeAutouniqueID(this.getTables());
+	  }
 
 }

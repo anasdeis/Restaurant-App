@@ -52,6 +52,7 @@ public class RestoAppController {
 				table.addCurrentSeat(new Seat(table));
 			}
 			ra.addCurrentTable(table);
+			RestoApplication.save();
 		}
 		catch (Exception e) {
 			error = e.getMessage();
@@ -63,18 +64,18 @@ public class RestoAppController {
 		String error = "";
 
 		try {
-			
 			for (Table table : ra.getCurrentTables()) {
 				if(selectedTableNumber.equals(table.getNumber())) {
 					ra.removeCurrentTable(table);
+					break;
 				}
 			}
+			RestoApplication.save();
 		}
 		catch (Exception e) {
 			error = e.getMessage();
 			throw new InvalidInputException(e.getMessage());
 		}
-
 		
 	}
 
