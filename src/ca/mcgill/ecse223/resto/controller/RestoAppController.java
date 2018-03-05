@@ -12,8 +12,11 @@ import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 import static ca.mcgill.ecse223.resto.application.RestoApplication.save;
 
+=======
+>>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
 =======
 >>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
 public class RestoAppController {
@@ -58,7 +61,11 @@ public class RestoAppController {
 			}
 			ra.addCurrentTable(table);
 <<<<<<< HEAD
+<<<<<<< HEAD
 			save();
+=======
+			RestoApplication.save();
+>>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
 =======
 			RestoApplication.save();
 >>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
@@ -80,7 +87,11 @@ public class RestoAppController {
 				}
 			}
 <<<<<<< HEAD
+<<<<<<< HEAD
 			save();
+=======
+			RestoApplication.save();
+>>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
 =======
 			RestoApplication.save();
 >>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
@@ -186,10 +197,13 @@ public class RestoAppController {
 			System.out.println(e.getMessage());
 		}
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 		table.setX(x);
 		table.setY(y);
 		RestoApplication.save();
+=======
+>>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
 =======
 >>>>>>> 8cb507198007e33bf0e5064d146d53699f664cbd
 	}
