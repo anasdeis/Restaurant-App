@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
+import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.RestoApp;
@@ -119,16 +120,23 @@ public class RestoAppController {
 		}
 		return false;
 	}
-	public static ArrayList<MenuItem> displayMenu(ItemCategory i) throws InvalidInputException {
-		if (i == null) throw new InvalidInputException("Empty category");
+	
+	public static ArrayList<MenuItem> getMenuItem(ItemCategory itemCategory) throws InvalidInputException {
+
+		if (itemCategory.equals(null)) {
+			throw new InvalidInputException("Item category is null"); 
+		}
+		
 		RestoApp resto = RestoApplication.getRestoApp();
-		ArrayList<MenuItem> item = new ArrayList<MenuItem>();
-//		for (MenuItem currItem : resto.getItemCategory()) {
-//		     if (currItem.hasPricedMenuItems() && currItem.getItemCategory() == i) {
-//		         item.add(currItem);
-//		      }
-//		  }
-		return item;
+		ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
+		Menu menu = resto.getMenu();
+		for (int j = 0; j < menu.numberOfMenuItems(); j++) {
+			MenuItem currItem = menu.getMenuItem(j);
+			if (currItem.getItemCategory().equals(itemCategory)) {
+				itemList.add(currItem);
+			}
+		}
+		return itemList; 
 	}
 	
 }
