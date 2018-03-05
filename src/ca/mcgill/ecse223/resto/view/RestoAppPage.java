@@ -60,6 +60,7 @@ public class RestoAppPage extends JFrame {
 	 * This method is called from within the constructor to initialize the form.
 	 */
 	private void initComponents() {
+		setTitle("RestoApp");
 		// Error Message Elements
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);

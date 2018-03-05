@@ -137,6 +137,7 @@ public class RestoAppController {
 				itemList.add(currItem);
 			}
 		}
+		
 		return itemList; 
 	}
 

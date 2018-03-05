@@ -5,7 +5,7 @@ import ca.mcgill.ecse223.resto.view.RestoAppPage;
 
 public class RestoApplication {
 	
-	private static String filename = "data.restoapp";
+	private static String filename = "menu.resto";
 
 	private static RestoApp ra;
 	
@@ -17,7 +17,6 @@ public class RestoApplication {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 RestoAppPage restoAppPage = new RestoAppPage();
-                restoAppPage.setTitle("Add/Remove Table");
                 restoAppPage.setVisible(true);
             }
         });
@@ -48,6 +47,10 @@ public class RestoApplication {
 		}
 		
 	return ra;
+	}
+	
+	public static void setFilename(String newFilename) {
+		filename = newFilename;
 	}
 	
 }
