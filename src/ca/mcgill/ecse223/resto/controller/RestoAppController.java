@@ -139,5 +139,37 @@ public class RestoAppController {
 		}
 		return itemList; 
 	}
-	
+
+	public static void moveTable(Table table, int x, int y) throws InvalidInputException {
+
+		String error = "";
+		if(table == null){
+			error += "Table cannot be null ";
+		}
+		if(x < 0){
+			error += "x cannot be negative ";
+		}
+		if(y < 0){
+			error += "y cannot be negative ";
+		}
+		if (error.length() > 0){
+			throw (new InvalidInputException(error.trim()));
+		}
+
+		int width = table.getWidth();
+		int length = table.getLength();
+		RestoApp r = RestoApplication.getRestoApp();
+		List<Table> currentTables = r.getCurrentTables();
+
+		try {
+
+			for (Table currentTable : currentTables) {
+				if ((isTableOverlapping(x, y, width, length) == true) && (table.equals(currentTable) == false)) {
+					throw (new InvalidInputException("Tables overlap! Change table configuration."));
+				}
+			}
+		} catch (InvalidInputException e) {
+			System.out.println(e.getMessage());
+		}
+	}
 }
