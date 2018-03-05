@@ -200,22 +200,19 @@ public class RestoAppPage extends JFrame {
 						.addComponent(tableLocationYLabel))
 				.addGroup(layout.createParallelGroup().addComponent(createTableButton).addComponent(tableWidthLabel)
 
-				)
+						)
 
 				.addGroup(layout.createParallelGroup().addComponent(tableLengthLabel))
 				.addComponent(horizontalLineBottom)
 
 				.addGroup(layout.createParallelGroup().addComponent(displayApp, 300, 300, 300)))
 				.addComponent(menuButton)
-
-		);
+				);
 		pack();
-
 	}
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
 		// call the controller
-
 		try {
 			RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()),
 					Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()),
@@ -239,7 +236,6 @@ public class RestoAppPage extends JFrame {
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 		}
-
 		refreshData();
 		repaint();
 	}
@@ -247,10 +243,8 @@ public class RestoAppPage extends JFrame {
 	protected void menuButtonActionPerformed(ActionEvent evt) {
 		// clear error message
 		error = null;
-
 		// open the menuDisplay
 		new MenuDisplay();
-
 	}
 
 	private void refreshData() {
@@ -280,7 +274,6 @@ public class RestoAppPage extends JFrame {
 			for (Table table : RestoAppController.getTables()) {
 				tableList.addItem("#" + table.getNumber());
 			}
-			;
 			selectedTableIndex = -1;
 			tableList.setSelectedIndex(selectedTableIndex);
 		}

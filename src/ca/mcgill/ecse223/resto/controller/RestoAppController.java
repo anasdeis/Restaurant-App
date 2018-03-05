@@ -17,10 +17,11 @@ public class RestoAppController {
 	public static List<Table> getTables(){
 		return RestoApplication.getRestoApp().getCurrentTables();
 	}
+	
 	public static void createTable(int numberOfSeats, int x, int y, int width, int length) throws InvalidInputException {	
 		RestoApp ra = RestoApplication.getRestoApp();
 		int generatedTableNumber = RestoAppController.generateTableNumber();
-		
+
 		String error = "";
 		if (numberOfSeats <= 0) {
 			error = "The number of seats must be greater than 0. ";
@@ -46,7 +47,7 @@ public class RestoAppController {
 		if (error.length() > 0) {
 			throw new InvalidInputException(error.trim());
 		}
-		
+
 		try {
 			Table table = new Table(generatedTableNumber, x, y, width, length, ra);
 			for(int i = 0; i < numberOfSeats; i++){
@@ -61,6 +62,7 @@ public class RestoAppController {
 			throw new InvalidInputException(e.getMessage());
 		}
 	}
+	
 	public static void removeTable(Integer selectedTableNumber) throws InvalidInputException {
 		RestoApp ra = RestoApplication.getRestoApp();
 		String error = "";
@@ -80,7 +82,7 @@ public class RestoAppController {
 			error = e.getMessage();
 			throw new InvalidInputException(e.getMessage());
 		}
-		
+
 	}
 
 	private static boolean isDuplicateTableNumber(int number) {
@@ -94,21 +96,26 @@ public class RestoAppController {
 		}
 		return false;
 	}
+	
 	public static int generateTableNumber() {
 		RestoApp ra = RestoApplication.getRestoApp();
 		List<Table> tables = ra.getCurrentTables();
-		if(tables.size() == 0)return 1;
-		else return tables.get(tables.size()-1).getNumber() + 1;
+		if(tables.size() == 0) {
+			return 1;
+		}
+		else {
+			return tables.get(tables.size()-1).getNumber() + 1;
+		}
 
 	}
-	
+
 	// Checks if the table that you are trying to input overlaps with another
 	// It starts counting at index [0][0] for x and y.
 	public static boolean isTableOverlapping(int x, int y, int width, int length) {
 		RestoApp ra = RestoApplication.getRestoApp();
 		List<Table> tables = ra.getCurrentTables();
 		int[][] tableMap = new int[9999][9999];
-		
+
 		for(int k = 0; k < tables.size(); k++){
 			for(int i = 0; i< tables.get(k).getWidth(); i++){
 				for(int j = 0; j < tables.get(k).getLength(); j++){
@@ -125,23 +132,23 @@ public class RestoAppController {
 		}
 		return false;
 	}
-	
+
 	public static ArrayList<MenuItem> getMenuItem(ItemCategory itemCategory) throws InvalidInputException {
 
 		if (itemCategory.equals(null)) {
 			throw new InvalidInputException("Item category is null"); 
 		}
-		
+
 		RestoApp resto = RestoApplication.getRestoApp();
 		ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
 		Menu menu = resto.getMenu();
+
 		for (int j = 0; j < menu.numberOfMenuItems(); j++) {
 			MenuItem currItem = menu.getMenuItem(j);
 			if (currItem.getItemCategory().equals(itemCategory)) {
 				itemList.add(currItem);
 			}
 		}
-		
 		return itemList; 
 	}
 
@@ -151,12 +158,15 @@ public class RestoAppController {
 		if(table == null){
 			error += "Table cannot be null ";
 		}
+
 		if(x < 0){
 			error += "x cannot be negative ";
 		}
+
 		if(y < 0){
 			error += "y cannot be negative ";
 		}
+
 		if (error.length() > 0){
 			throw (new InvalidInputException(error.trim()));
 		}
@@ -167,7 +177,6 @@ public class RestoAppController {
 		List<Table> currentTables = r.getCurrentTables();
 
 		try {
-
 			for (Table currentTable : currentTables) {
 				if ((isTableOverlapping(x, y, width, length) == true) && (table.equals(currentTable) == false)) {
 					throw (new InvalidInputException("Tables overlap! Change table configuration."));
