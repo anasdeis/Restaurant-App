@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.resto.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.*;
@@ -40,6 +41,10 @@ public class RestoAppPage extends JFrame {
 	private Integer selectedTableNumber = null;
 	private RestoAppDisplay displayApp;
 
+	// Move Table
+	private JButton moveTableButton;
+	private HashMap<Integer, Table> tables;
+
 	// Info Table Section
 	private JLabel numberSeatsLabel;
 	private JLabel tableLocationXLabel;
@@ -49,6 +54,8 @@ public class RestoAppPage extends JFrame {
 
 	// Display Menu
 	private JButton menuButton;
+
+
 
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
@@ -104,6 +111,10 @@ public class RestoAppPage extends JFrame {
 		tableWidthLabel.setText("Width: ");
 		tableLengthLabel.setText("Length: ");
 
+		// Move Table Elements
+		moveTableButton = new JButton();
+		moveTableButton.setText("Move Table");
+
 		// Display Menu Elements
 		menuButton = new JButton();
 		menuButton.setText("Menu");
@@ -136,6 +147,12 @@ public class RestoAppPage extends JFrame {
 		removeTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				removeTableButtonActionPerformed(evt);
+			}
+		});
+
+		moveTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				moveTableButtonActionPerformed(evt);
 			}
 		});
 
@@ -271,6 +288,25 @@ public class RestoAppPage extends JFrame {
 		repaint();
 	}
 
+	protected void moveTableButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = null;
+		// call the controller
+
+		if (selectedTableNumber < 0)
+			error = "Table needs to be selected for moving!";
+
+		if (error.length() == 0) {
+			try {
+				RestoAppController.moveTable(tables.get(selectedTableIndex), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()));
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
+		refreshData();
+		repaint();
+	}
+
 	protected void menuButtonActionPerformed(ActionEvent evt) {
 		// clear error message
 		error = null;
@@ -294,6 +330,7 @@ public class RestoAppPage extends JFrame {
 			// yLocation
 			yLocationTextField.setText("");
 
+
 			// table list
 			numberSeatsLabel.setText("Seats: ");
 			tableLocationXLabel.setText("Location X: ");
@@ -301,12 +338,19 @@ public class RestoAppPage extends JFrame {
 			tableWidthLabel.setText("Width: ");
 			tableLengthLabel.setText("Length: ");
 
+			tables =  new HashMap<Integer, Table>();
 			tableList.removeAllItems();
+			Integer index = 0;
 			for (Table table : RestoAppController.getTables()) {
+				tables.put(index, table);
 				tableList.addItem("#" + table.getNumber());
+				index++;
 			}
+
+			selectedTableNumber = null;
 			selectedTableIndex = -1;
 			tableList.setSelectedIndex(selectedTableIndex);
+
 		}
 	}
 
