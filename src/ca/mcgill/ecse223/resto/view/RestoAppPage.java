@@ -198,7 +198,8 @@ public class RestoAppPage extends JFrame {
 								.addComponent(lengthTextField, 200, 200, 400)
 								.addComponent(yLocationTextField, 200, 200, 400)
 								.addComponent(xLocationTextField, 200, 200, 400)
-								.addComponent(createTableButton))
+								.addComponent(createTableButton)
+								.addComponent(moveTableButton))
 
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tablesLabel)
@@ -206,13 +207,17 @@ public class RestoAppPage extends JFrame {
 								.addComponent(tableLocationXLabel)
 								.addComponent(tableLocationYLabel)
 								.addComponent(tableWidthLabel)
-								.addComponent(tableLengthLabel))
+								.addComponent(tableLengthLabel)
+								)
 
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton))
-						.addComponent(tableWidthLabel)
-						.addComponent(menuButton)));
+		
+						.addGroup(layout.createParallelGroup()
+								.addComponent(menuButton))
+				
+				));
 
 		layout.setVerticalGroup(layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
@@ -223,7 +228,8 @@ public class RestoAppPage extends JFrame {
 						.addComponent(numberOfSeatsLabel)
 						.addComponent(numberOfSeatsTextField)
 						.addComponent(tablesLabel)
-						.addComponent(tableList))
+						.addComponent(tableList)
+						.addComponent(menuButton))
 
 				.addGroup(layout.createParallelGroup()
 						.addComponent(widthLabel)
@@ -246,15 +252,18 @@ public class RestoAppPage extends JFrame {
 						.addComponent(tableLocationYLabel))
 				.addGroup(layout.createParallelGroup()
 						.addComponent(createTableButton)
-						.addComponent(tableWidthLabel))
-
+						.addComponent(tableWidthLabel)
+						.addComponent(tableLengthLabel,65,65,65)
+						)
 				.addGroup(layout.createParallelGroup()
-						.addComponent(tableLengthLabel))
+						.addComponent(moveTableButton))
+
+				
 				.addComponent(horizontalLineBottom)
 
 				.addGroup(layout.createParallelGroup()
 						.addComponent(displayApp, 300, 300, 300)))
-				.addComponent(menuButton)
+				
 				);
 		pack();
 	}
@@ -292,9 +301,10 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// call the controller
-
-		if (selectedTableNumber < 0)
+		
+		if (selectedTableNumber < 0) {
 			error = "Table needs to be selected for moving!";
+		}
 
 		if (error.length() == 0) {
 			try {
