@@ -1,7 +1,7 @@
 package ca.mcgill.ecse223.resto.test;
 
 
-
+/*
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -64,3 +64,4 @@ public class RestoApplicationTest {
 	}
 	
 }
+*/

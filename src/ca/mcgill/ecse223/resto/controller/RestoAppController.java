@@ -156,15 +156,15 @@ public class RestoAppController {
 
 		String error = "";
 		if(table == null){
-			error += "Table cannot be null ";
+			error += "Table cannot be null! ";
 		}
 
 		if(x < 0){
-			error += "x cannot be negative ";
+			error += "x cannot be negative! ";
 		}
 
 		if(y < 0){
-			error += "y cannot be negative ";
+			error += "y cannot be negative! ";
 		}
 
 		if (error.length() > 0){
@@ -178,17 +178,18 @@ public class RestoAppController {
 
 		try {
 			for (Table currentTable : currentTables) {
-				if ((isTableOverlapping(x, y, width, length) == true) && (table.equals(currentTable) == false)) {
+				if ((isTableOverlapping(x, y, width, length)) && (!table.equals(currentTable))) {
 					throw (new InvalidInputException("Tables overlap! Change table configuration."));
 				}
 			}
+
+			table.setX(x);
+			table.setY(y);
+			
 		} catch (InvalidInputException e) {
 			System.out.println(e.getMessage());
 		}
 
-		table.setX(x);
-		table.setY(y);
 		RestoApplication.save();
-
 	}
 }

@@ -300,7 +300,7 @@ public class RestoAppPage extends JFrame {
 
 	protected void moveTableButtonActionPerformed(ActionEvent evt) {
 		// clear error message
-		error = null;
+		error = "";
 		// call the controller
 		
 		if (selectedTableNumber < 0) {
@@ -358,7 +358,6 @@ public class RestoAppPage extends JFrame {
 				index++;
 			}
 
-			selectedTableNumber = null;
 			selectedTableIndex = -1;
 			tableList.setSelectedIndex(selectedTableIndex);
 
