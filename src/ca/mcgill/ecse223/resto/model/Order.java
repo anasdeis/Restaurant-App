@@ -10,7 +10,7 @@ import java.util.*;
 public class Order implements Serializable
 {
 	// line 24 "RestoAppPersistence.ump"
-	private static final long serialVersionUID = 3900912597282882073L ;
+	private static final long serialVersionUID = -3900912597282882073L ;
 
 	//------------------------
 	// STATIC VARIABLES

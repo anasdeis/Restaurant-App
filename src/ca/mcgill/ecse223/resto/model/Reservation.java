@@ -10,7 +10,7 @@ import java.util.*;
 public class Reservation implements Serializable
 {
 	//// line 42 "RestoAppPersistence.ump"
-	private static final long serialVersionUID = -2315072607928790501L ;
+	private static final long serialVersionUID = 2315072607928790501L ;
 
 	//------------------------
 	// STATIC VARIABLES

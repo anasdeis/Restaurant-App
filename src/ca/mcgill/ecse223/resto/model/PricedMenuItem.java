@@ -9,7 +9,7 @@ import java.util.*;
 public class PricedMenuItem implements Serializable
 {
 	// line 36 "RestoAppPersistence.ump"
-	private static final long serialVersionUID = 4855219931984388104L ;
+	private static final long serialVersionUID = -4855219931984388104L ;
 
 
 	//------------------------

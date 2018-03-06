@@ -9,7 +9,7 @@ import java.util.*;
 public class Table implements Serializable
 {
 	// line 54 "RestoAppPersistence.ump"
-	private static final long serialVersionUID = -8896099581655989380L;
+	private static final long serialVersionUID = 8896099581655989380L;
 
 	//------------------------
 	// STATIC VARIABLES

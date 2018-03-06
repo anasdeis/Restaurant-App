@@ -9,7 +9,7 @@ import java.util.*;
 public class Seat implements Serializable
 {
 	// line 48 "RestoAppPersistence.ump"
-	private static final long serialVersionUID = -386717977557499839L ;
+	private static final long serialVersionUID = 386717977557499839L ;
 
 	//------------------------
 	// MEMBER VARIABLES
