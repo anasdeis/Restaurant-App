@@ -24,7 +24,7 @@ import javax.swing.JScrollBar;
 public class MenuDisplay extends JFrame{
 	private String error;
 	
-	MenuDisplay() {
+	MenuDisplay(String category) {
 		//setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setSize(1000, 600);
@@ -32,8 +32,24 @@ public class MenuDisplay extends JFrame{
 		//getContentPane().setLayout(null);
 		
 		ArrayList<MenuItem> menuItems = null;
+		JLabel lbl = null;
 		try {
-			menuItems = RestoAppController.getMenuItem(MenuItem.ItemCategory.Appetizer);
+			if(category.equals("Appetizer")) {
+				menuItems = RestoAppController.getMenuItem(MenuItem.ItemCategory.Appetizer);
+				lbl = new JLabel("Appetizer");
+			}else if (category.equals("Main")){
+				menuItems= RestoAppController.getMenuItem(MenuItem.ItemCategory.Main);
+				lbl = new JLabel("Main");
+			}else if (category.equals("Dessert")){
+				RestoAppController.getMenuItem(MenuItem.ItemCategory.Dessert);
+				lbl = new JLabel("Dessert");
+			}else if (category.equals("Alcoholic Beverage")) {
+				RestoAppController.getMenuItem(MenuItem.ItemCategory.AlcoholicBeverage);
+				lbl = new JLabel("Alcoholic Beverage");
+			}else if (category.equals("Non Alcoholic Beverage")) {
+				RestoAppController.getMenuItem(MenuItem.ItemCategory.NonAlcoholicBeverage);
+				lbl = new JLabel("Non Alcoholic Beverage");
+			}
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 			JDialog er = new JDialog(this, error, false);
@@ -42,16 +58,16 @@ public class MenuDisplay extends JFrame{
 			er.setVisible(true);
 		}
 		
-		JLabel lblAppetizer = new JLabel("Appetizer");
-		lblAppetizer.setBounds(12, 13, 54, 32);
-		this.getContentPane().add(lblAppetizer);
+		
+		lbl.setBounds(12, 13, 54, 32);
+		this.getContentPane().add(lbl);
 		
 ////		JPanel apptizerPanel = new JPanel();
 ////		apptizerPanel.setBounds(12, 58, 179, 494);
 ////		getContentPane().add(apptizerPanel);
 //		
-		JList<Object> appetizerList = new JList<>(menuItems.toArray());
-		JScrollPane menuScrollPane = new JScrollPane(appetizerList);
+		JList<Object> itemList = new JList<>(menuItems.toArray());
+		JScrollPane menuScrollPane = new JScrollPane(itemList);
 		
 		getContentPane().add(menuScrollPane);
 		

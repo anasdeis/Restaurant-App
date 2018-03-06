@@ -275,7 +275,7 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// open the menuDisplay
-		new MenuDisplay();
+		new Menu();
 	}
 
 	private void refreshData() {
