@@ -68,6 +68,7 @@ public class RestoAppPage extends JFrame {
 	 */
 	private void initComponents() {
 		setTitle("RestoApp");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		// Error Message Elements
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
