@@ -41,13 +41,13 @@ public class MenuDisplay extends JFrame{
 				menuItems= RestoAppController.getMenuItem(MenuItem.ItemCategory.Main);
 				lbl = new JLabel("Main");
 			}else if (category.equals("Dessert")){
-				RestoAppController.getMenuItem(MenuItem.ItemCategory.Dessert);
+				menuItems= RestoAppController.getMenuItem(MenuItem.ItemCategory.Dessert);
 				lbl = new JLabel("Dessert");
 			}else if (category.equals("Alcoholic Beverage")) {
-				RestoAppController.getMenuItem(MenuItem.ItemCategory.AlcoholicBeverage);
+				menuItems= RestoAppController.getMenuItem(MenuItem.ItemCategory.AlcoholicBeverage);
 				lbl = new JLabel("Alcoholic Beverage");
 			}else if (category.equals("Non Alcoholic Beverage")) {
-				RestoAppController.getMenuItem(MenuItem.ItemCategory.NonAlcoholicBeverage);
+				menuItems= RestoAppController.getMenuItem(MenuItem.ItemCategory.NonAlcoholicBeverage);
 				lbl = new JLabel("Non Alcoholic Beverage");
 			}
 		} catch (InvalidInputException e) {
