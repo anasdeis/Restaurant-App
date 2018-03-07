@@ -27,7 +27,6 @@ public class RestoApplication {
 		if (ra == null) {
 
 			ra = load();	
-
 		}
 		return ra;
 	}

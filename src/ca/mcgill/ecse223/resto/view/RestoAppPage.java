@@ -52,14 +52,14 @@ public class RestoAppPage extends JFrame {
 	private JLabel tableLocationYLabel;
 	private JLabel tableWidthLabel;
 	private JLabel tableLengthLabel;
-	
-	// Update Table Section
+
+
+	// Update Table Section Declaration
 	private JLabel newNumberOfSeatsLabel;
 	private JLabel newTableNumberLabel;
 	private JTextField newNumberOfSeatsTextField;
 	private JTextField newTableNumberTextField;
 	private JButton updateTableButton;
-
 	// Display Menu
 	private JButton menuButton;
 
@@ -94,28 +94,24 @@ public class RestoAppPage extends JFrame {
 		yLocationTextField = new JTextField();
 		lengthTextField = new JTextField();
 		widthTextField = new JTextField();
+		newNumberOfSeatsTextField = new JTextField();
+	    newTableNumberTextField = new JTextField();
 
-		createTableButton.setText("Create Table ");
+		createTableButton.setText("Create Table: ");
 		numberOfSeatsLabel.setText("Number Of Seats: ");
 		xLocationLabel.setText("X Location: ");
 		yLocationLabel.setText("Y Location: ");
 		lengthLabel.setText("Length: ");
 		widthLabel.setText("Width: ");
 
+		newNumberOfSeatsTextField.setText("");
+		 newTableNumberTextField.setText("");
+
 		// Delete Table Elements
 		tableList = new JComboBox<String>(new String[0]);
 		tablesLabel = new JLabel();
 		removeTableButton = new JButton();
 
-		// Update Table Elements
-		//Labels
-		newNumberOfSeatsLabel = new JLabel();
-		newTableNumberLabel = new JLabel();
-		newNumberOfSeatsLabel.setText("Enter Number of Seats :");
-		newTableNumberLabel.setText("Enter New Table Number :");
-//		newNumberOfSeatsTextField.setText("");
-//		newTableNumberTextField.setText("");
-		
 		// Table Info Elements
 		numberSeatsLabel = new JLabel();
 		tableLocationXLabel = new JLabel();
@@ -142,17 +138,6 @@ public class RestoAppPage extends JFrame {
 				createTableButtonActionPerformed(evt);
 			}
 		});
-		
-		
-		//Button Update Table
-		updateTableButton = new JButton();		
-		updateTableButton.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				updateTableButtonActionPerformed(evt);
-			}
-		});
-		updateTableButton.setText("Update Table");
-
 
 		tableList.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,7 +158,6 @@ public class RestoAppPage extends JFrame {
 				}
 			}
 		});
-		
 		removeTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				removeTableButtonActionPerformed(evt);
@@ -192,29 +176,49 @@ public class RestoAppPage extends JFrame {
 			}
 		});
 
-		tablesLabel.setText("Select Table: ");
+		tablesLabel.setText("Tables: ");
 		removeTableButton.setText("Remove Table");
 
-		
 		// horizontal line elements
 		JSeparator horizontalLineTop = new JSeparator();
 		JSeparator horizontalLineBottom = new JSeparator();
 		// initialize JPanel
 		displayApp = new RestoAppDisplay();
 
+		newNumberOfSeatsLabel = new JLabel();
+		newTableNumberLabel = new JLabel();
+		newNumberOfSeatsLabel.setText("Enter Number of Seats :");
+		newTableNumberLabel.setText("Enter New Table Number :");
+
+
+		//Button Update Table
+		updateTableButton = new JButton();      
+		updateTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				updateTableButtonActionPerformed(evt);
+			}
+		});
+		updateTableButton.setText("Update Table");
+		//added method
+
+		//added these in refreshData()
+		//	          newNumberOfSeatsTextField.setText("");
+		//	          newTableNumberTextField.setText("");
+
+
+
+
 		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-
 		layout.setHorizontalGroup(layout.createParallelGroup()
 				.addGroup(layout.createParallelGroup()
 						.addComponent(displayApp, 800, 800, 800)
 						.addComponent(errorMessage)
 						.addComponent(horizontalLineTop)
 						.addComponent(horizontalLineBottom))
-
 				.addGroup(layout.createSequentialGroup()
 						.addGroup(layout.createParallelGroup()
 								.addComponent(numberOfSeatsLabel)
@@ -222,14 +226,14 @@ public class RestoAppPage extends JFrame {
 								.addComponent(lengthLabel)
 								.addComponent(xLocationLabel)
 								.addComponent(yLocationLabel))
-
 						.addGroup(layout.createParallelGroup()
 								.addComponent(numberOfSeatsTextField, 200, 200, 400)
 								.addComponent(widthTextField, 200, 200, 400)
 								.addComponent(lengthTextField, 200, 200, 400)
 								.addComponent(yLocationTextField, 200, 200, 400)
 								.addComponent(xLocationTextField, 200, 200, 400)
-								.addComponent(createTableButton))
+								.addComponent(createTableButton)
+								.addComponent(moveTableButton))
 
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tablesLabel)
@@ -237,57 +241,90 @@ public class RestoAppPage extends JFrame {
 								.addComponent(tableLocationXLabel)
 								.addComponent(tableLocationYLabel)
 								.addComponent(tableWidthLabel)
-								.addComponent(tableLengthLabel))
-
+								.addComponent(tableLengthLabel)
+								.addComponent(newTableNumberLabel)
+								.addComponent(newNumberOfSeatsLabel)
+								.addComponent(updateTableButton))
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
-								.addComponent(removeTableButton))
+								.addComponent(removeTableButton)
+								 .addComponent(newTableNumberTextField)
+								 .addComponent(newNumberOfSeatsTextField)
+								)
+						.addGroup(layout.createParallelGroup()
+
+								.addComponent(menuButton))
 						.addComponent(tableWidthLabel)
-						.addComponent(menuButton)));
+						));
+
 
 		layout.setVerticalGroup(layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup()
-				.addComponent(errorMessage)
-				.addGroup(layout.createParallelGroup()
-						.addComponent(horizontalLineTop))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(numberOfSeatsLabel)
-						.addComponent(numberOfSeatsTextField)
-						.addComponent(tablesLabel)
-						.addComponent(tableList))
+						.addComponent(errorMessage)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(horizontalLineTop))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(numberOfSeatsLabel)
+								.addComponent(numberOfSeatsTextField)
+								.addComponent(tablesLabel)
+								.addComponent(tableList)
+								.addComponent(menuButton))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(widthLabel)
+								.addComponent(widthTextField)
+								.addComponent(removeTableButton))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(numberSeatsLabel)
+								.addComponent(lengthTextField)
+								.addComponent(lengthLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(xLocationTextField)
+								.addComponent(xLocationLabel)
+								.addComponent(tableLocationXLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(yLocationTextField)
+								.addComponent(yLocationLabel)
+								.addComponent(tableLocationYLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(createTableButton)
+								.addComponent(tableWidthLabel)
+								.addComponent(tableLengthLabel,65,65,65))
+					
+						.addGroup(layout.createParallelGroup()
+								.addComponent(newTableNumberLabel)
+								 .addComponent(newTableNumberTextField)
 
-				.addGroup(layout.createParallelGroup()
-						.addComponent(widthLabel)
-						.addComponent(widthTextField)
-						.addComponent(removeTableButton))
+								)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(newNumberOfSeatsLabel)
+								  .addComponent(newNumberOfSeatsTextField)
+								)
 
-				.addGroup(layout.createParallelGroup()
-						.addComponent(numberSeatsLabel)
-						.addComponent(lengthTextField)
-						.addComponent(lengthLabel))
+						.addGroup(layout.createParallelGroup()
+								.addComponent(moveTableButton)
+								.addComponent(updateTableButton))
 
-				.addGroup(layout.createParallelGroup()
-						.addComponent(xLocationTextField)
-						.addComponent(xLocationLabel)
-						.addComponent(tableLocationXLabel))
 
-				.addGroup(layout.createParallelGroup()
-						.addComponent(yLocationTextField)
-						.addComponent(yLocationLabel)
-						.addComponent(tableLocationYLabel))
-				.addGroup(layout.createParallelGroup()
-						.addComponent(createTableButton)
-						.addComponent(tableWidthLabel))
-
-				.addGroup(layout.createParallelGroup()
-						.addComponent(tableLengthLabel))
-				.addComponent(horizontalLineBottom)
-
-				.addGroup(layout.createParallelGroup()
-						.addComponent(displayApp, 300, 300, 300)))
+						.addComponent(horizontalLineBottom)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(displayApp, 300, 300, 300)))
 				.addComponent(menuButton)
 				);
 		pack();
+
+	}
+	protected void updateTableButtonActionPerformed(ActionEvent evt) {
+		//clear error message
+		error = null;
+
+		      try {
+		          RestoAppController.updateTable(RestoApplication.getRestoApp().getTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
+		      } catch (InvalidInputException e) {
+		          error = e.getMessage();
+		      }
+
+		refreshData();
+		repaint();
 	}
 
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
@@ -297,8 +334,7 @@ public class RestoAppPage extends JFrame {
 					Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()),
 					Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
 		} catch (Exception e) {
-			error = "Insert numbers into each text field";
-			//throw new InvalidInputException(e.getMessage());
+			error = e.getMessage();
 		}
 
 		refreshData();
@@ -318,27 +354,12 @@ public class RestoAppPage extends JFrame {
 		refreshData();
 		repaint();
 	}
-	
-	protected void updateTableButtonActionPerformed(ActionEvent evt) {
-		//clear error message
-		error = null;
-		
-		//call controller
-		try {
-			RestoAppController.updateTable(RestoApplication.getRestoApp().getTable(selectedTableNumber), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
-		}
-		
-		refreshData();
-		repaint();
-	}
 
 	protected void moveTableButtonActionPerformed(ActionEvent evt) {
 		// clear error message
 		error = "";
 		// call the controller
-		
+
 		if (selectedTableNumber < 0) {
 			error = "Table needs to be selected for moving!";
 		}
@@ -358,8 +379,7 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// open the menuDisplay
-		new Menu();
-//		new MenuDisplay();
+		new MenuPage();
 	}
 
 	private void refreshData() {
@@ -398,11 +418,6 @@ public class RestoAppPage extends JFrame {
 			selectedTableIndex = -1;
 			tableList.setSelectedIndex(selectedTableIndex);
 
-			
-			//update table part
-			newNumberOfSeatsTextField.setText("");
-			newTableNumberTextField.setText("");
-			
 		}
 	}
 
