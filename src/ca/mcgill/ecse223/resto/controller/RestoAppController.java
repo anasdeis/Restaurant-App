@@ -102,9 +102,7 @@ public class RestoAppController {
 					break;
 				}
 			}
-			
 			RestoApplication.save();
-			
 		}
 		catch (Exception e) {
 			error = e.getMessage();

@@ -70,9 +70,10 @@ public class RestoAppPage extends JFrame {
 	private JLabel contactNameLabel;
 	private JLabel contactEmailAddressLabel;
 	private JLabel contactPhoneNumberLabel;
+	private JLabel reservedStatus;
 
 	private JTextField numberInPartyTextField;
-	private JTextField conctactNameTextField;
+	private JTextField contactNameTextField;
 	private JTextField contactEmailAddressTextField;
 	private JTextField contactPhoneNumberTextField;
 
@@ -145,12 +146,17 @@ public class RestoAppPage extends JFrame {
 		menuButton.setText("Menu");
 		
 		// Reserve Table elements
-		reserveButton = new JButton();
+		reserveButton = new JButton("Reserve Table");
 		numberInPartyLabel = new JLabel("Number of People:");
 		contactEmailAddressLabel = new JLabel("Contact E-mail address:");
 		contactPhoneNumberLabel = new JLabel("Contact Phone:");
 		contactNameLabel = new JLabel("Contact Name:");
-		
+		reservedStatus = new JLabel("Reservation Status: ");
+		reservedStatus.setForeground(Color.red);
+		numberInPartyTextField = new JTextField();
+		contactEmailAddressTextField = new JTextField();
+		contactPhoneNumberTextField = new JTextField();
+		contactNameTextField = new JTextField();
 		numberInPartyTextField = new JTextField();
 		
 
@@ -174,6 +180,21 @@ public class RestoAppPage extends JFrame {
 							tableLocationYLabel.setText("Location Y: " + table.getY());
 							tableWidthLabel.setText("Width: " + table.getWidth());
 							tableLengthLabel.setText("Length: " + table.getLength());
+							
+							if(!table.getReservations().isEmpty()){
+								contactEmailAddressLabel.setText("Contact E-mail address: "+table.getReservation(0).getContactEmailAddress());
+								contactNameLabel.setText("Contact Name: "+table.getReservation(0).getContactName());
+								contactPhoneNumberLabel.setText("Contact Phone: "+table.getReservation(0).getContactPhoneNumber());
+								numberInPartyLabel.setText("Number of People: "+table.getReservation(0).getNumberInParty());
+								reservedStatus.setText("Reservation Status: Reserved, has "+table.getReservations().size()+" reservation(s)");
+							}
+							else {
+								contactEmailAddressLabel.setText("Contact E-mail address: ");
+								contactNameLabel.setText("Contact Name:");
+								contactPhoneNumberLabel.setText("Contact Phone: ");
+								numberInPartyLabel.setText("Number of People: ");
+								reservedStatus.setText("Reservation Status: Unreserved ");
+							}
 						}
 					}
 				}
@@ -245,11 +266,11 @@ public class RestoAppPage extends JFrame {
 								.addComponent(xLocationLabel)
 								.addComponent(yLocationLabel))
 						.addGroup(layout.createParallelGroup()
-								.addComponent(numberOfSeatsTextField, 200, 200, 400)
-								.addComponent(widthTextField, 200, 200, 400)
-								.addComponent(lengthTextField, 200, 200, 400)
-								.addComponent(yLocationTextField, 200, 200, 400)
-								.addComponent(xLocationTextField, 200, 200, 400)
+								.addComponent(numberOfSeatsTextField)
+								.addComponent(widthTextField)
+								.addComponent(lengthTextField)
+								.addComponent(yLocationTextField)
+								.addComponent(xLocationTextField)
 								.addComponent(createTableButton)
 								.addComponent(moveTableButton))
 
@@ -262,17 +283,28 @@ public class RestoAppPage extends JFrame {
 								.addComponent(tableLengthLabel)
 								.addComponent(newTableNumberLabel)
 								.addComponent(newNumberOfSeatsLabel)
-								.addComponent(updateTableButton))
+								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(tableList)
 								.addComponent(removeTableButton)
-								 .addComponent(newTableNumberTextField)
-								 .addComponent(newNumberOfSeatsTextField)
+								.addComponent(contactNameLabel)
+								.addComponent(contactEmailAddressLabel)
+								.addComponent(contactPhoneNumberLabel)
+								.addComponent(numberInPartyLabel)
+								.addComponent(reservedStatus)
+								.addComponent(newTableNumberTextField)
+								.addComponent(newNumberOfSeatsTextField)
+								.addComponent(updateTableButton)
 								)
 						.addGroup(layout.createParallelGroup()
-
-								.addComponent(menuButton))
-						.addComponent(tableWidthLabel)
+								.addComponent(menuButton)
+								.addComponent(contactNameTextField)
+								.addComponent(contactEmailAddressTextField)
+								.addComponent(contactPhoneNumberTextField)
+								.addComponent(numberInPartyTextField)
+								.addComponent(reserveButton)
+								
+								)
 						));
 
 
@@ -292,41 +324,58 @@ public class RestoAppPage extends JFrame {
 								.addComponent(widthTextField)
 								.addComponent(removeTableButton))
 						.addGroup(layout.createParallelGroup()
-								.addComponent(numberSeatsLabel)
+								.addComponent(lengthLabel)
 								.addComponent(lengthTextField)
-								.addComponent(lengthLabel))
+								.addComponent(numberSeatsLabel)
+								.addComponent(contactNameLabel)
+								.addComponent(contactNameTextField)
+								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(xLocationTextField)
 								.addComponent(xLocationLabel)
-								.addComponent(tableLocationXLabel))
+								.addComponent(tableLocationXLabel)
+								.addComponent(contactEmailAddressLabel)
+								.addComponent(contactEmailAddressTextField)
+								
+								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(yLocationTextField)
 								.addComponent(yLocationLabel)
-								.addComponent(tableLocationYLabel))
+								.addComponent(tableLocationYLabel)
+								.addComponent(contactPhoneNumberLabel)
+								.addComponent(contactPhoneNumberTextField)
+								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(createTableButton)
 								.addComponent(tableWidthLabel)
-								.addComponent(tableLengthLabel,65,65,65))
+								.addComponent(numberInPartyLabel)
+								.addComponent(numberInPartyTextField)
+								)
 					
 						.addGroup(layout.createParallelGroup()
+								.addComponent(moveTableButton)
+								.addComponent(tableLengthLabel)
+								.addComponent(reservedStatus)
+								.addComponent(reserveButton)
+								)
+						
+						.addGroup(layout.createParallelGroup()
 								.addComponent(newTableNumberLabel)
-								 .addComponent(newTableNumberTextField)
+								.addComponent(newTableNumberTextField)
 
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(newNumberOfSeatsLabel)
-								  .addComponent(newNumberOfSeatsTextField)
+								.addComponent(newNumberOfSeatsTextField)
 								)
 
 						.addGroup(layout.createParallelGroup()
-								.addComponent(moveTableButton)
 								.addComponent(updateTableButton))
 
 
 						.addComponent(horizontalLineBottom)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(displayApp, 300, 300, 300)))
-				.addComponent(menuButton)
 				);
 		pack();
 
@@ -334,12 +383,16 @@ public class RestoAppPage extends JFrame {
 	protected void updateTableButtonActionPerformed(ActionEvent evt) {
 		//clear error message
 		error = null;
-
-		      try {
-		          RestoAppController.updateTable(RestoApplication.getRestoApp().getTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
-		      } catch (InvalidInputException e) {
-		          error = e.getMessage();
-		      }
+		if (selectedTableIndex < 0) {
+			error = "Table needs to be selected for updating!";
+		}
+		else {
+			try {
+				RestoAppController.updateTable(RestoApplication.getRestoApp().getTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
+		}
 
 		refreshData();
 		repaint();
@@ -363,11 +416,15 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// call the controller
-
-		try {
-			RestoAppController.removeTable(selectedTableNumber);
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
+		if (selectedTableIndex < 0) {
+			error = "Table needs to be selected for removing!";
+		}
+		else {
+			try {
+				RestoAppController.removeTable(selectedTableNumber);
+			} catch (InvalidInputException e) {
+				error = e.getMessage();
+			}
 		}
 		refreshData();
 		repaint();
@@ -378,15 +435,16 @@ public class RestoAppPage extends JFrame {
 		error = "";
 		// call the controller
 
-		if (selectedTableNumber < 0) {
+		if (selectedTableIndex < 0) {
 			error = "Table needs to be selected for moving!";
 		}
-
-		if (error.length() == 0) {
-			try {
-				RestoAppController.moveTable(tables.get(selectedTableIndex), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()));
-			} catch (InvalidInputException e) {
-				error = e.getMessage();
+		else {
+			if (error.length() == 0) {
+				try {
+					RestoAppController.moveTable(tables.get(selectedTableIndex), Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()));
+				} catch (InvalidInputException e) {
+					error = e.getMessage();
+				}
 			}
 		}
 		refreshData();
@@ -404,11 +462,18 @@ public class RestoAppPage extends JFrame {
 		// clear error message
 		error = null;
 		// open the menuDisplay
-		try {
-			RestoAppController.reserveTable(null, (Integer) null, null, null, null, null);
-		} catch (InvalidInputException e) {
-			error = e.getMessage();
+		if (selectedTableIndex < 0) {
+			error = "Table needs to be selected for reserving!";
 		}
+		else {
+			try {
+				RestoAppController.reserveTable(null, Integer.parseInt(numberInPartyTextField.getText()), contactNameTextField.getText(), contactEmailAddressTextField.getText(), contactPhoneNumberTextField.getText(), selectedTableNumber);
+			} catch (InvalidInputException e) {
+				error = e.getMessage() + " Please do not leave blank fields";
+			}
+		}
+		refreshData();
+		repaint();
 	}
 	
 
@@ -435,6 +500,11 @@ public class RestoAppPage extends JFrame {
 			tableLocationYLabel.setText("Location Y: ");
 			tableWidthLabel.setText("Width: ");
 			tableLengthLabel.setText("Length: ");
+			
+			numberInPartyLabel.setText("Number of People: ");
+			contactEmailAddressLabel.setText("Contact E-mail address:" );
+			contactPhoneNumberLabel.setText("Contact Phone: ");
+			contactNameLabel.setText("Contact Name: ");
 
 			tables =  new HashMap<Integer, Table>();
 			tableList.removeAllItems();
