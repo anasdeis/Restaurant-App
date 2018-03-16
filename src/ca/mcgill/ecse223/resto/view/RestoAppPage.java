@@ -10,6 +10,7 @@ import javax.swing.*;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoAppPage extends JFrame {
@@ -62,8 +63,18 @@ public class RestoAppPage extends JFrame {
 	private JButton updateTableButton;
 	// Display Menu
 	private JButton menuButton;
+	
+	// ReserveTable
+	private JButton reserveButton;
+	private JLabel numberInPartyLabel;
+	private JLabel contactNameLabel;
+	private JLabel contactEmailAddressLabel;
+	private JLabel contactPhoneNumberLabel;
 
-
+	private JTextField numberInPartyTextField;
+	private JTextField conctactNameTextField;
+	private JTextField contactEmailAddressTextField;
+	private JTextField contactPhoneNumberTextField;
 
 	/** Creates new form RestoAppPage */
 	public RestoAppPage() {
@@ -132,6 +143,16 @@ public class RestoAppPage extends JFrame {
 		// Display Menu Elements
 		menuButton = new JButton();
 		menuButton.setText("Menu");
+		
+		// Reserve Table elements
+		reserveButton = new JButton();
+		numberInPartyLabel = new JLabel("Number of People:");
+		contactEmailAddressLabel = new JLabel("Contact E-mail address:");
+		contactPhoneNumberLabel = new JLabel("Contact Phone:");
+		contactNameLabel = new JLabel("Contact Name:");
+		
+		numberInPartyTextField = new JTextField();
+		
 
 		createTableButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -175,6 +196,11 @@ public class RestoAppPage extends JFrame {
 				menuButtonActionPerformed(evt);
 			}
 		});
+		reserveButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				reserveButtonActionPerformed(evt);
+			}
+		});
 
 		tablesLabel.setText("Tables: ");
 		removeTableButton.setText("Remove Table");
@@ -201,14 +227,6 @@ public class RestoAppPage extends JFrame {
 		updateTableButton.setText("Update Table");
 		//added method
 
-		//added these in refreshData()
-		//	          newNumberOfSeatsTextField.setText("");
-		//	          newTableNumberTextField.setText("");
-
-
-
-
-		// layout
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
@@ -381,6 +399,18 @@ public class RestoAppPage extends JFrame {
 		// open the menuDisplay
 		new MenuPage();
 	}
+	
+	protected void reserveButtonActionPerformed(ActionEvent evt) {
+		// clear error message
+		error = null;
+		// open the menuDisplay
+		try {
+			RestoAppController.reserveTable(null, (Integer) null, null, null, null, null);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+		}
+	}
+	
 
 	private void refreshData() {
 		// error

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse223.resto.controller;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.PricedMenuItem;
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
@@ -86,15 +88,47 @@ public class RestoAppController {
 		}
 
 	}
+	public static void reserveTable(Date aDate, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Integer selectedTableNumber) throws InvalidInputException {
+		String error = "";
+		RestoApp ra = RestoApplication.getRestoApp();
+		List<Table> allTables = ra.getCurrentTables();
+		Table [] allTablesArray = allTables.toArray(new Table[allTables.size()]);
+		
+		Reservation reservation = new Reservation(aDate, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, ra, allTablesArray);
+		try {
+			for (Table table : allTables) {
+				if(selectedTableNumber.equals(table.getNumber())) {
+					table.addReservation(reservation);
+					break;
+				}
+			}
+			
+			RestoApplication.save();
+			
+		}
+		catch (Exception e) {
+			error = e.getMessage();
+			throw new InvalidInputException(e.getMessage());
+		}
+		
+	}
 
 	private static boolean isDuplicateTableNumber(int number) {
 		RestoApp ra = RestoApplication.getRestoApp();
 		List<Table> tables = ra.getCurrentTables();
-		System.out.println(tables.size());
 		for(int i = 0; i< tables.size(); i++){
 			if(tables.get(i).getNumber() == number){
 				return true;
 			}
+		}
+		return false;
+	}
+	private static boolean isTableReserved(Integer selectedTableNumber) {
+		RestoApp ra = RestoApplication.getRestoApp();
+		List<Table> tables = ra.getCurrentTables();
+		List<Reservation> reservations = ra.getReservations();
+		for (Reservation reservation : reservations) {
+			
 		}
 		return false;
 	}
