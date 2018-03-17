@@ -1,0 +1,39 @@
+class Table {
+  //autounique primaryID;
+  //immutable Integer maxChair;
+  //defaulted bill = false;
+  //defaulted order = false;
+  //enum State {Available, NotBilled, Billed}
+  //Field field;
+
+  Status {
+    Available {
+      createOrder(Order order) [isCurrentOrder(order)] -> InUse;
+      addToOrder(Order order)  / {addToOrder(Order order)}-> InUse;
+    }
+    InUse {
+      NotBilled {
+        NoItemOrdered{
+          makeAvailable() / {removeOrder(Order order)} -> Available;
+          [findNumberOfItemOrdered() > 0] -> ItemOrdered;
+        }
+        ItemOrdered{
+          makeBill(Seat seat)  / {makeBill(Seat seat)}-> Billed;
+        }
+        shareItem(OrderItem item, Seat seat)  / {shareItem(OrderItem item, Seat seat)}-> NotBilled;
+        orderItem(MenuItem item, Seat seat) / {orderItem(MenuItem item, Seat seat) }-> NotBilled;
+        cancelItem(OrderItem item, Seat seat) / {cancelItem(OrderItem item, Seat seat)}-> NotBilled; [findNumberOfItemOrdered() > 0] -> NotBilled;
+      }
+      
+      Billed {
+        removeFromBill(Seat seat) [isLastBill()] / {removeFromBill(Seat seat)}-> ItemOrdered;
+        makeBill(Seat seat) [!isBilled(seat)] / {makeBill(Seat seat)}-> Billed;
+        removeFromBill(Seat seat) [!isLastBill()] / {removeFromBill(Seat seat)}-> Billed;
+        shareItem(OrderItem item, Seat seat) / {shareItem(OrderItem item, Seat seat)}-> Billed;
+        addToBill(Bill bill, Seat seat) [!isBilled(seat)] / {addToBill(Bill bill, Seat seat)}-> Billed;
+        orderItem(MenuItem item, Seat seat) / {orderItem(MenuItem item, Seat seat)} -> Billed;
+        makeAvailable [isAllSeatsHaveBill()] / {removeOrder(Order order)}-> Available;     
+}
+}
+  }
+}
