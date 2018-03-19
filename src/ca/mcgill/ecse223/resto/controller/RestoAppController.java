@@ -212,19 +212,19 @@ public class RestoAppController {
 
 		try {
 			for (Table currentTable : currentTables) {
-				if ((isTableOverlapping(x, y, width, length)) && (!table.equals(currentTable))) {
+				if ((isTableOverlapping(x, y, width, length))) {
 					throw (new InvalidInputException("Tables overlap! Change table configuration."));
 				}
 			}
 
 			table.setX(x);
 			table.setY(y);
+			RestoApplication.save();
 			
-		} catch (InvalidInputException e) {
+			} catch (InvalidInputException e) {
 			System.out.println(e.getMessage());
 		}
 
-		RestoApplication.save();
 	}
 	public static void addMenuItem(String name, String category, String price) throws InvalidInputException{
         String error = "";
