@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.MenuItem;
-import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
+
 
 
 public class MenuDisplay extends JFrame{

@@ -9,6 +9,9 @@ import java.util.*;
 // line 59 "../../../../../RestoApp v2.ump"
 public class MenuItem implements Serializable
 {
+	
+	public enum ItemCategory { Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage }
+
 
   //------------------------
   // STATIC VARIABLES
@@ -259,11 +262,5 @@ public class MenuItem implements Serializable
   // line 23 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = -1776230320092632776L ;
 
-// line 61 ../../../../../RestoApp v2.ump
-  enum ItemCategory 
-  {
-    Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage
-  }
-
-  
+// line 61 ../../../../../RestoApp v2.ump  
 }
