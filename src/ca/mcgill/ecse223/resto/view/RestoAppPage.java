@@ -175,7 +175,7 @@ public class RestoAppPage extends JFrame {
 					List<Table> tables = RestoAppController.getTables();
 					for (Table table : tables) {
 						if (selectedTableNumber.equals(table.getNumber())) {
-							numberSeatsLabel.setText("Seats: " + table.numberOfSeats());
+							numberSeatsLabel.setText("Seats: " + table.getCurrentSeats().size());
 							tableLocationXLabel.setText("Location X: " + table.getX());
 							tableLocationYLabel.setText("Location Y: " + table.getY());
 							tableWidthLabel.setText("Width: " + table.getWidth());
@@ -388,7 +388,7 @@ public class RestoAppPage extends JFrame {
 		}
 		else {
 			try {
-				RestoAppController.updateTable(RestoApplication.getRestoApp().getTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
+				RestoAppController.updateTable(RestoApplication.getRestoApp().getCurrentTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
 			} catch (InvalidInputException e) {
 				error = e.getMessage();
 			}
@@ -467,7 +467,7 @@ public class RestoAppPage extends JFrame {
 		}
 		else {
 			try {
-				RestoAppController.reserveTable(null, Integer.parseInt(numberInPartyTextField.getText()), contactNameTextField.getText(), contactEmailAddressTextField.getText(), contactPhoneNumberTextField.getText(), selectedTableNumber);
+				RestoAppController.reserveTable(null, null, Integer.parseInt(numberInPartyTextField.getText()), contactNameTextField.getText(), contactEmailAddressTextField.getText(), contactPhoneNumberTextField.getText(),null , selectedTableNumber);
 			} catch (InvalidInputException e) {
 				error = e.getMessage() + " Please do not leave blank fields";
 			}
