@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
 // line 50 "../../../../../RestoAppPersistence.ump"
-// line 37 "../../../../../RestoApp v2.ump"
+// line 38 "../../../../../RestoApp v2.ump"
 public class Seat implements Serializable
 {
 
@@ -15,7 +15,6 @@ public class Seat implements Serializable
   //------------------------
 
   //Seat Associations
-  private Table table;
   private List<OrderItem> orderItems;
   private List<Bill> bills;
 
@@ -23,13 +22,8 @@ public class Seat implements Serializable
   // CONSTRUCTOR
   //------------------------
 
-  public Seat(Table aTable)
+  public Seat()
   {
-    boolean didAddTable = setTable(aTable);
-    if (!didAddTable)
-    {
-      throw new RuntimeException("Unable to create seat due to table");
-    }
     orderItems = new ArrayList<OrderItem>();
     bills = new ArrayList<Bill>();
   }
@@ -37,11 +31,6 @@ public class Seat implements Serializable
   //------------------------
   // INTERFACE
   //------------------------
-
-  public Table getTable()
-  {
-    return table;
-  }
 
   public OrderItem getOrderItem(int index)
   {
@@ -101,36 +90,6 @@ public class Seat implements Serializable
   {
     int index = bills.indexOf(aBill);
     return index;
-  }
-
-  public boolean setTable(Table aTable)
-  {
-    boolean wasSet = false;
-    //Must provide table to seat
-    if (aTable == null)
-    {
-      return wasSet;
-    }
-
-    if (table != null && table.numberOfSeats() <= Table.minimumNumberOfSeats())
-    {
-      return wasSet;
-    }
-
-    Table existingTable = table;
-    table = aTable;
-    if (existingTable != null && !existingTable.equals(aTable))
-    {
-      boolean didRemove = existingTable.removeSeat(this);
-      if (!didRemove)
-      {
-        table = existingTable;
-        return wasSet;
-      }
-    }
-    table.addSeat(this);
-    wasSet = true;
-    return wasSet;
   }
 
   public static int minimumNumberOfOrderItems()
@@ -299,9 +258,6 @@ public class Seat implements Serializable
 
   public void delete()
   {
-    Table placeholderTable = table;
-    this.table = null;
-    placeholderTable.removeSeat(this);
     ArrayList<OrderItem> copyOfOrderItems = new ArrayList<OrderItem>(orderItems);
     orderItems.clear();
     for(OrderItem aOrderItem : copyOfOrderItems)

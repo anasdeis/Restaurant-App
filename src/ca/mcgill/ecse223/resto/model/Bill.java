@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
 // line 9 "../../../../../RestoAppPersistence.ump"
-// line 69 "../../../../../RestoApp v2.ump"
+// line 71 "../../../../../RestoApp v2.ump"
 public class Bill implements Serializable
 {
 
@@ -17,13 +17,12 @@ public class Bill implements Serializable
   //Bill Associations
   private Order order;
   private List<Seat> issuedForSeats;
-  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Bill(Order aOrder, RestoApp aRestoApp, Seat... allIssuedForSeats)
+  public Bill(Order aOrder, Seat... allIssuedForSeats)
   {
     boolean didAddOrder = setOrder(aOrder);
     if (!didAddOrder)
@@ -35,11 +34,6 @@ public class Bill implements Serializable
     if (!didAddIssuedForSeats)
     {
       throw new RuntimeException("Unable to create Bill, must have at least 1 issuedForSeats");
-    }
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create bill due to restoApp");
     }
   }
 
@@ -83,11 +77,6 @@ public class Bill implements Serializable
   {
     int index = issuedForSeats.indexOf(aIssuedForSeat);
     return index;
-  }
-
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
   }
 
   public boolean setOrder(Order aOrder)
@@ -243,25 +232,6 @@ public class Bill implements Serializable
     return wasAdded;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeBill(this);
-    }
-    restoApp.addBill(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
     Order placeholderOrder = order;
@@ -273,9 +243,6 @@ public class Bill implements Serializable
     {
       aIssuedForSeat.removeBill(this);
     }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    placeholderRestoApp.removeBill(this);
   }
   
   //------------------------

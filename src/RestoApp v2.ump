@@ -15,7 +15,8 @@ class RestoApp {
 }
 
 class Reservation {
-   Date dateTime;
+   Date date;
+   Time time;
    Integer numberInParty;
    contactName;
    contactEmailAddress;
@@ -38,7 +39,8 @@ class Seat {
 }
 
 class Order {
-   Date dateTime;
+   Date date;
+   Time time;
    autounique number;
    * orders -- 1..* Table tables; // only from currentTables for currentOrders
    1 <@>- * OrderItem orderItems;

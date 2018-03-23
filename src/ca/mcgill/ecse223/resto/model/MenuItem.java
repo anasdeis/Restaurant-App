@@ -1,20 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
 // line 20 "../../../../../RestoAppPersistence.ump"
-// line 57 "../../../../../RestoApp v2.ump"
+// line 59 "../../../../../RestoApp v2.ump"
 public class MenuItem implements Serializable
 {
-
-  //------------------------
-  // ENUMERATIONS
-  //------------------------
-
-  public enum ItemCategory { Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage }
 
   //------------------------
   // STATIC VARIABLES
@@ -33,24 +27,18 @@ public class MenuItem implements Serializable
   //MenuItem Associations
   private List<PricedMenuItem> pricedMenuItems;
   private PricedMenuItem currentPricedMenuItem;
-  private Menu menu;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public MenuItem(String aName, Menu aMenu)
+  public MenuItem(String aName)
   {
     if (!setName(aName))
     {
       throw new RuntimeException("Cannot create due to duplicate name");
     }
     pricedMenuItems = new ArrayList<PricedMenuItem>();
-    boolean didAddMenu = setMenu(aMenu);
-    if (!didAddMenu)
-    {
-      throw new RuntimeException("Unable to create menuItem due to menu");
-    }
   }
 
   //------------------------
@@ -142,11 +130,6 @@ public class MenuItem implements Serializable
     return has;
   }
 
-  public Menu getMenu()
-  {
-    return menu;
-  }
-
   public boolean isNumberOfPricedMenuItemsValid()
   {
     boolean isValid = numberOfPricedMenuItems() >= minimumNumberOfPricedMenuItems();
@@ -158,9 +141,9 @@ public class MenuItem implements Serializable
     return 1;
   }
 
-  public PricedMenuItem addPricedMenuItem(double aPrice, RestoApp aRestoApp)
+  public PricedMenuItem addPricedMenuItem(double aPrice)
   {
-    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, aRestoApp, this);
+    PricedMenuItem aNewPricedMenuItem = new PricedMenuItem(aPrice, this);
     return aNewPricedMenuItem;
   }
 
@@ -175,6 +158,7 @@ public class MenuItem implements Serializable
     {
       return wasAdded;
     }
+
     if (isNewMenuItem)
     {
       aPricedMenuItem.setMenuItem(this);
@@ -247,25 +231,6 @@ public class MenuItem implements Serializable
     return wasSet;
   }
 
-  public boolean setMenu(Menu aMenu)
-  {
-    boolean wasSet = false;
-    if (aMenu == null)
-    {
-      return wasSet;
-    }
-
-    Menu existingMenu = menu;
-    menu = aMenu;
-    if (existingMenu != null && !existingMenu.equals(aMenu))
-    {
-      existingMenu.removeMenuItem(this);
-    }
-    menu.addMenuItem(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
     menuitemsByName.remove(getName());
@@ -275,19 +240,17 @@ public class MenuItem implements Serializable
       aPricedMenuItem.delete();
     }
     currentPricedMenuItem = null;
-    Menu placeholderMenu = menu;
-    this.menu = null;
-    placeholderMenu.removeMenuItem(this);
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "name" + ":" + getName()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "itemCategory" + "=" + (getItemCategory() != null ? !getItemCategory().equals(this)  ? getItemCategory().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "menu = "+(getMenu()!=null?Integer.toHexString(System.identityHashCode(getMenu())):"null");
+            "  " + "currentPricedMenuItem = "+(getCurrentPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getCurrentPricedMenuItem())):"null")
+     + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
@@ -295,6 +258,12 @@ public class MenuItem implements Serializable
   
   // line 23 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = -1776230320092632776L ;
+
+// line 61 ../../../../../RestoApp v2.ump
+  enum ItemCategory 
+  {
+    Appetizer, Main, Dessert, AlcoholicBeverage, NonAlcoholicBeverage
+  }
 
   
 }

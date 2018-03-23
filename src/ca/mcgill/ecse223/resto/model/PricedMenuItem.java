@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
 // line 38 "../../../../../RestoAppPersistence.ump"
-// line 65 "../../../../../RestoApp v2.ump"
+// line 67 "../../../../../RestoApp v2.ump"
 public class PricedMenuItem implements Serializable
 {
 
@@ -18,7 +18,6 @@ public class PricedMenuItem implements Serializable
   private double price;
 
   //PricedMenuItem Associations
-  private RestoApp restoApp;
   private List<OrderItem> orderItems;
   private MenuItem menuItem;
 
@@ -26,14 +25,9 @@ public class PricedMenuItem implements Serializable
   // CONSTRUCTOR
   //------------------------
 
-  public PricedMenuItem(double aPrice, RestoApp aRestoApp, MenuItem aMenuItem)
+  public PricedMenuItem(double aPrice, MenuItem aMenuItem)
   {
     price = aPrice;
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create pricedMenuItem due to restoApp");
-    }
     orderItems = new ArrayList<OrderItem>();
     boolean didAddMenuItem = setMenuItem(aMenuItem);
     if (!didAddMenuItem)
@@ -57,11 +51,6 @@ public class PricedMenuItem implements Serializable
   public double getPrice()
   {
     return price;
-  }
-
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
   }
 
   public OrderItem getOrderItem(int index)
@@ -99,33 +88,14 @@ public class PricedMenuItem implements Serializable
     return menuItem;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removePricedMenuItem(this);
-    }
-    restoApp.addPricedMenuItem(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public static int minimumNumberOfOrderItems()
   {
     return 0;
   }
 
-  public OrderItem addOrderItem(int aQuantity, Order aOrder, Seat... allSeats)
+  public OrderItem addOrderItem(int aQuantity, Seat... allSeats)
   {
-    return new OrderItem(aQuantity, this, aOrder, allSeats);
+    return new OrderItem(aQuantity, this, allSeats);
   }
 
   public boolean addOrderItem(OrderItem aOrderItem)
@@ -222,9 +192,6 @@ public class PricedMenuItem implements Serializable
 
   public void delete()
   {
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    placeholderRestoApp.removePricedMenuItem(this);
     for(int i=orderItems.size(); i > 0; i--)
     {
       OrderItem aOrderItem = orderItems.get(i - 1);
@@ -238,10 +205,11 @@ public class PricedMenuItem implements Serializable
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "price" + ":" + getPrice()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "menuItem = "+(getMenuItem()!=null?Integer.toHexString(System.identityHashCode(getMenuItem())):"null");
+            "  " + "menuItem = "+(getMenuItem()!=null?Integer.toHexString(System.identityHashCode(getMenuItem())):"null")
+     + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

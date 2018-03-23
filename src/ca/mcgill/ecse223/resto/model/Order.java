@@ -1,13 +1,14 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.*;
 
 // line 26 "../../../../../RestoAppPersistence.ump"
-// line 40 "../../../../../RestoApp v2.ump"
+// line 41 "../../../../../RestoApp v2.ump"
 public class Order implements Serializable
 {
 
@@ -22,36 +23,30 @@ public class Order implements Serializable
   //------------------------
 
   //Order Attributes
-  private Date dateTime;
+  private Date date;
+  private Time time;
 
   //Autounique Attributes
   private int number;
 
   //Order Associations
   private List<Table> tables;
-  private List<OrderItem> orderItems;
-  private RestoApp restoApp;
   private List<Bill> bills;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(Date aDateTime, RestoApp aRestoApp, Table... allTables)
+  public Order(Date aDate, Time aTime, Table... allTables)
   {
-    dateTime = aDateTime;
+    date = aDate;
+    time = aTime;
     number = nextNumber++;
     tables = new ArrayList<Table>();
     boolean didAddTables = setTables(allTables);
     if (!didAddTables)
     {
       throw new RuntimeException("Unable to create Order, must have at least 1 tables");
-    }
-    orderItems = new ArrayList<OrderItem>();
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create order due to restoApp");
     }
     bills = new ArrayList<Bill>();
   }
@@ -60,17 +55,30 @@ public class Order implements Serializable
   // INTERFACE
   //------------------------
 
-  public boolean setDateTime(Date aDateTime)
+  public boolean setDate(Date aDate)
   {
     boolean wasSet = false;
-    dateTime = aDateTime;
+    date = aDate;
     wasSet = true;
     return wasSet;
   }
 
-  public Date getDateTime()
+  public boolean setTime(Time aTime)
   {
-    return dateTime;
+    boolean wasSet = false;
+    time = aTime;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public Date getDate()
+  {
+    return date;
+  }
+
+  public Time getTime()
+  {
+    return time;
   }
 
   public int getNumber()
@@ -109,41 +117,6 @@ public class Order implements Serializable
   {
     int index = tables.indexOf(aTable);
     return index;
-  }
-
-  public OrderItem getOrderItem(int index)
-  {
-    OrderItem aOrderItem = orderItems.get(index);
-    return aOrderItem;
-  }
-
-  public List<OrderItem> getOrderItems()
-  {
-    List<OrderItem> newOrderItems = Collections.unmodifiableList(orderItems);
-    return newOrderItems;
-  }
-
-  public int numberOfOrderItems()
-  {
-    int number = orderItems.size();
-    return number;
-  }
-
-  public boolean hasOrderItems()
-  {
-    boolean has = orderItems.size() > 0;
-    return has;
-  }
-
-  public int indexOfOrderItem(OrderItem aOrderItem)
-  {
-    int index = orderItems.indexOf(aOrderItem);
-    return index;
-  }
-
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
   }
 
   public Bill getBill(int index)
@@ -310,105 +283,14 @@ public class Order implements Serializable
     return wasAdded;
   }
 
-  public static int minimumNumberOfOrderItems()
-  {
-    return 0;
-  }
-
-  public OrderItem addOrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Seat... allSeats)
-  {
-    return new OrderItem(aQuantity, aPricedMenuItem, this, allSeats);
-  }
-
-  public boolean addOrderItem(OrderItem aOrderItem)
-  {
-    boolean wasAdded = false;
-    if (orderItems.contains(aOrderItem)) { return false; }
-    Order existingOrder = aOrderItem.getOrder();
-    boolean isNewOrder = existingOrder != null && !this.equals(existingOrder);
-    if (isNewOrder)
-    {
-      aOrderItem.setOrder(this);
-    }
-    else
-    {
-      orderItems.add(aOrderItem);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeOrderItem(OrderItem aOrderItem)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aOrderItem, as it must always have a order
-    if (!this.equals(aOrderItem.getOrder()))
-    {
-      orderItems.remove(aOrderItem);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-
-  public boolean addOrderItemAt(OrderItem aOrderItem, int index)
-  {  
-    boolean wasAdded = false;
-    if(addOrderItem(aOrderItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
-      orderItems.remove(aOrderItem);
-      orderItems.add(index, aOrderItem);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveOrderItemAt(OrderItem aOrderItem, int index)
-  {
-    boolean wasAdded = false;
-    if(orderItems.contains(aOrderItem))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOrderItems()) { index = numberOfOrderItems() - 1; }
-      orderItems.remove(aOrderItem);
-      orderItems.add(index, aOrderItem);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addOrderItemAt(aOrderItem, index);
-    }
-    return wasAdded;
-  }
-
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeOrder(this);
-    }
-    restoApp.addOrder(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public static int minimumNumberOfBills()
   {
     return 0;
   }
 
-  public Bill addBill(RestoApp aRestoApp, Seat... allIssuedForSeats)
+  public Bill addBill(Seat... allIssuedForSeats)
   {
-    return new Bill(this, aRestoApp, allIssuedForSeats);
+    return new Bill(this, allIssuedForSeats);
   }
 
   public boolean addBill(Bill aBill)
@@ -481,16 +363,6 @@ public class Order implements Serializable
     {
       aTable.removeOrder(this);
     }
-    while (orderItems.size() > 0)
-    {
-      OrderItem aOrderItem = orderItems.get(orderItems.size() - 1);
-      aOrderItem.delete();
-      orderItems.remove(aOrderItem);
-    }
-    
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    placeholderRestoApp.removeOrder(this);
     for(int i=bills.size(); i > 0; i--)
     {
       Bill aBill = bills.get(i - 1);
@@ -501,10 +373,12 @@ public class Order implements Serializable
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
+            "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
@@ -512,6 +386,8 @@ public class Order implements Serializable
   
   // line 29 ../../../../../RestoAppPersistence.ump
   private static final long serialVersionUID = -3900912597282882073L ;
+// line 46 ../../../../../RestoApp v2.ump
+//  1 <@>- * OrderItem orderItems ;
 
   
 }

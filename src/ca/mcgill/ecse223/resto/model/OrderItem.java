@@ -1,12 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
 
 // line 32 "../../../../../RestoAppPersistence.ump"
-// line 47 "../../../../../RestoApp v2.ump"
+// line 49 "../../../../../RestoApp v2.ump"
 public class OrderItem implements Serializable
 {
 
@@ -20,13 +20,12 @@ public class OrderItem implements Serializable
   //OrderItem Associations
   private PricedMenuItem pricedMenuItem;
   private List<Seat> seats;
-  private Order order;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public OrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Order aOrder, Seat... allSeats)
+  public OrderItem(int aQuantity, PricedMenuItem aPricedMenuItem, Seat... allSeats)
   {
     quantity = aQuantity;
     boolean didAddPricedMenuItem = setPricedMenuItem(aPricedMenuItem);
@@ -39,11 +38,6 @@ public class OrderItem implements Serializable
     if (!didAddSeats)
     {
       throw new RuntimeException("Unable to create OrderItem, must have at least 1 seats");
-    }
-    boolean didAddOrder = setOrder(aOrder);
-    if (!didAddOrder)
-    {
-      throw new RuntimeException("Unable to create orderItem due to order");
     }
   }
 
@@ -100,11 +94,6 @@ public class OrderItem implements Serializable
   {
     int index = seats.indexOf(aSeat);
     return index;
-  }
-
-  public Order getOrder()
-  {
-    return order;
   }
 
   public boolean setPricedMenuItem(PricedMenuItem aPricedMenuItem)
@@ -260,25 +249,6 @@ public class OrderItem implements Serializable
     return wasAdded;
   }
 
-  public boolean setOrder(Order aOrder)
-  {
-    boolean wasSet = false;
-    if (aOrder == null)
-    {
-      return wasSet;
-    }
-
-    Order existingOrder = order;
-    order = aOrder;
-    if (existingOrder != null && !existingOrder.equals(aOrder))
-    {
-      existingOrder.removeOrderItem(this);
-    }
-    order.addOrderItem(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
     PricedMenuItem placeholderPricedMenuItem = pricedMenuItem;
@@ -290,18 +260,16 @@ public class OrderItem implements Serializable
     {
       aSeat.removeOrderItem(this);
     }
-    Order placeholderOrder = order;
-    this.order = null;
-    placeholderOrder.removeOrderItem(this);
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "quantity" + ":" + getQuantity()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "pricedMenuItem = "+(getPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getPricedMenuItem())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "order = "+(getOrder()!=null?Integer.toHexString(System.identityHashCode(getOrder())):"null");
+            "  " + "pricedMenuItem = "+(getPricedMenuItem()!=null?Integer.toHexString(System.identityHashCode(getPricedMenuItem())):"null")
+     + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS

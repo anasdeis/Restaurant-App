@@ -1,9 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.26.0-b05b57321 modeling language!*/
+/*This code was generated using the UMPLE 1.20.1.4071 modeling language!*/
 
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.sql.Date;
+import java.sql.Time;
 import java.util.*;
 
 // line 44 "../../../../../RestoAppPersistence.ump"
@@ -22,7 +23,8 @@ public class Reservation implements Serializable
   //------------------------
 
   //Reservation Attributes
-  private Date dateTime;
+  private Date date;
+  private Time time;
   private int numberInParty;
   private String contactName;
   private String contactEmailAddress;
@@ -33,15 +35,15 @@ public class Reservation implements Serializable
 
   //Reservation Associations
   private List<Table> tables;
-  private RestoApp restoApp;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Reservation(Date aDateTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, RestoApp aRestoApp, Table... allTables)
+  public Reservation(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table... allTables)
   {
-    dateTime = aDateTime;
+    date = aDate;
+    time = aTime;
     numberInParty = aNumberInParty;
     contactName = aContactName;
     contactEmailAddress = aContactEmailAddress;
@@ -53,21 +55,24 @@ public class Reservation implements Serializable
     {
       throw new RuntimeException("Unable to create Reservation, must have at least 1 tables");
     }
-    boolean didAddRestoApp = setRestoApp(aRestoApp);
-    if (!didAddRestoApp)
-    {
-      throw new RuntimeException("Unable to create reservation due to restoApp");
-    }
   }
 
   //------------------------
   // INTERFACE
   //------------------------
 
-  public boolean setDateTime(Date aDateTime)
+  public boolean setDate(Date aDate)
   {
     boolean wasSet = false;
-    dateTime = aDateTime;
+    date = aDate;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTime(Time aTime)
+  {
+    boolean wasSet = false;
+    time = aTime;
     wasSet = true;
     return wasSet;
   }
@@ -104,9 +109,14 @@ public class Reservation implements Serializable
     return wasSet;
   }
 
-  public Date getDateTime()
+  public Date getDate()
   {
-    return dateTime;
+    return date;
+  }
+
+  public Time getTime()
+  {
+    return time;
   }
 
   public int getNumberInParty()
@@ -165,11 +175,6 @@ public class Reservation implements Serializable
   {
     int index = tables.indexOf(aTable);
     return index;
-  }
-
-  public RestoApp getRestoApp()
-  {
-    return restoApp;
   }
 
   public boolean isNumberOfTablesValid()
@@ -306,25 +311,6 @@ public class Reservation implements Serializable
     return wasAdded;
   }
 
-  public boolean setRestoApp(RestoApp aRestoApp)
-  {
-    boolean wasSet = false;
-    if (aRestoApp == null)
-    {
-      return wasSet;
-    }
-
-    RestoApp existingRestoApp = restoApp;
-    restoApp = aRestoApp;
-    if (existingRestoApp != null && !existingRestoApp.equals(aRestoApp))
-    {
-      existingRestoApp.removeReservation(this);
-    }
-    restoApp.addReservation(this);
-    wasSet = true;
-    return wasSet;
-  }
-
   public void delete()
   {
     ArrayList<Table> copyOfTables = new ArrayList<Table>(tables);
@@ -333,22 +319,21 @@ public class Reservation implements Serializable
     {
       aTable.removeReservation(this);
     }
-    RestoApp placeholderRestoApp = restoApp;
-    this.restoApp = null;
-    placeholderRestoApp.removeReservation(this);
   }
 
 
   public String toString()
   {
+	  String outputString = "";
     return super.toString() + "["+
             "reservationNumber" + ":" + getReservationNumber()+ "," +
             "numberInParty" + ":" + getNumberInParty()+ "," +
             "contactName" + ":" + getContactName()+ "," +
             "contactEmailAddress" + ":" + getContactEmailAddress()+ "," +
             "contactPhoneNumber" + ":" + getContactPhoneNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "dateTime" + "=" + (getDateTime() != null ? !getDateTime().equals(this)  ? getDateTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
+            "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null")
+     + outputString;
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
