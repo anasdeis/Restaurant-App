@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.resto.controller;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class RestoAppController {
         try {
             Table table = new Table(generatedTableNumber, x, y, width, length, ra);
             for (int i = 0; i < numberOfSeats; i++) {
-                table.addCurrentSeat(new Seat(table));
+                table.addCurrentSeat(new Seat());
             }
             ra.addCurrentTable(table);
             RestoApplication.save();
@@ -87,13 +88,13 @@ public class RestoAppController {
 
     }
 
-    public static void reserveTable(Date aDate, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Integer selectedTableNumber) throws InvalidInputException {
+    public static void reserveTable(Date aDate, Time aTime,  int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table[] aTables, Integer selectedTableNumber) throws InvalidInputException {
         String error = "";
         RestoApp ra = RestoApplication.getRestoApp();
         List<Table> allTables = ra.getCurrentTables();
         Table[] allTablesArray = allTables.toArray(new Table[allTables.size()]);
 
-        Reservation reservation = new Reservation(aDate, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, ra, allTablesArray);
+        Reservation reservation = new Reservation(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, aTables);
         try {
             for (Table table : allTables) {
                 if (selectedTableNumber.equals(table.getNumber())) {
@@ -180,10 +181,11 @@ public class RestoAppController {
                 table.endOrder(order);
             }
         }
-
-        if (allTablesAvailalbeOrDifferentCurrentOrder(tables, order)) {
-            r.removeCurrentOrder(order);
-        }
+//        I cant find this method...
+//        
+//        if (allTablesAvailalbeOrDifferentCurrentOrder(tables, order)) {
+//            r.removeCurrentOrder(order);
+//        }
 
         try {
 
@@ -207,12 +209,13 @@ public class RestoAppController {
 
     private static boolean isTableReserved(Integer selectedTableNumber) {
         RestoApp ra = RestoApplication.getRestoApp();
-        List<Table> tables = ra.getCurrentTables();
-        List<Reservation> reservations = ra.getReservations();
-        for (Reservation reservation : reservations) {
-
+        Table table = ra.getCurrentTable(selectedTableNumber);
+        if(table.hasReservations()){
+        	return true;
+        }else{
+            return false;	
         }
-        return false;
+
     }
 
     public static int generateTableNumber() {
@@ -256,9 +259,9 @@ public class RestoAppController {
             throw new InvalidInputException("Item category is null");
         }
 
-        RestoApp resto = RestoApplication.getRestoApp();
+        RestoApp ra = RestoApplication.getRestoApp();
         ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
-        Menu menu = resto.getMenu();
+        Menu menu = ra.getMenu();
 
         for (int j = 0; j < menu.numberOfMenuItems(); j++) {
             MenuItem currItem = menu.getMenuItem(j);
@@ -398,8 +401,7 @@ public class RestoAppController {
 
             if (numOfSeats > n) {
                 for (int j = numOfSeats - n; j > 0; j--) {
-                    Seat seatAdd = table.addSeat();
-                    table.addCurrentSeat(seatAdd);
+                    table.addCurrentSeat(new Seat());
                 }
             } else if (numOfSeats < n) {
                 for (int j = n - numOfSeats; j > 0; j--) {
