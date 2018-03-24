@@ -181,7 +181,7 @@ public class RestoAppController {
             }
         }
 
-        if (allTablesAvailalbeOrDifferentCurrentOrder(tables, order)) {
+        if (allTablesAvailableOrDifferentCurrentOrder(tables, order)) {
             r.removeCurrentOrder(order);
         }
 
@@ -193,6 +193,16 @@ public class RestoAppController {
             throw (new InvalidInputException(e.getMessage()));
         }
     }
+
+    private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order ) {
+        for (Table table : tables) {
+            if ((table.getStatusFullName() != "Available") || (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private static boolean isDuplicateTableNumber(int number) {
         RestoApp ra = RestoApplication.getRestoApp();

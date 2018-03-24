@@ -1,7 +1,7 @@
 namespace ca.mcgill.ecse223.resto.model;
 
 use RestoAppPersistence.ump;
-use RestoAppStates.ump;
+use RestoAppTableStateMachine.ump;
 
 class RestoApp {
    1 <@>- * Reservation reservations; // sorted by date and time
@@ -9,7 +9,7 @@ class RestoApp {
    0..1 -> * Table currentTables; // subsets tables
    1 <@>- * Order orders;
    0..1 -> * Order currentOrders; // subsets orders
-   1 <@>- 1 Menu menu;   
+   1 <@>- 1 Menu menu;
    1 <@>- * PricedMenuItem pricedMenuItems;
    1 <@>- * Bill bills;
 }
@@ -52,7 +52,7 @@ class OrderItem {
    * orderItems -- 1..* Seat seats; // only from order.tables.seats
 }
 
-class Menu {   
+class Menu {
    1 <@>- * MenuItem menuItems;
 }
 
