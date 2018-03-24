@@ -171,7 +171,8 @@ public class RestoAppPage extends JFrame {
         //startOrder
         startOrderButton = new JButton();
         startOrderButton.setText("Start Order");
-        selectedTablesLabel = new JLabel("Select Table #: ");
+        selectedTablesLabel = new JLabel("Select Table # (with space in between selected numbers): ");
+        selectedTablesTextField = new JTextField();
 
         //endOrder
         endOrderButton = new JButton();
@@ -278,136 +279,134 @@ public class RestoAppPage extends JFrame {
 		updateTableButton.setText("Update Table");
 		//added method
 
-		GroupLayout layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setAutoCreateGaps(true);
-		layout.setAutoCreateContainerGaps(true);
-		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addGroup(layout.createParallelGroup()
-						.addComponent(displayApp, 800, 800, 800)
-						.addComponent(errorMessage)
-						.addComponent(horizontalLineTop)
-						.addComponent(horizontalLineBottom))
-				.addGroup(layout.createSequentialGroup()
-						.addGroup(layout.createParallelGroup()
-								.addComponent(numberOfSeatsLabel)
-								.addComponent(widthLabel)
-								.addComponent(lengthLabel)
-								.addComponent(xLocationLabel)
-								.addComponent(yLocationLabel))
-						.addGroup(layout.createParallelGroup()
-								.addComponent(numberOfSeatsTextField)
-								.addComponent(widthTextField)
-								.addComponent(lengthTextField)
-								.addComponent(yLocationTextField)
-								.addComponent(xLocationTextField)
-								.addComponent(createTableButton)
-								.addComponent(moveTableButton))
-
-						.addGroup(layout.createParallelGroup()
-								.addComponent(tablesLabel)
-								.addComponent(numberSeatsLabel)
-								.addComponent(tableLocationXLabel)
-								.addComponent(tableLocationYLabel)
-								.addComponent(tableWidthLabel)
-								.addComponent(tableLengthLabel)
-								.addComponent(newTableNumberLabel)
-								.addComponent(newNumberOfSeatsLabel)
-								)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(tableList)
-								.addComponent(removeTableButton)
-								.addComponent(contactNameLabel)
-								.addComponent(contactEmailAddressLabel)
-								.addComponent(contactPhoneNumberLabel)
-								.addComponent(numberInPartyLabel)
-								.addComponent(reservedStatus)
-								.addComponent(newTableNumberTextField)
-								.addComponent(newNumberOfSeatsTextField)
-								.addComponent(updateTableButton)
-								)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(menuButton)
-								.addComponent(contactNameTextField)
-								.addComponent(contactEmailAddressTextField)
-								.addComponent(contactPhoneNumberTextField)
-								.addComponent(numberInPartyTextField)
-								.addComponent(reserveButton)
-								
-								)
-						));
-
-
-		layout.setVerticalGroup(layout.createParallelGroup()
-				.addGroup(layout.createSequentialGroup()
-						.addComponent(errorMessage)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(horizontalLineTop))
-						.addGroup(layout.createParallelGroup()
-								.addComponent(numberOfSeatsLabel)
-								.addComponent(numberOfSeatsTextField)
-								.addComponent(tablesLabel)
-								.addComponent(tableList)
-								.addComponent(menuButton))
-						.addGroup(layout.createParallelGroup()
-								.addComponent(widthLabel)
-								.addComponent(widthTextField)
-								.addComponent(removeTableButton))
-						.addGroup(layout.createParallelGroup()
-								.addComponent(lengthLabel)
-								.addComponent(lengthTextField)
-								.addComponent(numberSeatsLabel)
-								.addComponent(contactNameLabel)
-								.addComponent(contactNameTextField)
-								)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(xLocationTextField)
-								.addComponent(xLocationLabel)
-								.addComponent(tableLocationXLabel)
-								.addComponent(contactEmailAddressLabel)
-								.addComponent(contactEmailAddressTextField)
-								
-								)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(yLocationTextField)
-								.addComponent(yLocationLabel)
-								.addComponent(tableLocationYLabel)
-								.addComponent(contactPhoneNumberLabel)
-								.addComponent(contactPhoneNumberTextField)
-								)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(createTableButton)
-								.addComponent(tableWidthLabel)
-								.addComponent(numberInPartyLabel)
-								.addComponent(numberInPartyTextField)
-								)
-					
-						.addGroup(layout.createParallelGroup()
-								.addComponent(moveTableButton)
-								.addComponent(tableLengthLabel)
-								.addComponent(reservedStatus)
-								.addComponent(reserveButton)
-								)
-						
-						.addGroup(layout.createParallelGroup()
-								.addComponent(newTableNumberLabel)
-								.addComponent(newTableNumberTextField)
-
-								)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(newNumberOfSeatsLabel)
-								.addComponent(newNumberOfSeatsTextField)
-								)
-
-						.addGroup(layout.createParallelGroup()
-								.addComponent(updateTableButton))
-
-
-						.addComponent(horizontalLineBottom)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(displayApp, 300, 300, 300)))
-				);
-		pack();
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        layout.setHorizontalGroup(layout.createParallelGroup()
+                .addGroup(layout.createParallelGroup()
+                        .addComponent(displayApp, 800, 800, 800)
+                        .addComponent(errorMessage)
+                        .addComponent(horizontalLineTop)
+                        .addComponent(horizontalLineBottom))
+                .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(numberOfSeatsLabel)
+                                .addComponent(widthLabel)
+                                .addComponent(lengthLabel)
+                                .addComponent(xLocationLabel)
+                                .addComponent(yLocationLabel)
+                                .addComponent(selectedTablesLabel)
+                                .addComponent(startOrderButton))
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(numberOfSeatsTextField)
+                                .addComponent(widthTextField)
+                                .addComponent(lengthTextField)
+                                .addComponent(endOrderButton)
+                                .addComponent(yLocationTextField)
+                                .addComponent(xLocationTextField)
+                                .addComponent(createTableButton)
+                                .addComponent(moveTableButton)
+                                .addComponent(selectedTablesTextField)
+                                .addComponent(endOrderButton))
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(tablesLabel)
+                                .addComponent(numberSeatsLabel)
+                                .addComponent(tableLocationXLabel)
+                                .addComponent(tableLocationYLabel)
+                                .addComponent(tableWidthLabel)
+                                .addComponent(tableLengthLabel)
+                                .addComponent(newTableNumberLabel)
+                                .addComponent(newNumberOfSeatsLabel)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(tableList)
+                                .addComponent(removeTableButton)
+                                .addComponent(contactNameLabel)
+                                .addComponent(contactEmailAddressLabel)
+                                .addComponent(contactPhoneNumberLabel)
+                                .addComponent(numberInPartyLabel)
+                                .addComponent(reservedStatus)
+                                .addComponent(newTableNumberTextField)
+                                .addComponent(newNumberOfSeatsTextField)
+                                .addComponent(updateTableButton)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(menuButton)
+                                .addComponent(contactNameTextField)
+                                .addComponent(contactEmailAddressTextField)
+                                .addComponent(contactPhoneNumberTextField)
+                                .addComponent(numberInPartyTextField)
+                                .addComponent(reserveButton)
+                        )
+                ));
+        layout.setVerticalGroup(layout.createParallelGroup()
+                .addGroup(layout.createSequentialGroup()
+                        .addComponent(errorMessage)
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(horizontalLineTop))
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(numberOfSeatsLabel)
+                                .addComponent(numberOfSeatsTextField)
+                                .addComponent(tablesLabel)
+                                .addComponent(tableList)
+                                .addComponent(menuButton))
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(widthLabel)
+                                .addComponent(widthTextField)
+                                .addComponent(removeTableButton))
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(lengthLabel)
+                                .addComponent(lengthTextField)
+                                .addComponent(numberSeatsLabel)
+                                .addComponent(contactNameLabel)
+                                .addComponent(contactNameTextField)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(xLocationTextField)
+                                .addComponent(xLocationLabel)
+                                .addComponent(tableLocationXLabel)
+                                .addComponent(contactEmailAddressLabel)
+                                .addComponent(contactEmailAddressTextField)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(yLocationTextField)
+                                .addComponent(yLocationLabel)
+                                .addComponent(tableLocationYLabel)
+                                .addComponent(contactPhoneNumberLabel)
+                                .addComponent(contactPhoneNumberTextField)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(createTableButton)
+                                .addComponent(tableWidthLabel)
+                                .addComponent(numberInPartyLabel)
+                                .addComponent(numberInPartyTextField)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(moveTableButton)
+                                .addComponent(tableLengthLabel)
+                                .addComponent(reservedStatus)
+                                .addComponent(reserveButton)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(selectedTablesLabel)
+                               .addComponent(selectedTablesTextField)
+                                .addComponent(newTableNumberLabel)
+                                .addComponent(newTableNumberTextField)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(startOrderButton)
+                                .addComponent(endOrderButton)
+                                .addComponent(newNumberOfSeatsLabel)
+                                .addComponent(newNumberOfSeatsTextField)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(updateTableButton))
+                        .addComponent(horizontalLineBottom)
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(displayApp, 300, 300, 300)))
+        );
+        pack();
 
 	}
 	protected void updateTableButtonActionPerformed(ActionEvent evt) {
@@ -524,31 +523,30 @@ public class RestoAppPage extends JFrame {
                 List<Table> tables = RestoAppController.getTables();
                 List<Table> selectedTables = new ArrayList<Table>();
                 boolean flag = true;
-                for (int tableNumber : intArray) {
-                    if (flag) {
-                        for (Table table : tables) {
-                            flag = false;
-                            if (tableNumber == (table.getNumber())) {
-                                selectedTables.add(table);
-                                flag = true;
-                                break;
-                            }
-                        }
-                    } else {
+
+                outerloop: for (int tableNumber : intArray) {
+                    if (!flag) {
                         error = "Input only valid table numbers!";
                         throw (new NumberFormatException(error));
-
+                    }
+                    for (Table table : tables) {
+                        flag = false;
+                        if (tableNumber == (table.getNumber())) {
+                            selectedTables.add(table);
+                            flag = true;
+                            System.out.println("Valid tableNumber " + tableNumber);
+                            continue outerloop;
+                        }
                     }
                 }
-                try {
-                    RestoAppController.startOrder(selectedTables);
-                } catch (InvalidInputException e) {
-                    error = e.getMessage();
-                }
-            } catch (NumberFormatException e) {
+                RestoAppController.startOrder(selectedTables);
+            } catch (NumberFormatException | InvalidInputException e) {
                 error = e.getMessage();
             }
         }
+
+        refreshData();
+        repaint();
     }
 
     protected void endOrderButtonActionPerformed(ActionEvent evt) {
@@ -557,12 +555,14 @@ public class RestoAppPage extends JFrame {
         if (selectedTableIndex < 0) {
             error = "Table needs to be selected for moving!";
         } else {
-            try {
-                RestoAppController.endOrder();
-            } catch (InvalidInputException e) {
-                error = e.getMessage();
-            }
+       //     try {
+           //     RestoAppController.endOrder(order);
+          //  } catch (InvalidInputException e) {
+        //        error = e.getMessage();
+          //  }
         }
+        refreshData();
+        repaint();
     }
 	
 
@@ -609,6 +609,4 @@ public class RestoAppPage extends JFrame {
 
 		}
 	}
->>>>>>> ce7736191184959e32479ec74f4e59bcc98412bf
-
 }

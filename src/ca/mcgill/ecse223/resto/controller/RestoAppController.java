@@ -159,7 +159,7 @@ public class RestoAppController {
 
     }
     
-    public static boolean dateDoesOverlap(Date date,Time time) {
+ /*   public static boolean dateDoesOverlap(Date date,Time time) {
     	RestoApp ra = RestoApplication.getRestoApp();
         List<Table> tables = ra.getCurrentTables();
     	
@@ -167,12 +167,12 @@ public class RestoAppController {
         java.sql.Date dateNow = new java.sql.Date(curTime);
         
         for (Table table : tables) {
-	    	if ((table.getDate().compareTo(date) == 0) && (reservationa.getTime().compareTo(aTime) == 0)) {
+	//    	if ((table.getDate().compareTo(date) == 0) && (reservation.getTime().compareTo(aTime) == 0)) {
 				
 			}
-        }
+   //     }
     	return true;
-    }
+    }*/
 
     public static void startOrder(List<Table> tables) throws InvalidInputException {
 
@@ -335,16 +335,16 @@ public class RestoAppController {
 
         RestoApp ra = RestoApplication.getRestoApp();
         ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
-        Menu menu = ra.getMenu();
+     //   Menu menu = ra.getMenu();
 
-        for (int j = 0; j < menu.numberOfMenuItems(); j++) {
-            MenuItem currItem = menu.getMenuItem(j);
-            if (currItem.getItemCategory().equals(itemCategory)) {
-                itemList.add(currItem);
-            }
-        }
+    //    for (int j = 0; j < menu.numberOfMenuItems(); j++) {
+      //      MenuItem currItem = menu.getMenuItem(j);
+      //      if (currItem.getItemCategory().equals(itemCategory)) {
+      //          itemList.add(currItem);
+       //     }
+    //    }
         return itemList;
-    }
+   }
 
     public static void moveTable(Table table, int x, int y) throws InvalidInputException {
 
@@ -390,9 +390,9 @@ public class RestoAppController {
         String error = "";
         RestoApp ra = RestoApplication.getRestoApp();
 
-        MenuItem newMenuItem = new MenuItem(name, ra.getMenu());
+    //    MenuItem newMenuItem = new MenuItem(name, ra.getMenu());
 
-        if (category.equals("Appetizer")) {
+    /*    if (category.equals("Appetizer")) {
             newMenuItem.setItemCategory(MenuItem.ItemCategory.Appetizer);
         } else if (category.equalsIgnoreCase("Main")) {
             newMenuItem.setItemCategory(MenuItem.ItemCategory.Main);
@@ -403,7 +403,7 @@ public class RestoAppController {
         } else if (category.equalsIgnoreCase("Non Alcoholic Beverage")) {
             newMenuItem.setItemCategory(MenuItem.ItemCategory.NonAlcoholicBeverage);
         }
-
+*/
 
         int dotCount = 0;
         for (int i = 0; i < price.length(); i++) {
@@ -429,7 +429,7 @@ public class RestoAppController {
         } else if (priceDouble == 0) {
             throw new InvalidInputException("Cannot have 0 as price");
         } else {
-            PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble, newMenuItem);
+    //        PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble, newMenuItem);
         }
 
         RestoApplication.save();
