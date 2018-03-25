@@ -1,55 +1,56 @@
 package ca.mcgill.ecse223.resto.application;
+
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 import ca.mcgill.ecse223.resto.view.RestoAppPage;
 
 public class RestoApplication {
 
-	private static String filename = "menu.resto";
+    private static String filename = "menu.resto";
 
-	private static RestoApp ra;
+    private static RestoApp ra;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// start UI
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				RestoAppPage restoAppPage = new RestoAppPage();
-				restoAppPage.setVisible(true);
-			}
-		});
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        // start UI
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                RestoAppPage restoAppPage = new RestoAppPage();
+                restoAppPage.setVisible(true);
+            }
+        });
 
-	}
+    }
 
-	public static RestoApp getRestoApp() {
-		if (ra == null) {
+    public static RestoApp getRestoApp() {
+        if (ra == null) {
 
-			ra = load();	
-		}
-		return ra;
-	}
+            ra = load();
+        }
+        return ra;
+    }
 
-	public static void save(){
-		PersistenceObjectStream.serialize(ra);
-	}
-	public static RestoApp load(){
-		PersistenceObjectStream.setFilename(filename);
-		ra =  (RestoApp) PersistenceObjectStream.deserialize();
+    public static void save() {
+        PersistenceObjectStream.serialize(ra);
+    }
 
-		if(ra == null){
-			ra = new RestoApp();
-		}
-		else {
-			ra.reinitialize();
-		}
+    public static RestoApp load() {
+        PersistenceObjectStream.setFilename(filename);
+        ra = (RestoApp) PersistenceObjectStream.deserialize();
 
-		return ra;
-	}
+        if (ra == null) {
+            ra = new RestoApp();
+        } else {
+            ra.reinitialize();
+        }
 
-	public static void setFilename(String newFilename) {
-		filename = newFilename;
-	}
+        return ra;
+    }
+
+    public static void setFilename(String newFilename) {
+        filename = newFilename;
+    }
 
 }

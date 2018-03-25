@@ -10,18 +10,18 @@ import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoAppDisplay extends JPanel {
 
-	public RestoAppDisplay() {
-		super();
-		setFocusable(true);
-	}
+    public RestoAppDisplay() {
+        super();
+        setFocusable(true);
+    }
 
-	protected void paintComponent(Graphics g){	//paint component
+    protected void paintComponent(Graphics g) {    //paint component
 
-		RestoAppController.getTables();
-		for (Table table : RestoAppController.getTables()) {
-			g.drawRect(table.getX(), table.getY(), table.getWidth(), table.getLength());
+        RestoAppController.getTables();
+        for (Table table : RestoAppController.getTables()) {
+            g.drawRect(table.getX(), table.getY(), table.getWidth(), table.getLength());
 
-		}
-	}
+        }
+    }
 
 }

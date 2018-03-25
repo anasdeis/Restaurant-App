@@ -55,7 +55,7 @@ public class RestoAppController {
 
         try {
             Table table = new Table(generatedTableNumber, x, y, width, length, ra);
-            
+
             for (int i = 0; i < numberOfSeats; i++) {
                 table.addCurrentSeat(new Seat());
             }
@@ -88,66 +88,66 @@ public class RestoAppController {
         }
     }
 
-    public static void reserveTable(Date aDate, Time aTime,  int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table[] aTables, Integer selectedTableNumber) throws InvalidInputException {
+    public static void reserveTable(Date aDate, Time aTime, int aNumberInParty, String aContactName, String aContactEmailAddress, String aContactPhoneNumber, Table[] aTables, Integer selectedTableNumber) throws InvalidInputException {
         String error = "";
         RestoApp ra = RestoApplication.getRestoApp();
         long time = System.currentTimeMillis();
         java.sql.Date dateNow = new java.sql.Date(time);
-        
-        if(aDate == null || dateNow.compareTo(aDate) > 0) {
-        	error = error + "Please enter the date of the reservation. Make sure it is in the future.";
+
+        if (aDate == null || dateNow.compareTo(aDate) > 0) {
+            error = error + "Please enter the date of the reservation. Make sure it is in the future.";
         }
-        
-        if(aTime == null) {
-        	error = error + "Please enter the time of the reservation";
+
+        if (aTime == null) {
+            error = error + "Please enter the time of the reservation";
         }
-        
-        if(aContactName == null) {
-        	error = error + "Please enter your name";
+
+        if (aContactName == null) {
+            error = error + "Please enter your name";
         }
-        
-        if(aContactEmailAddress == null) {
-        	error = error + "Please enter your email address";
+
+        if (aContactEmailAddress == null) {
+            error = error + "Please enter your email address";
         }
-        
-        if(aContactPhoneNumber == null) {
-        	error = error + "Please enter your phone number";
+
+        if (aContactPhoneNumber == null) {
+            error = error + "Please enter your phone number";
         }
-        
-        if(aNumberInParty <= 0) {
-        	error = error + "Please enter a positive number (larger than 0)";
+
+        if (aNumberInParty <= 0) {
+            error = error + "Please enter a positive number (larger than 0)";
         }
-        
-        if(aContactPhoneNumber == null) {
-        	error = error + "Please enter your phone number";
+
+        if (aContactPhoneNumber == null) {
+            error = error + "Please enter your phone number";
         }
-        
-        
+
+
         List<Table> allTables = ra.getCurrentTables();
         Table[] allTablesArray = allTables.toArray(new Table[allTables.size()]);
         int seatCapacity = 0;
-        
+
         try {
             for (Table table : allTables) {
                 if (selectedTableNumber.equals(table.getNumber())) {
-                    
-                	seatCapacity = table.numberOfCurrentSeats();
-                	
-                	List<Reservation> reservationsInTable = table.getReservations();
-                	
-                	for (Reservation reservationa : reservationsInTable) {
-                		if ((reservationa.getDate().compareTo(aDate) == 0) && (reservationa.getTime().compareTo(aTime) == 0)) {
-                			error = error + "Please choose another time, table reserved at the requested time";
-                			break;
-                		}
-                	}
-                	
-                	if (seatCapacity < aNumberInParty) {
-                		error = error + "There are no enough seats on this table. Please choose another table";
-                	}
-                	
-                	Reservation reservation = new Reservation(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, aTables);
-                	table.addReservation(reservation);
+
+                    seatCapacity = table.numberOfCurrentSeats();
+
+                    List<Reservation> reservationsInTable = table.getReservations();
+
+                    for (Reservation reservationa : reservationsInTable) {
+                        if ((reservationa.getDate().compareTo(aDate) == 0) && (reservationa.getTime().compareTo(aTime) == 0)) {
+                            error = error + "Please choose another time, table reserved at the requested time";
+                            break;
+                        }
+                    }
+
+                    if (seatCapacity < aNumberInParty) {
+                        error = error + "There are no enough seats on this table. Please choose another table";
+                    }
+
+                    Reservation reservation = new Reservation(aDate, aTime, aNumberInParty, aContactName, aContactEmailAddress, aContactPhoneNumber, aTables);
+                    table.addReservation(reservation);
                     break;
                 }
             }
@@ -160,7 +160,7 @@ public class RestoAppController {
     }
     
  /*   public static boolean dateDoesOverlap(Date date,Time time) {
-    	RestoApp ra = RestoApplication.getRestoApp();
+        RestoApp ra = RestoApplication.getRestoApp();
         List<Table> tables = ra.getCurrentTables();
     	
         long curTime = System.currentTimeMillis();
@@ -260,7 +260,7 @@ public class RestoAppController {
         }
     }
 
-    private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order ) {
+    private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
         for (Table table : tables) {
             if ((table.getStatusFullName() != "Available") || (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
                 return false;
@@ -284,10 +284,10 @@ public class RestoAppController {
     private static boolean isTableReserved(Integer selectedTableNumber) {
         RestoApp ra = RestoApplication.getRestoApp();
         Table table = ra.getCurrentTable(selectedTableNumber);
-        if(table.hasReservations()){
-        	return true;
-        }else{
-            return false;	
+        if (table.hasReservations()) {
+            return true;
+        } else {
+            return false;
         }
 
     }
@@ -335,16 +335,16 @@ public class RestoAppController {
 
         RestoApp ra = RestoApplication.getRestoApp();
         ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
-     //   Menu menu = ra.getMenu();
+        //   Menu menu = ra.getMenu();
 
-    //    for (int j = 0; j < menu.numberOfMenuItems(); j++) {
-      //      MenuItem currItem = menu.getMenuItem(j);
-      //      if (currItem.getItemCategory().equals(itemCategory)) {
-      //          itemList.add(currItem);
-       //     }
-    //    }
+        //    for (int j = 0; j < menu.numberOfMenuItems(); j++) {
+        //      MenuItem currItem = menu.getMenuItem(j);
+        //      if (currItem.getItemCategory().equals(itemCategory)) {
+        //          itemList.add(currItem);
+        //     }
+        //    }
         return itemList;
-   }
+    }
 
     public static void moveTable(Table table, int x, int y) throws InvalidInputException {
 
@@ -370,7 +370,7 @@ public class RestoAppController {
         RestoApp r = RestoApplication.getRestoApp();
         List<Table> currentTables = r.getCurrentTables();
 
-        if ((isTableOverlapping(x, y, width, length))) {
+        if ((table.doesOverlap(x, y, width, length))) {
             throw (new InvalidInputException("Tables overlap! Change table configuration."));
         }
 
@@ -390,7 +390,7 @@ public class RestoAppController {
         String error = "";
         RestoApp ra = RestoApplication.getRestoApp();
 
-    //    MenuItem newMenuItem = new MenuItem(name, ra.getMenu());
+        //    MenuItem newMenuItem = new MenuItem(name, ra.getMenu());
 
     /*    if (category.equals("Appetizer")) {
             newMenuItem.setItemCategory(MenuItem.ItemCategory.Appetizer);
@@ -429,7 +429,7 @@ public class RestoAppController {
         } else if (priceDouble == 0) {
             throw new InvalidInputException("Cannot have 0 as price");
         } else {
-    //        PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble, newMenuItem);
+            //        PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble, newMenuItem);
         }
 
         RestoApplication.save();
