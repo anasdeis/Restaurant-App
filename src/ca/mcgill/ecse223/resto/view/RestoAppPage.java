@@ -98,6 +98,8 @@ public class RestoAppPage extends JFrame {
      * This method is called from within the constructor to initialize the form.
      */
     private void initComponents() {
+    	
+    	setResizable(false);
 
         setTitle("RestoApp");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
