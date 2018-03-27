@@ -98,6 +98,7 @@ public class RestoAppPage extends JFrame {
      * This method is called from within the constructor to initialize the form.
      */
     private void initComponents() {
+
         setTitle("RestoApp");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         // Error Message Elements
@@ -105,12 +106,12 @@ public class RestoAppPage extends JFrame {
         errorMessage.setForeground(Color.RED);
 
         // Create Driver Elements
-        createTableButton = new JButton();
-        numberOfSeatsLabel = new JLabel();
-        xLocationLabel = new JLabel();
-        yLocationLabel = new JLabel();
-        lengthLabel = new JLabel();
-        widthLabel = new JLabel();
+        createTableButton = new JButton("Create Table");
+        numberOfSeatsLabel = new JLabel("Number Of Seats: ");
+        xLocationLabel = new JLabel("X Location: ");
+        yLocationLabel = new JLabel("Y Location: ");
+        lengthLabel = new JLabel("Length: ");
+        widthLabel = new JLabel("Width: ");
 
         numberOfSeatsTextField = new JTextField();
         xLocationTextField = new JTextField();
@@ -120,41 +121,23 @@ public class RestoAppPage extends JFrame {
         newNumberOfSeatsTextField = new JTextField();
         newTableNumberTextField = new JTextField();
 
-        createTableButton.setText("Create Table: ");
-        numberOfSeatsLabel.setText("Number Of Seats: ");
-        xLocationLabel.setText("X Location: ");
-        yLocationLabel.setText("Y Location: ");
-        lengthLabel.setText("Length: ");
-        widthLabel.setText("Width: ");
-
-        newNumberOfSeatsTextField.setText("");
-        newTableNumberTextField.setText("");
-
         // Delete Table Elements
         tableList = new JComboBox<String>(new String[0]);
         tablesLabel = new JLabel();
         removeTableButton = new JButton();
 
         // Table Info Elements
-        numberSeatsLabel = new JLabel();
-        tableLocationXLabel = new JLabel();
-        tableLocationYLabel = new JLabel();
-        tableWidthLabel = new JLabel();
-        tableLengthLabel = new JLabel();
-
-        numberSeatsLabel.setText("Seats: ");
-        tableLocationXLabel.setText("Location X: ");
-        tableLocationYLabel.setText("Location Y: ");
-        tableWidthLabel.setText("Width: ");
-        tableLengthLabel.setText("Length: ");
+        numberSeatsLabel = new JLabel("Seats: ");
+        tableLocationXLabel = new JLabel("Location X: ");
+        tableLocationYLabel = new JLabel("Location Y: ");
+        tableWidthLabel = new JLabel("Width: ");
+        tableLengthLabel = new JLabel("Length: ");
 
         // Move Table Elements
-        moveTableButton = new JButton();
-        moveTableButton.setText("Move Table");
+        moveTableButton = new JButton("Move Table");
 
         // Display Menu Elements
-        menuButton = new JButton();
-        menuButton.setText("Menu");
+        menuButton = new JButton("Menu");
 
         // Reserve Table elements
         reserveButton = new JButton("Reserve Table");
@@ -171,14 +154,12 @@ public class RestoAppPage extends JFrame {
         numberInPartyTextField = new JTextField();
 
         //startOrder
-        startOrderButton = new JButton();
-        startOrderButton.setText("Start Order");
-        selectedTablesLabel = new JLabel("Select Table # (with space in between selected numbers): ");
+        startOrderButton = new JButton("Start Order");
+        selectedTablesLabel = new JLabel("table # (separate by spaces): ");
         selectedTablesTextField = new JTextField();
 
         //endOrder
-        endOrderButton = new JButton();
-        endOrderButton.setText("End Order");
+        endOrderButton = new JButton("End Order");
 
 
         createTableButton.addActionListener(new java.awt.event.ActionListener() {
@@ -570,30 +551,40 @@ public class RestoAppPage extends JFrame {
         errorMessage.setText(error);
         if (error == null || error.length() == 0) {
             // populate page with data
-            // number of seats
+
+            //TextField
+            //create table
             numberOfSeatsTextField.setText("");
-            // width
             widthTextField.setText("");
-            // length
             lengthTextField.setText("");
-            // xLocation
             xLocationTextField.setText("");
-            // yLocation
             yLocationTextField.setText("");
+            //update table
+            newNumberOfSeatsTextField.setText("");
+            newTableNumberTextField.setText("");
+            //reserve table
+            numberInPartyTextField.setText("");
+            contactNameTextField.setText("");
+            contactEmailAddressTextField.setText("");
+            contactPhoneNumberTextField.setText("");
+            //start order
+            selectedTablesTextField.setText("");
 
-
-            // table list
+            //LabelField
+            //select table
             numberSeatsLabel.setText("Seats: ");
             tableLocationXLabel.setText("Location X: ");
             tableLocationYLabel.setText("Location Y: ");
             tableWidthLabel.setText("Width: ");
             tableLengthLabel.setText("Length: ");
-
-            numberInPartyLabel.setText("Number of People: ");
-            contactEmailAddressLabel.setText("Contact E-mail address:");
+            //reserve table
+            contactEmailAddressLabel.setText("Contact E-mail address: ");
+            contactNameLabel.setText("Contact Name:");
             contactPhoneNumberLabel.setText("Contact Phone: ");
-            contactNameLabel.setText("Contact Name: ");
+            numberInPartyLabel.setText("Number of People: ");
+            reservedStatus.setText("Reservation Status: Unreserved ");
 
+            //select table - also combo box for table visualization
             tables = new HashMap<Integer, Table>();
             tableList.removeAllItems();
             Integer index = 0;

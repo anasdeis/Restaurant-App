@@ -235,7 +235,7 @@ public class RestoAppController {
         }
 
         if (!currentOrders.contains(order)) {
-            throw (new InvalidInputException("Not a current table! "));
+            throw (new InvalidInputException("Not a current order! "));
         }
 
         List<Table> tables = order.getTables();
@@ -262,7 +262,7 @@ public class RestoAppController {
 
     private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
         for (Table table : tables) {
-            if ((table.getStatusFullName() != "Available") || (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
+            if ((table.getStatusFullName() == "Available") || (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
                 return false;
             }
         }
