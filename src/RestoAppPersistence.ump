@@ -58,3 +58,9 @@ class Table {
   isA Serializable;
   private static final long serialVersionUID = 8896099581655989380L;
 }
+
+class Waiter{
+  depend java.io.Serializable;
+  isA Serializable;
+  private static final long serialVersionUID = 2897099481655989380L;
+}
