@@ -161,6 +161,7 @@ public class MenuPage extends JFrame {
             successMessage.setSize(500, 20);
             successMessage.setLocationRelativeTo(this);
             successMessage.setVisible(true);
+            
         } catch (InvalidInputException e) {
             error = e.getMessage();
             JDialog er = new JDialog(this, error, false);
@@ -169,5 +170,12 @@ public class MenuPage extends JFrame {
             er.setVisible(true);
         }
 
+        clearFields();
     }
+    
+    private void clearFields() {
+    	this.newItemTextField.setText("");
+    	this.priceTextField.setText("");
+    }
+    
 }

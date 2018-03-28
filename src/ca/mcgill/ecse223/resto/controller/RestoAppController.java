@@ -391,7 +391,11 @@ public class RestoAppController {
 		 if (category.equalsIgnoreCase("Non Alcoholic Beverage")) {
 		 newMenuItem.setItemCategory(MenuItem.ItemCategory.NonAlcoholicBeverage); }
 		
-
+		 //TODO price can be "", if it is not a currentMenuItem 
+		if(price.equals(null)|| category.equals(null)|| name.equals(null)|| price.equals("")|| name.equals("")) {
+			throw new InvalidInputException("Cannot have empty input");
+		}
+		 
 		int dotCount = 0;
 		for (int i = 0; i < price.length(); i++) {
 
@@ -401,7 +405,7 @@ public class RestoAppController {
 					dotCount++; // Keep track of how many . (there can only be 1)
 				}
 			} else {
-				throw new InvalidInputException("Invalid price format (ex: 2.99");
+				throw new InvalidInputException("Invalid price format (ex: 2.99)");
 			}
 
 		}

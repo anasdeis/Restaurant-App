@@ -35,10 +35,10 @@ public class MenuDisplay extends JFrame {
                 setTitle("Dessert");
             } else if (category.equals("Alcoholic Beverage")) {
                 menuItems = RestoAppController.getMenuItem(MenuItem.ItemCategory.AlcoholicBeverage);
-                setTitle("Alcoholic Beverage");
+                setTitle("Alc Bev");
             } else if (category.equals("Non Alcoholic Beverage")) {
                 menuItems = RestoAppController.getMenuItem(MenuItem.ItemCategory.NonAlcoholicBeverage);
-                setTitle("Non Alcoholic Beverage");
+                setTitle("NonAlc Bev");
             }
         } catch (InvalidInputException e) {
             error = e.getMessage();
@@ -50,22 +50,31 @@ public class MenuDisplay extends JFrame {
 
         JList<Object> itemList;
         
-        ArrayList <String> items = new ArrayList<>();
+        ArrayList <String> currentItems = new ArrayList<>();
+        //ArrayList <String> discontinuedItems = new ArrayList<>();
         for (int i=0;i<menuItems.size();i++) {
         	String name = menuItems.get(i).getName();
         	PricedMenuItem currentPMI = menuItems.get(i).getCurrentPricedMenuItem();
-        	double price = currentPMI.getPrice();
         	
-        	items.add(name + ": " + price);
+        	if(currentPMI != null) {
+        		double price = currentPMI.getPrice();
+        		currentItems.add(name + ": " + price);
+        	}else {	// if the PriceMenuItem is null, this item is discontinued and is no longer on the current menu
+        		//discontinuedItems.add(name);
+        		currentItems.add(name + "*");
+        	}
+        	
         	
         }
-        itemList = new JList<>(items.toArray());
+        itemList = new JList<>(currentItems.toArray());
         JScrollPane menuScrollPane = new JScrollPane(itemList);
 
         getContentPane().add(menuScrollPane);
 
         pack();
+        setSize(300,200);
         setVisible(true);
+        
 
     }
 
