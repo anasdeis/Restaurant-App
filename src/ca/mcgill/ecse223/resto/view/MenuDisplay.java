@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 
 
 public class MenuDisplay extends JFrame {
@@ -47,17 +48,21 @@ public class MenuDisplay extends JFrame {
             er.setVisible(true);
         }
 
-
-    
-        //TODO Currently displays the "MenuItem" not the fields of it
-        JList<Object> itemList = new JList<>(menuItems.toArray());
+        JList<Object> itemList;
+        
+        ArrayList <String> items = new ArrayList<>();
+        for (int i=0;i<menuItems.size();i++) {
+        	String name = menuItems.get(i).getName();
+        	PricedMenuItem currentPMI = menuItems.get(i).getCurrentPricedMenuItem();
+        	double price = currentPMI.getPrice();
+        	
+        	items.add(name + ": " + price);
+        	
+        }
+        itemList = new JList<>(items.toArray());
         JScrollPane menuScrollPane = new JScrollPane(itemList);
 
         getContentPane().add(menuScrollPane);
-
-
-        //apptizerPanel.add(menuScrollPane);
-
 
         pack();
         setVisible(true);
