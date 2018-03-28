@@ -12,6 +12,8 @@ class RestoApp {
    1 <@>- 1 Menu menu;   
    1 <@>- * PricedMenuItem pricedMenuItems;
    1 <@>- * Bill bills;
+   1 <@>- * Waiter waiters;
+   0..1 -> 0..1 Waiter logedOnWaiter; // subsets waiter
 }
 
 class Reservation {
@@ -99,4 +101,11 @@ class PricedMenuItem {
 class Bill {
    * bills -- 1 Order order; // order.bills.issuedForSeats = order.orderItems.seats
    * bills -- 1..* Seat issuedForSeats; // only from order.orderItems.seats;
+}
+
+class Waiter {
+   waiterName;
+   waiterEmailAddress;
+   waiterPhoneNumber;
+   1 waiter -- * Order orders;
 }
