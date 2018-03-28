@@ -33,6 +33,34 @@ class Table {
    Integer length;
    1 <@>- 1..* Seat seats;
    0..1 -> * Seat currentSeats; // subsets seats
+   depend ca.mcgill.ecse223.resto.application.RestoApplication;
+   public boolean doesOverlap(int x, int y, int width, int length) {
+        RestoApp ra = RestoApplication.getRestoApp();
+        List<ca.mcgill.ecse223.resto.model.Table> tables = ra.getCurrentTables();
+        int[][] tableMap = new int[9999][9999];
+
+        loop:
+        for (int k = 0; k < tables.size(); k++) {
+
+            if (this.equals(tables.get(k))) {
+                continue loop;
+            }
+
+            for (int i = 0; i < tables.get(k).getWidth(); i++) {
+                for (int j = 0; j < tables.get(k).getLength(); j++) {
+                    tableMap[tables.get(k).getX() + i][tables.get(k).getY() + j] = 1;
+                }
+            }
+        }
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < length; j++) {
+                if (tableMap[i + x][j + y] == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 class Seat {
