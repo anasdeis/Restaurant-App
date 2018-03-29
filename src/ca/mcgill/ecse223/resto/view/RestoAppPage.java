@@ -107,8 +107,7 @@ public class RestoAppPage extends JFrame {
         errorMessage = new JLabel();
         errorMessage.setForeground(Color.RED);
 
-        // Create Driver Elements
-        createTableButton = new JButton("Create Table");
+        // Create Table Elements
         numberOfSeatsLabel = new JLabel("Number Of Seats: ");
         xLocationLabel = new JLabel("X Location: ");
         yLocationLabel = new JLabel("Y Location: ");
@@ -125,8 +124,7 @@ public class RestoAppPage extends JFrame {
 
         // Delete Table Elements
         tableList = new JComboBox<String>(new String[0]);
-        tablesLabel = new JLabel();
-        removeTableButton = new JButton();
+        tablesLabel = new JLabel("Table: ");
 
         // Table Info Elements
         numberSeatsLabel = new JLabel("Seats: ");
@@ -135,14 +133,11 @@ public class RestoAppPage extends JFrame {
         tableWidthLabel = new JLabel("Width: ");
         tableLengthLabel = new JLabel("Length: ");
 
-        // Move Table Elements
-        moveTableButton = new JButton("Move Table");
-
-        // Display Menu Elements
-        menuButton = new JButton("Menu");
+        // Update Table Elemts
+        newNumberOfSeatsLabel = new JLabel("Enter Number of Seats :");
+        newTableNumberLabel = new JLabel("Enter New Table Number :");
 
         // Reserve Table elements
-        reserveButton = new JButton("Reserve Table");
         numberInPartyLabel = new JLabel("Number of People:");
         contactEmailAddressLabel = new JLabel("Contact E-mail address:");
         contactPhoneNumberLabel = new JLabel("Contact Phone:");
@@ -156,26 +151,16 @@ public class RestoAppPage extends JFrame {
         numberInPartyTextField = new JTextField();
 
         //startOrder
-        startOrderButton = new JButton("Start Order");
         selectedTablesLabel = new JLabel("table # (separate by spaces): ");
         selectedTablesTextField = new JTextField();
 
-        //endOrder
-        endOrderButton = new JButton("End Order");
-
-
-        createTableButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createTableButtonActionPerformed(evt);
-            }
-        });
 
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedTableIndex = cb.getSelectedIndex();
                 if (selectedTableIndex != -1) {
-                    selectedTableNumber = Integer.parseInt(cb.getSelectedItem().toString().charAt(1) + "");
+                    selectedTableNumber = Integer.parseInt(cb.getSelectedItem().toString());
                     List<Table> tables = RestoAppController.getTables();
                     for (Table table : tables) {
                         if (selectedTableNumber.equals(table.getNumber())) {
@@ -201,45 +186,61 @@ public class RestoAppPage extends JFrame {
                         }
                     }
                 }
+
+                else {
+                    refreshData();
+                }
             }
         });
+        createTableButton = new JButton("Create Table");
+        createTableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createTableButtonActionPerformed(evt);
+            }
+        });
+        removeTableButton = new JButton("Remove Table");
         removeTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removeTableButtonActionPerformed(evt);
             }
         });
-
+        moveTableButton = new JButton("Move Table");
         moveTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 moveTableButtonActionPerformed(evt);
             }
         });
-
+        updateTableButton = new JButton("Update Table");
+        updateTableButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateTableButtonActionPerformed(evt);
+            }
+        });
+        menuButton = new JButton("Menu");
         menuButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuButtonActionPerformed(evt);
             }
         });
+        reserveButton = new JButton("Reserve Table");
         reserveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 reserveButtonActionPerformed(evt);
             }
         });
-
+        startOrderButton = new JButton("Start Order");
         startOrderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 startOrderButtonActionPerformed(evt);
             }
         });
-
+        endOrderButton = new JButton("End Order");
         endOrderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 endOrderButtonActionPerformed(evt);
             }
         });
 
-        tablesLabel.setText("Tables: ");
-        removeTableButton.setText("Remove Table");
 
         // horizontal line elements
         JSeparator horizontalLineTop = new JSeparator();
@@ -247,29 +248,13 @@ public class RestoAppPage extends JFrame {
         // initialize JPanel
         displayApp = new RestoAppDisplay();
 
-        newNumberOfSeatsLabel = new JLabel();
-        newTableNumberLabel = new JLabel();
-        newNumberOfSeatsLabel.setText("Enter Number of Seats :");
-        newTableNumberLabel.setText("Enter New Table Number :");
-
-
-        //Button Update Table
-        updateTableButton = new JButton();
-        updateTableButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateTableButtonActionPerformed(evt);
-            }
-        });
-        updateTableButton.setText("Update Table");
-        //added method
-
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         layout.setHorizontalGroup(layout.createParallelGroup()
                 .addGroup(layout.createParallelGroup()
-                        .addComponent(displayApp, 800, 800, 800)
+                        .addComponent(displayApp, 1500, 1500, 1500)
                         .addComponent(errorMessage)
                         .addComponent(horizontalLineTop)
                         .addComponent(horizontalLineBottom))
@@ -388,36 +373,19 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(updateTableButton))
                         .addComponent(horizontalLineBottom)
                         .addGroup(layout.createParallelGroup()
-                                .addComponent(displayApp, 300, 300, 300)))
+                                .addComponent(displayApp, 450, 450, 450)))
         );
         pack();
 
     }
 
-    protected void updateTableButtonActionPerformed(ActionEvent evt) {
-        //clear error message
-        error = null;
-        if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for updating!";
-        } else {
-            try {
-                RestoAppController.updateTable(RestoApplication.getRestoApp().getCurrentTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
-            } catch (InvalidInputException e) {
-                error = e.getMessage();
-            }
-        }
-
-        refreshData();
-        repaint();
-    }
-
     protected void createTableButtonActionPerformed(ActionEvent evt) {
-        // call the controller
+
         try {
             RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()),
                     Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()),
                     Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
-        } catch (Exception e) {
+        } catch (NumberFormatException | InvalidInputException e) {
             error = e.getMessage();
         }
 
@@ -426,14 +394,15 @@ public class RestoAppPage extends JFrame {
     }
 
     protected void removeTableButtonActionPerformed(ActionEvent evt) {
-        // clear error message
+
         error = null;
-        // call the controller
+
         if (selectedTableIndex < 0) {
             error = "Table needs to be selected for removing!";
+
         } else {
             try {
-                RestoAppController.removeTable(selectedTableNumber);
+                RestoAppController.removeTable(tables.get(selectedTableIndex));
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -443,9 +412,8 @@ public class RestoAppPage extends JFrame {
     }
 
     protected void moveTableButtonActionPerformed(ActionEvent evt) {
-        // clear error message
-        error = "";
-        // call the controller
+
+        error = null;
 
         if (selectedTableIndex < 0) {
             error = "Table needs to be selected for moving!";
@@ -462,17 +430,36 @@ public class RestoAppPage extends JFrame {
         repaint();
     }
 
-    protected void menuButtonActionPerformed(ActionEvent evt) {
-        // clear error message
+    protected void updateTableButtonActionPerformed(ActionEvent evt) {
+
         error = null;
-        // open the menuDisplay
+
+        if (selectedTableIndex < 0) {
+            error = "Table needs to be selected for updating!";
+
+        } else {
+            try {
+                RestoAppController.updateTable(RestoApplication.getRestoApp().getCurrentTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
+            } catch (NumberFormatException | InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+
+        refreshData();
+        repaint();
+    }
+
+    protected void menuButtonActionPerformed(ActionEvent evt) {
+
+        error = null;
+
         new MenuPage();
     }
 
     protected void reserveButtonActionPerformed(ActionEvent evt) {
-        // clear error message
+
         error = null;
-        // open the menuDisplay
+
         if (selectedTableIndex < 0) {
             error = "Table needs to be selected for reserving!";
         } else {
@@ -487,52 +474,65 @@ public class RestoAppPage extends JFrame {
     }
 
     protected void startOrderButtonActionPerformed(ActionEvent evt) {
-        error = "";
+        error = null;
 
-        if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for moving!";
+        String[] stringArray = selectedTablesTextField.getText().trim().split("\\s+");//remove any leading, trailing white spaces and split the string from rest of the white spaces
+        int[] intArray = new int[stringArray.length]; //create a new int array to store the int values
 
-        } else {
+        if (intArray.length == 0) {
+            error = "Enter the set of table # that you want to start order for";
+        }
+
+        else {
 
             try {
-
-                String[] stringArray = selectedTablesTextField.getText().trim().split("\\s+");//remove any leading, trailing white spaces and split the string from rest of the white spaces
-                int[] intArray = new int[stringArray.length]; //create a new int array to store the int values
                 for (int i = 0; i < stringArray.length; i++) {
                     intArray[i] = Integer.parseInt(stringArray[i]);//parse the integer value and store it in the int array
                 }
+
+                for (int i = 0; i < intArray.length; i++)
+                    for (int j = i + 1; j < intArray.length; j++)
+                        if (j != i && intArray[j] == intArray[i]) {
+                            error = "Do not enter duplicate table #";
+                            throw (new InvalidInputException(error));
+                        }
+
                 List<Table> tables = RestoAppController.getTables();
                 List<Table> selectedTables = new ArrayList<Table>();
-                boolean flag = true;
+                boolean isCurrentTable = true;
+                int i = 1;
 
                 outerloop:
                 for (int tableNumber : intArray) {
-                    if (!flag) {
-                        error = "Input only valid table numbers!";
-                        throw (new NumberFormatException(error));
-                    }
+                    System.out.println("tableNumber #" + tableNumber);
                     for (Table table : tables) {
-                        flag = false;
+                        isCurrentTable = false;
                         if (tableNumber == (table.getNumber())) {
                             selectedTables.add(table);
-                            flag = true;
-                            System.out.println("Valid tableNumber " + tableNumber);
+                            isCurrentTable = true;
+                            System.out.println("Valid tableNumber #" + tableNumber);
                             continue outerloop;
                         }
+                        if (i == (tables.size())) {
+                            error = "Table #" + tableNumber + " is not a current table!";
+                            throw (new InvalidInputException(error));
+                        }
+                        i++;
                     }
                 }
+
                 RestoAppController.startOrder(selectedTables);
+
             } catch (NumberFormatException | InvalidInputException e) {
                 error = e.getMessage();
             }
         }
-
         refreshData();
         repaint();
     }
 
     protected void endOrderButtonActionPerformed(ActionEvent evt) {
-        error = "";
+        error = null;
 
         if (selectedTableIndex < 0) {
             error = "Table needs to be selected for moving!";
@@ -592,7 +592,7 @@ public class RestoAppPage extends JFrame {
             Integer index = 0;
             for (Table table : RestoAppController.getTables()) {
                 tables.put(index, table);
-                tableList.addItem("#" + table.getNumber());
+                tableList.addItem("" + table.getNumber());
                 index++;
             }
 

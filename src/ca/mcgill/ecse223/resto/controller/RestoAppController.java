@@ -53,37 +53,53 @@ public class RestoAppController {
 			throw new InvalidInputException(error.trim());
 		}
 
-		try {
 			Table table = new Table(generatedTableNumber, x, y, width, length, ra);
+			ra.addCurrentTable(table);
 
 			for (int i = 0; i < numberOfSeats; i++) {
-				table.addCurrentSeat(new Seat());
+				Seat seat = table.addSeat();
+				table.addCurrentSeat(seat);
 			}
-			ra.addCurrentTable(table);
+
+		try {
+
 			RestoApplication.save();
 
-		} catch (Exception e) {
-			error = e.getMessage();
+		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
 	}
 
-	public static void removeTable(Integer selectedTableNumber) throws InvalidInputException {
-		RestoApp ra = RestoApplication.getRestoApp();
+	public static void removeTable(Table table) throws InvalidInputException {
+		RestoApp r = RestoApplication.getRestoApp();
 		String error = "";
 
-		try {
-			for (Table table : ra.getCurrentTables()) {
-				if (selectedTableNumber.equals(table.getNumber())) {
-					ra.removeCurrentTable(table);
-					break;
-				}
-			}
+		if (table == null) {
+			error += "Table cannot be null! ";
+		}
 
+		if (table.hasReservations()) {
+			error += "Table is reserved! ";
+		}
+
+		if (error.length() > 0) {
+			throw (new InvalidInputException(error.trim()));
+		}
+
+		List<Order> currentOrders = r.getCurrentOrders();
+		for (Order order : currentOrders) {
+			List<Table> tables = order.getTables();
+			if (tables.contains(table)){
+				throw (new InvalidInputException("Table is in use!"));
+			}
+		}
+
+		r.removeCurrentTable(table);
+
+		try {
 			RestoApplication.save();
 
-		} catch (Exception e) {
-			error = e.getMessage();
+		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
 	}
@@ -149,7 +165,7 @@ public class RestoAppController {
 					}
 
 					Reservation reservation = new Reservation(aDate, aTime, aNumberInParty, aContactName,
-							aContactEmailAddress, aContactPhoneNumber, aTables);
+							aContactEmailAddress, aContactPhoneNumber, ra, aTables);
 					table.addReservation(reservation);
 					break;
 				}
@@ -429,36 +445,41 @@ public class RestoAppController {
 
 	}
 
-	public static void updateTable(Table table, int newNumber, int numOfSeats) throws InvalidInputException {
+	public static void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException {
 		RestoApp ra = RestoApplication.getRestoApp();
 
 		String error = "";
 		if (table == null) {
-			error = error + "The table does not exist, please add the table first";
+			error = error + "The table does not exist, please select a table";
 		}
-		if (numOfSeats <= 0) {
+		if (numberOfSeats <= 0) {
 			error = error + "The number of seats must be greater than 0";
 		}
 
 		if (newNumber < 0) {
-			error = error + "You entered a negative number. Please add a positive table number";
+			error = error + "You entered a negative number. Please enter a positive table number";
 		}
 
 		if (table.hasReservations() == true) {
-			error = error + "The table is reserves, you can not update its details";
+			error = error + "The table is reserved, you cannot update its details";
 		}
 
 		if (isDuplicateTableNumber(newNumber)) {
 			error = error + "The new table number already exists. Please choose another number";
 		}
 
+		if (error.length() > 0) {
+			throw new InvalidInputException(error.trim());
+		}
+
 		List<Order> currentOrders = ra.getCurrentOrders();
-		for (int i = currentOrders.size(); i > 0; i--) {
-			List<Table> tables = currentOrders.get(i).getTables();
+		for (Order order :  currentOrders) {
+
+			List<Table> tables = order.getTables();
 			boolean inUse = tables.contains(table);
 
-			if (inUse == true) {
-				error = "Table is in use, choose another table";
+			if (inUse) {
+				throw new InvalidInputException("Table is in use, choose another table");
 			}
 		}
 
@@ -466,19 +487,19 @@ public class RestoAppController {
 			table.setNumber(newNumber);
 			int n = table.numberOfCurrentSeats();
 
-			if (numOfSeats > n) {
-				for (int j = numOfSeats - n; j > 0; j--) {
-					table.addCurrentSeat(new Seat());
+			if (numberOfSeats > n) {
+				for (int i = 1; i < numberOfSeats - n; i++) {
+					Seat seat = table.addSeat();
+					table.addCurrentSeat(seat);
 				}
-			} else if (numOfSeats < n) {
-				for (int j = n - numOfSeats; j > 0; j--) {
+			} else if (numberOfSeats < n) {
+				for (int i = 1; i < n - numberOfSeats; i++) {
 					Seat seatToRemove = table.getCurrentSeat(0);
 					table.removeCurrentSeat(seatToRemove);
 				}
 			}
 			RestoApplication.save();
-		} catch (Exception e) {
-			error = e.getMessage();
+		} catch (RuntimeException e) {
 			throw new InvalidInputException(e.getMessage());
 		}
 	}
