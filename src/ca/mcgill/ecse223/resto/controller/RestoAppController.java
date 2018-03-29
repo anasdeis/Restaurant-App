@@ -374,6 +374,8 @@ public class RestoAppController {
         return orderTotal;
     }
 
+  
+	
     //situation4 Get ordered items for a group of customers in multiple groups
     public static List<OrderItem> getOrderForGroupCustomerATMultiTable(List<Seat> seatList) {
         //get ordered items for the group of seats
