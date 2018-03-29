@@ -213,10 +213,12 @@ public class RestoAppPage extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
         		JComboBox<String> cb = (JComboBox<String>) evt.getSource();
         		selectedSeatIndex = cb.getSelectedIndex();
+        	System.out.println(selectedSeatIndex);
                 List<Table> tables = RestoAppController.getTables();
 
-        		if (selectedSeatIndex != -1) {
+        		if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
         			try {
+        				//getting the seat object from the dropdown item
 						Seat specificSeat = RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),selectedSeatIndex);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -640,7 +642,6 @@ public class RestoAppPage extends JFrame {
                 index++;
             }
 
-            selectedTableIndex = -1;
             tableList.setSelectedIndex(selectedTableIndex);
 
         }

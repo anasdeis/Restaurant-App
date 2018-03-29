@@ -270,6 +270,12 @@ public class RestoAppController {
         }
         return true;
     }
+    
+    	public static Seat getSpecificSeat(Table table, Integer seatIndex) throws Exception {
+    			List<Seat> seats = getSeatForEachCustomerAtOneTable(table);
+    				
+    			return seats.get(seatIndex);
+    		}
 
     /*
     situation1 Issued a bill for one table
