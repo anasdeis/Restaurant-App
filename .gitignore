@@ -6,7 +6,7 @@
 *.class
 /bin/
 /.metadata/
-menu V2.resto
+menuV2.resto
 /.recommenders/
 RestoApp.iml
 representations.aird
