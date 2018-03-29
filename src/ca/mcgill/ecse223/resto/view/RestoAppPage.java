@@ -89,6 +89,13 @@ public class RestoAppPage extends JFrame {
 
 	// Seats
 	private JComboBox<String> seatList;
+	private JLabel seatsLabel;
+	private JButton addSeatButton;
+	private JButton situationOne;
+	private JButton situationTwo;
+	private JButton situationThree;
+	private JButton situationFour;
+
 
 	/**
 	 * Creates new form RestoAppPage
@@ -160,6 +167,13 @@ public class RestoAppPage extends JFrame {
 
 		// seats
 		seatList = new JComboBox<String>(new String[0]);
+		seatsLabel = new JLabel("Seats: ");
+		addSeatButton = new JButton("Add");
+		situationOne = new JButton("Situation 1");
+		situationTwo = new JButton("Situation 2");
+		situationThree = new JButton("Situation 3");
+		situationFour = new JButton("Situation 4");
+		
 
 		tableList.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -320,27 +334,32 @@ public class RestoAppPage extends JFrame {
 								.addComponent(contactNameTextField).addComponent(contactEmailAddressTextField)
 								.addComponent(contactPhoneNumberTextField).addComponent(numberInPartyTextField)
 								.addComponent(reserveButton))
-						.addGroup(layout.createParallelGroup().addComponent(seatList))));
+						.addGroup(layout.createParallelGroup().addComponent(seatsLabel))
+						.addGroup(layout.createParallelGroup().addComponent(seatList).addComponent(addSeatButton).addComponent(situationOne).addComponent(situationTwo).addComponent(situationThree).addComponent(situationFour)
+								
+								)
+						));
+		
 		layout.setVerticalGroup(layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup().addComponent(errorMessage)
 						.addGroup(layout.createParallelGroup().addComponent(horizontalLineTop))
 						.addGroup(layout.createParallelGroup().addComponent(numberOfSeatsLabel)
 								.addComponent(numberOfSeatsTextField).addComponent(tablesLabel).addComponent(tableList)
-								.addComponent(menuButton).addComponent(seatList))
+								.addComponent(menuButton).addComponent(seatsLabel).addComponent(seatList))
 						.addGroup(layout.createParallelGroup().addComponent(widthLabel).addComponent(widthTextField)
-								.addComponent(removeTableButton))
+								.addComponent(removeTableButton).addComponent(addSeatButton))
 						.addGroup(layout.createParallelGroup().addComponent(lengthLabel).addComponent(lengthTextField)
 								.addComponent(numberSeatsLabel).addComponent(contactNameLabel)
-								.addComponent(contactNameTextField))
+								.addComponent(contactNameTextField).addComponent(situationOne))
 						.addGroup(layout.createParallelGroup().addComponent(xLocationTextField)
 								.addComponent(xLocationLabel).addComponent(tableLocationXLabel)
-								.addComponent(contactEmailAddressLabel).addComponent(contactEmailAddressTextField))
+								.addComponent(contactEmailAddressLabel).addComponent(contactEmailAddressTextField).addComponent(situationTwo))
 						.addGroup(layout.createParallelGroup().addComponent(yLocationTextField)
 								.addComponent(yLocationLabel).addComponent(tableLocationYLabel)
-								.addComponent(contactPhoneNumberLabel).addComponent(contactPhoneNumberTextField))
+								.addComponent(contactPhoneNumberLabel).addComponent(contactPhoneNumberTextField).addComponent(situationThree))
 						.addGroup(layout.createParallelGroup().addComponent(createTableButton)
 								.addComponent(tableWidthLabel).addComponent(numberInPartyLabel)
-								.addComponent(numberInPartyTextField))
+								.addComponent(numberInPartyTextField).addComponent(situationFour))
 						.addGroup(layout.createParallelGroup().addComponent(moveTableButton)
 								.addComponent(tableLengthLabel).addComponent(reservedStatus)
 								.addComponent(reserveButton))
