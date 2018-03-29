@@ -482,7 +482,7 @@ public class RestoAppPage extends JFrame {
 
         } else {
             try {
-                RestoAppController.updateTable(RestoApplication.getRestoApp().getCurrentTable(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
+                RestoAppController.updateTable(tables.get(selectedTableIndex), Integer.parseInt(newTableNumberTextField.getText()), Integer.parseInt(newNumberOfSeatsTextField.getText()));
             } catch (NumberFormatException | InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -578,7 +578,8 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for moving!";
+            error = "Table needs to be selected for e!";
+
         } else {
             //     try {
             //     RestoAppController.endOrder(order);
