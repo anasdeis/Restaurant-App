@@ -199,7 +199,7 @@ public class RestoAppPage extends JFrame {
 							tableWidthLabel.setText("Width: " + table.getWidth());
 							tableLengthLabel.setText("Length: " + table.getLength());
 
-							if (!table.getReservations().isEmpty()) {
+							if (table.hasReservations()) {
 								contactEmailAddressLabel.setText(
 										"Contact E-mail address: " + table.getReservation(0).getContactEmailAddress());
 								contactNameLabel.setText("Contact Name: " + table.getReservation(0).getContactName());
@@ -414,8 +414,8 @@ public class RestoAppPage extends JFrame {
 
 		if (selectedTableIndex < 0) {
 			error = "Table needs to be selected for moving!";
+
 		} else {
-			if (error.length() == 0) {
 				try {
 					RestoAppController.moveTable(tables.get(selectedTableIndex),
 							Integer.parseInt(xLocationTextField.getText()),
@@ -424,7 +424,7 @@ public class RestoAppPage extends JFrame {
 					error = e.getMessage();
 				}
 			}
-		}
+
 		refreshData();
 		repaint();
 	}
@@ -506,17 +506,12 @@ public class RestoAppPage extends JFrame {
 
 				List<Table> tables = RestoAppController.getTables();
 				List<Table> selectedTables = new ArrayList<Table>();
-				boolean isCurrentTable = true;
 				int i = 1;
 
 				outerloop: for (int tableNumber : intArray) {
-					System.out.println("tableNumber #" + tableNumber);
 					for (Table table : tables) {
-						isCurrentTable = false;
 						if (tableNumber == (table.getNumber())) {
 							selectedTables.add(table);
-							isCurrentTable = true;
-							System.out.println("Valid tableNumber #" + tableNumber);
 							continue outerloop;
 						}
 						if (i == (tables.size())) {
@@ -541,14 +536,14 @@ public class RestoAppPage extends JFrame {
 		error = null;
 
 		if (selectedTableIndex < 0) {
-			error = "Table needs to be selected for e!";
+			error = "Table needs to be selected to end order!";
 
 		} else {
-			// try {
-			// RestoAppController.endOrder(order);
-			// } catch (InvalidInputException e) {
-			// error = e.getMessage();
-			// }
+			 try {
+			 RestoAppController.endOrder(tables.get(selectedTableIndex).getOrder(tables.get(selectedTableIndex).numberOfOrders() - 1));
+			 } catch (InvalidInputException e) {
+			 error = e.getMessage();
+			 }
 		}
 		refreshData();
 		repaint();

@@ -265,10 +265,10 @@ public class RestoAppController {
 		for (Table table : tables) {
 			if ((table.getStatusFullName() == "Available")
 					|| (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public static Seat getSpecificSeat(Table table, Integer seatIndex) throws Exception {
@@ -574,7 +574,7 @@ public class RestoAppController {
 			error += "You entered a negative number. Please enter a positive table number";
 		}
 
-		if (table.hasReservations() == true) {
+		if (table.hasReservations()) {
 			error += "The table is reserved, you cannot update its details";
 		}
 
