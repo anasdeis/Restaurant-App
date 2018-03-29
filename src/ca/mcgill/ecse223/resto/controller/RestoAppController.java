@@ -10,6 +10,7 @@ import ca.mcgill.ecse223.resto.model.Menu;
 import ca.mcgill.ecse223.resto.model.MenuItem;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
 import ca.mcgill.ecse223.resto.model.Order;
+import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.PricedMenuItem;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
@@ -256,6 +257,131 @@ public class RestoAppController {
 		}
 		return true;
 	}
+	
+	/*
+    situation1 Issued a bill for one table
+    situation2 Issued a bill for each customer in one table 
+    situation3 Issued a bill for group of customers in one table
+    situation4 Issued a bill for group of customers in different tables 
+    */
+    //shared helper method for displaying ordered items and prices   
+     public static List<Integer> getQuantityOfOrderedItem(List<OrderItem> orderList) {
+    	List<Integer> listOfQuantity = new ArrayList<Integer>();
+    	for (OrderItem individualOrderItem : orderList) {
+    		listOfQuantity.add(individualOrderItem.getQuantity());
+    	}
+    	return listOfQuantity;
+    }
+  //shared helper method for displaying ordered items and prices     
+     public static List<Double> getPriceOfOrderedItem(List<OrderItem> orderList) {
+    	List<Double> listOfPrice = new ArrayList<Double>();
+    	for (OrderItem individualOrderItem : orderList) {
+    		listOfPrice.add(individualOrderItem.getPricedMenuItem().getPrice());
+    	}
+    	return listOfPrice;
+    }
+ ////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+    //Situation1 Get all ordered items for the whole table 
+    public static List<OrderItem> getOrderedItemForOneTable(Table table) throws Exception {
+    	//test if the table input is valid, if not, throw exceptions
+    	RestoApp r = RestoApplication.getRestoApp();
+    	List<Table> tables = r.getCurrentTables();
+    	boolean tableExist = false;
+    		
+    	for (Table currentTable : tables) {
+    		if (currentTable.equals(table)) {
+    			tableExist = true;
+    			}		
+    		}
+    	if (tableExist == false) {
+    		throw new Exception("The input table does not exist");
+    	}
+    	if (table.getOrders() == null) throw new Exception("This table has no order!");
+  
+    	List<OrderItem> orderTotal = new ArrayList<OrderItem>();
+    	List<Seat> currentSeat = table.getCurrentSeats();
+    	for (Seat seat: currentSeat) {
+    		for (OrderItem individualOrderedItem: seat.getOrderItems()) {
+    			orderTotal.add(individualOrderedItem);
+    		}	
+    	}
+    	return orderTotal;	
+    }
+
+        //situation2 Get ordered seats for each customers in one table
+	public static List<Seat> getSeatForEachCustomerAtOneTable(Table table) throws Exception {
+    	//test if the table input is valid, if not, throw exceptions
+    	RestoApp r = RestoApplication.getRestoApp();
+    	List<Table> tables = r.getCurrentTables();
+    	boolean tableExist = false;    		
+    	for (Table currentTable : tables) {
+    		if (currentTable.equals(table)) {
+    			tableExist = true;
+    			}		
+    		}
+    	if (tableExist == false) {
+    		throw new Exception("This table does not exist");
+    	}
+    	if (table.getOrders() == null) throw new Exception("This table has no order!");
+    	if (!table.hasCurrentSeats()) throw new Exception("This is no seat in this table!");
+    	//get a list of all current seats
+    	List<Seat> currentSeat = table.getCurrentSeats();
+    	return currentSeat;
+	}
+	
+	    //situation2 Get ordered items for each seat in on table (use the same order as seatList to get all orderList one by one)
+		public static List<OrderItem> getOrderForEacgCustomerAtOneTable(Seat seat) {
+			return seat.getOrderItems();
+		}
+
+		//situation3 Get ordered items for a group of customers in one table
+	public static List<OrderItem> getOrderForGroupCustomerAtOneTable(List<Seat> seatList) throws Exception {
+			//test if the table seats are in one table, if not, throw exceptions
+	    RestoApp r = RestoApplication.getRestoApp();
+	    List<Table> tables = r.getCurrentTables();
+	    for (Table individualtable : tables) {
+	    	if (individualtable.getCurrentSeats().contains(seatList.get(0))) {
+	    		for (Seat seat: seatList) {
+	    			if (!individualtable.getCurrentSeats().contains(seat)) {
+	    					throw new Exception("The input seats are not in the same table");
+	    			}
+	    		}
+	    			
+	    	}
+	    }
+	       //get ordered items for the group of seats
+	    List<OrderItem> orderTotal = new ArrayList<OrderItem>();
+	    for (Seat seat : seatList) {
+	    	for (OrderItem order : seat.getOrderItems()) {
+	    		orderTotal.add(order);
+	    	}
+	    }
+	    	return orderTotal;
+	}
+	
+    //situation4 Get ordered items for a group of customers in multiple groups
+    public static List<OrderItem> getOrderForGroupCustomerATMultiTable(List<Seat> seatList) {
+    	//get ordered items for the group of seats
+    	List<OrderItem> orderTotal = new ArrayList<OrderItem>();
+    	for (Seat seat : seatList) {
+    		for (OrderItem order : seat.getOrderItems()) {
+    			orderTotal.add(order);
+    		}
+    	}
+    	return orderTotal;
+    }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static Double issuedBill(List<Integer> orderedQuantity, List<Double> price) throws Exception {
+    	if (orderedQuantity.size() > price.size()) throw new Exception("Missing price!");
+    	if (orderedQuantity.size() < price.size()) throw new Exception("Missing order item!");
+    	Double total = 0.0;
+    	for (int i = 0; i < orderedQuantity.size(); i++) {
+    		total = total + orderedQuantity.get(i) * price.get(i); 
+    	}
+    	return total;
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////    
+
 
 	private static boolean isDuplicateTableNumber(int number) {
 		RestoApp ra = RestoApplication.getRestoApp();
