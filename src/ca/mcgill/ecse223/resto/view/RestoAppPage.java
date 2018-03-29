@@ -12,6 +12,7 @@ import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.Reservation;
+import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoAppPage extends JFrame {
@@ -41,6 +42,7 @@ public class RestoAppPage extends JFrame {
     private JLabel tablesLabel;
     private JButton removeTableButton;
     private Integer selectedTableIndex = -1;
+    private Integer selectedSeatIndex = -1;
     private Integer selectedTableNumber = null;
     private RestoAppDisplay displayApp;
 
@@ -85,6 +87,9 @@ public class RestoAppPage extends JFrame {
 
     //endOrder
     private JButton endOrderButton;
+    
+    //Seats
+    private JComboBox<String> seatList;
 
     /**
      * Creates new form RestoAppPage
@@ -153,7 +158,9 @@ public class RestoAppPage extends JFrame {
         //startOrder
         selectedTablesLabel = new JLabel("table # (separate by spaces): ");
         selectedTablesTextField = new JTextField();
-
+        
+        //seats
+        seatList = new JComboBox<String>(new String[0]);
 
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,6 +171,15 @@ public class RestoAppPage extends JFrame {
                     List<Table> tables = RestoAppController.getTables();
                     for (Table table : tables) {
                         if (selectedTableNumber.equals(table.getNumber())) {
+                        	try {
+								List<Seat> seats = RestoAppController.getSeatForEachCustomerAtOneTable(table);
+					            seatList.removeAllItems();
+								for (int i = 0; i < seats.size(); i++) {
+									seatList.addItem(""+i);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
                             numberSeatsLabel.setText("Seats: " + table.getCurrentSeats().size());
                             tableLocationXLabel.setText("Location X: " + table.getX());
                             tableLocationYLabel.setText("Location Y: " + table.getY());
@@ -191,6 +207,28 @@ public class RestoAppPage extends JFrame {
                     refreshData();
                 }
             }
+        });
+        seatList.addActionListener(new java.awt.event.ActionListener() {
+
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+        		JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+        		selectedSeatIndex = cb.getSelectedIndex();
+                List<Table> tables = RestoAppController.getTables();
+
+        		if (selectedSeatIndex != -1) {
+        			try {
+						Seat specificSeat = RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),selectedSeatIndex);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+        			
+        		}
+        		
+        		else {
+        			refreshData();
+        		}
+        	}
         });
         createTableButton = new JButton("Create Table");
         createTableButton.addActionListener(new java.awt.event.ActionListener() {
@@ -308,6 +346,9 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(numberInPartyTextField)
                                 .addComponent(reserveButton)
                         )
+                        .addGroup(layout.createParallelGroup()
+                               .addComponent(seatList)
+                        )
                 ));
         layout.setVerticalGroup(layout.createParallelGroup()
                 .addGroup(layout.createSequentialGroup()
@@ -319,7 +360,9 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(numberOfSeatsTextField)
                                 .addComponent(tablesLabel)
                                 .addComponent(tableList)
-                                .addComponent(menuButton))
+                                .addComponent(menuButton)
+                                .addComponent(seatList)
+                        		)
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(widthLabel)
                                 .addComponent(widthTextField)

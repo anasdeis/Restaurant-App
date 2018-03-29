@@ -345,6 +345,12 @@ public class RestoAppController {
     	return currentSeat;
 	}
 	
+	public static Seat getSpecificSeat(Table table, Integer seatIndex) throws Exception {
+		List<Seat> seats = getSeatForEachCustomerAtOneTable(table);
+			
+		return seats.get(seatIndex);
+	}
+	
 	    //situation2 Get ordered items for each seat in on table (use the same order as seatList to get all orderList one by one)
 		public static List<OrderItem> getOrderForEacgCustomerAtOneTable(Seat seat) {
 			return seat.getOrderItems();
