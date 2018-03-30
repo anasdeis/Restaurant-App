@@ -339,13 +339,12 @@ public class RestoAppPage extends JFrame {
 		JSeparator horizontalLineBottom = new JSeparator();
 		// initialize JPanel
 		displayApp = new RestoAppDisplay();
-
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		layout.setHorizontalGroup(layout.createParallelGroup()
-				.addGroup(layout.createParallelGroup().addComponent(displayApp, 1500, 1500, 1500)
+				.addGroup(layout.createParallelGroup().addComponent(displayApp, 2000, 2000, 2000)
 						.addComponent(errorMessage).addComponent(horizontalLineTop).addComponent(horizontalLineBottom))
 				.addGroup(layout.createSequentialGroup()
 						.addGroup(layout.createParallelGroup().addComponent(numberOfSeatsLabel).addComponent(widthLabel)
@@ -370,32 +369,32 @@ public class RestoAppPage extends JFrame {
 								.addComponent(contactPhoneNumberTextField).addComponent(numberInPartyTextField)
 								.addComponent(reserveButton))
 						.addGroup(layout.createParallelGroup().addComponent(seatsLabel))
-						.addGroup(layout.createParallelGroup().addComponent(seatList).addComponent(addSeatButton).addComponent(issueBillForOneTable).addComponent(issueBillForEachCustomerInOneTable)
-								.addComponent(issueBillForGroupCustomerInOneTable).addComponent(issueBillForGroupCustomerInMultipleTable).addComponent(overviewScrollPane)
-								
+						.addGroup(layout.createParallelGroup().addComponent(seatList).addComponent(issueBillForOneTable).addComponent(issueBillForEachCustomerInOneTable)
+								.addComponent(issueBillForGroupCustomerInOneTable).addComponent(issueBillForGroupCustomerInMultipleTable).addComponent(overviewScrollPane))
+						.addGroup(layout.createParallelGroup().addComponent(addTableButton).addComponent(addSeatButton))		
 								)
-						));
+						);
 		
 		layout.setVerticalGroup(layout.createParallelGroup()
 				.addGroup(layout.createSequentialGroup().addComponent(errorMessage)
 						.addGroup(layout.createParallelGroup().addComponent(horizontalLineTop))
 						.addGroup(layout.createParallelGroup().addComponent(numberOfSeatsLabel)
 								.addComponent(numberOfSeatsTextField).addComponent(tablesLabel).addComponent(tableList)
-								.addComponent(menuButton).addComponent(seatsLabel).addComponent(seatList))
+								.addComponent(menuButton).addComponent(seatsLabel).addComponent(seatList).addComponent(addTableButton))
 						.addGroup(layout.createParallelGroup().addComponent(widthLabel).addComponent(widthTextField)
-								.addComponent(removeTableButton).addComponent(viewOrdersButton).addComponent(addSeatButton))
+								.addComponent(removeTableButton).addComponent(viewOrdersButton).addComponent(issueBillForOneTable).addComponent(addSeatButton))
 						.addGroup(layout.createParallelGroup().addComponent(lengthLabel).addComponent(lengthTextField)
 								.addComponent(numberSeatsLabel).addComponent(contactNameLabel)
-								.addComponent(contactNameTextField).addComponent(issueBillForOneTable))
+								.addComponent(contactNameTextField).addComponent(issueBillForEachCustomerInOneTable))
 						.addGroup(layout.createParallelGroup().addComponent(xLocationTextField)
 								.addComponent(xLocationLabel).addComponent(tableLocationXLabel)
-								.addComponent(contactEmailAddressLabel).addComponent(contactEmailAddressTextField).addComponent(issueBillForEachCustomerInOneTable))
+								.addComponent(contactEmailAddressLabel).addComponent(contactEmailAddressTextField).addComponent(issueBillForGroupCustomerInOneTable))
 						.addGroup(layout.createParallelGroup().addComponent(yLocationTextField)
 								.addComponent(yLocationLabel).addComponent(tableLocationYLabel)
-								.addComponent(contactPhoneNumberLabel).addComponent(contactPhoneNumberTextField).addComponent(issueBillForGroupCustomerInOneTable))
+								.addComponent(contactPhoneNumberLabel).addComponent(contactPhoneNumberTextField).addComponent(issueBillForGroupCustomerInMultipleTable))
 						.addGroup(layout.createParallelGroup().addComponent(createTableButton)
 								.addComponent(tableWidthLabel).addComponent(numberInPartyLabel)
-								.addComponent(numberInPartyTextField).addComponent(issueBillForGroupCustomerInMultipleTable))
+								.addComponent(numberInPartyTextField))
 						.addGroup(layout.createParallelGroup().addComponent(moveTableButton)
 								.addComponent(tableLengthLabel).addComponent(reservedStatus)
 								.addComponent(reserveButton))
@@ -411,7 +410,6 @@ public class RestoAppPage extends JFrame {
 		pack();
 
 	}
-
 	protected void createTableButtonActionPerformed(ActionEvent evt) {
 
 		try {
