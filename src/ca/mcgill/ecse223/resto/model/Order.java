@@ -40,7 +40,7 @@ public class Order implements Serializable
   // CONSTRUCTOR
   //------------------------
 
-  public Order(Date aDate, Time aTime, RestoApp aRestoApp, Waiter aWaiter, Table... allTables)
+  public Order(Date aDate, Time aTime, RestoApp aRestoApp, Table... allTables)
   {
     date = aDate;
     time = aTime;
@@ -58,11 +58,6 @@ public class Order implements Serializable
       throw new RuntimeException("Unable to create order due to restoApp");
     }
     bills = new ArrayList<Bill>();
-    boolean didAddWaiter = setWaiter(aWaiter);
-    if (!didAddWaiter)
-    {
-      throw new RuntimeException("Unable to create order due to waiter");
-    }
   }
 
   //------------------------
@@ -201,6 +196,12 @@ public class Order implements Serializable
   public Waiter getWaiter()
   {
     return waiter;
+  }
+
+  public boolean hasWaiter()
+  {
+    boolean has = waiter != null;
+    return has;
   }
 
   public boolean isNumberOfTablesValid()
@@ -503,18 +504,16 @@ public class Order implements Serializable
   public boolean setWaiter(Waiter aWaiter)
   {
     boolean wasSet = false;
-    if (aWaiter == null)
-    {
-      return wasSet;
-    }
-
     Waiter existingWaiter = waiter;
     waiter = aWaiter;
     if (existingWaiter != null && !existingWaiter.equals(aWaiter))
     {
       existingWaiter.removeOrder(this);
     }
-    waiter.addOrder(this);
+    if (aWaiter != null)
+    {
+      aWaiter.addOrder(this);
+    }
     wasSet = true;
     return wasSet;
   }
@@ -542,9 +541,12 @@ public class Order implements Serializable
       Bill aBill = bills.get(i - 1);
       aBill.delete();
     }
-    Waiter placeholderWaiter = waiter;
-    this.waiter = null;
-    placeholderWaiter.removeOrder(this);
+    if (waiter != null)
+    {
+      Waiter placeholderWaiter = waiter;
+      this.waiter = null;
+      placeholderWaiter.removeOrder(this);
+    }
   }
 
 

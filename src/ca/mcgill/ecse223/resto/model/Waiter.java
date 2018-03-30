@@ -4,8 +4,6 @@
 package ca.mcgill.ecse223.resto.model;
 import java.io.Serializable;
 import java.util.*;
-import java.sql.Date;
-import java.sql.Time;
 
 // line 62 "../../../../../RestoAppPersistence.ump"
 // line 106 "../../../../../RestoApp v3.ump"
@@ -125,20 +123,19 @@ public class Waiter implements Serializable
     return 0;
   }
 
-  public Order addOrder(Date aDate, Time aTime, RestoApp aRestoApp, Table... allTables)
-  {
-    return new Order(aDate, aTime, aRestoApp, this, allTables);
-  }
-
   public boolean addOrder(Order aOrder)
   {
     boolean wasAdded = false;
     if (orders.contains(aOrder)) { return false; }
     Waiter existingWaiter = aOrder.getWaiter();
-    boolean isNewWaiter = existingWaiter != null && !this.equals(existingWaiter);
-    if (isNewWaiter)
+    if (existingWaiter == null)
     {
       aOrder.setWaiter(this);
+    }
+    else if (!this.equals(existingWaiter))
+    {
+      existingWaiter.removeOrder(aOrder);
+      addOrder(aOrder);
     }
     else
     {
@@ -151,10 +148,10 @@ public class Waiter implements Serializable
   public boolean removeOrder(Order aOrder)
   {
     boolean wasRemoved = false;
-    //Unable to remove aOrder, as it must always have a waiter
-    if (!this.equals(aOrder.getWaiter()))
+    if (orders.contains(aOrder))
     {
       orders.remove(aOrder);
+      aOrder.setWaiter(null);
       wasRemoved = true;
     }
     return wasRemoved;
@@ -213,10 +210,9 @@ public class Waiter implements Serializable
 
   public void delete()
   {
-    for(int i=orders.size(); i > 0; i--)
+    while( !orders.isEmpty() )
     {
-      Order aOrder = orders.get(i - 1);
-      aOrder.delete();
+      orders.get(0).setWaiter(null);
     }
     RestoApp placeholderRestoApp = restoApp;
     this.restoApp = null;

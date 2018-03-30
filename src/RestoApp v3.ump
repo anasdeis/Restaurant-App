@@ -107,5 +107,5 @@ class Waiter {
    waiterName;
    waiterEmailAddress;
    waiterPhoneNumber;
-   1 waiter -- * Order orders;
+   0..1 waiter -- * Order orders;
 }

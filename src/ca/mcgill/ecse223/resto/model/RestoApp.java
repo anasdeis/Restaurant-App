@@ -537,9 +537,9 @@ public class RestoApp implements Serializable
     return 0;
   }
 
-  public Order addOrder(Date aDate, Time aTime, Waiter aWaiter, Table... allTables)
+  public Order addOrder(Date aDate, Time aTime, Table... allTables)
   {
-    return new Order(aDate, aTime, this, aWaiter, allTables);
+    return new Order(aDate, aTime, this, allTables);
   }
 
   public boolean addOrder(Order aOrder)
