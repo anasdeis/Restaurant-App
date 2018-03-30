@@ -577,7 +577,7 @@ public class RestoAppController {
 		return exists;
 	}
 
-	public static MenuItem createNewItem(String name, String category, Menu aMenu) throws RuntimeException {
+	public static MenuItem createNewItem(String name, String category, Menu aMenu) {
 
 		MenuItem newMenuItem = new MenuItem(name, aMenu);
 		if (category.equals("Appetizer")) {

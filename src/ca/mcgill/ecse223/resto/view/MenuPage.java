@@ -192,6 +192,7 @@ public class MenuPage extends JFrame {
 			successMessage.setSize(500, 20);
 			successMessage.setLocationRelativeTo(this);
 			successMessage.setVisible(true);
+			clearFields();
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 			JDialog er = new JDialog(this, error, false);

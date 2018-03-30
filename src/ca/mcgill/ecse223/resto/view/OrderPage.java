@@ -31,7 +31,6 @@ public class OrderPage extends JFrame {
         orderList = new JComboBox<String>();
         table = RestoAppController.getTables().get(tableIndex);
         ordersForTable = RestoAppController.getOrderedItemForOneTable(table);
-        System.out.println(ordersForTable.size());
 
     }
     

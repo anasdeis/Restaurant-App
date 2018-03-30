@@ -43,7 +43,7 @@ public class RestoApplication {
 		if (ra == null) {
 			ra = new RestoApp();
 		} else {
-			//ra.reinitialize();
+			ra.reinitialize();
 		}
 
 		return ra;

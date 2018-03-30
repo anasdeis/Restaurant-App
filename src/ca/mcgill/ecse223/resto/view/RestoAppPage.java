@@ -245,7 +245,6 @@ public class RestoAppPage extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
 				selectedSeatIndex = cb.getSelectedIndex();
-				System.out.println(selectedSeatIndex);
 				List<Table> tables = RestoAppController.getTables();
 
 				if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
