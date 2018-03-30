@@ -91,6 +91,7 @@ public class RestoAppPage extends JFrame {
 	private JLabel seatsLabel;
 	// Bill
 	private JButton addSeatButton;
+	private JButton addTableButton;
 	private JButton issueBillForOneTable;
 	private JButton issueBillForEachCustomerInOneTable;
 	private JButton issueBillForGroupCustomerInOneTable;
@@ -100,6 +101,10 @@ public class RestoAppPage extends JFrame {
 	private JScrollPane overviewScrollPane;
 	private DefaultListModel<Seat> listModel = new DefaultListModel<>();
 	private JList<Seat> seatListToBeBilled = new JList<>(listModel);
+	//Table overview
+	private JScrollPane overviewScrollPaneTable;
+	private DefaultListModel<Table> listModelTable = new DefaultListModel<>();
+	private JList<Table> tableListToBeBilled = new JList<>(listModelTable);
 
 	/**
 	 * Creates new form RestoAppPage
@@ -182,7 +187,8 @@ public class RestoAppPage extends JFrame {
 		issueBillForGroupCustomerInMultipleTable = new JButton("Bill Mode4 (Group in Multiple Tables)");
 		overviewScrollPane = new JScrollPane(seatListToBeBilled);
 		this.add(overviewScrollPane);
-		Dimension d = seatListToBeBilled.getPreferredSize();
+		//overviewScrollPaneTable = new JScrollPane(tableListToBeBilled);
+		//this.add(overviewScrollPaneTable);
 
 		tableList.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -314,6 +320,14 @@ public class RestoAppPage extends JFrame {
 				addSeatButtonActionPerformed(evt);
 			}
 		});
+		
+		addTableButton = new JButton("Add Table To Bill");
+		addTableButton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				addTableButtonActionPerformed(evt);
+			}
+		});
+		
 		viewOrdersButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				orderButtonActionPerformed(evt);
@@ -435,6 +449,18 @@ public class RestoAppPage extends JFrame {
 			if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
 				listModel.addElement(RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),
 						selectedSeatIndex));
+			}
+		} catch (Exception e) {
+			
+		}
+		refreshData();
+		repaint();			
+			}
+	
+	protected void addTableButtonActionPerformed(ActionEvent evt) {
+		try {
+			if (selectedTableIndex != -1) {
+				listModelTable.addElement(RestoAppController.getSpecificTable(selectedTableIndex));
 			}
 		} catch (Exception e) {
 			
