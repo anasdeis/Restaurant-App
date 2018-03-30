@@ -276,6 +276,10 @@ public class RestoAppController {
 
 		return seats.get(seatIndex);
 	}
+	
+	public static Table getSpecificTable(Integer tableIndex) {
+		return RestoApplication.getRestoApp().getCurrentTables().get(tableIndex);
+	}
 
 	/*
 	 * situation1 Issued a bill for one table situation2 Issued a bill for each
