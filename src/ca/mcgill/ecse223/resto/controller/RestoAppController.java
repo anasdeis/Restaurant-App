@@ -503,12 +503,79 @@ public class RestoAppController {
 		}
 	}
 
-	public static void addMenuItem(String name, String category, String price) throws InvalidInputException {
+	public static void addMenuItem(String name, String category, String price) throws Exception {
 		String error = "";
 		RestoApp ra = RestoApplication.getRestoApp();
+		Menu menu = ra.getMenu();
+		
+		if (category.equals(null) || name.equals(null) || name.equals("")) {
+			throw new InvalidInputException("Cannot have empty input for name");
+		}
+		
+		checkIfExisting(name,menu);
+			
+		
+		// if price is inputed
+		if (!(price.equals(null) || price.equals("") || price.equals("0"))) {
+			int dotCount = 0;
+			for (int i = 0; i < price.length(); i++) {
+				// Check if price is only numbers and .
+				if ((price.charAt(i) > 47 && price.charAt(i) < 58) || price.charAt(i) == 46) {
+					// Keep track of how many . (there can only be 1)
+					if (price.charAt(i) == 46) {
+						dotCount++;
+					}
+				} else {
+					throw new InvalidInputException("Invalid price format (ex: 2.99)");
+				}
 
-		MenuItem newMenuItem = new MenuItem(name, ra.getMenu());
+			}
 
+			if (dotCount > 1) {
+				throw new InvalidInputException("You cannot have more than one decimal point");
+			}
+
+			double priceDouble = Double.parseDouble(price);
+			if (priceDouble < 0) {
+				throw new InvalidInputException("Cannot have a negative price");
+			} else {
+				MenuItem newMenuItem = createNewItem(name, category, menu);
+				PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble, newMenuItem);
+				newMenuItem.setCurrentPricedMenuItem(newPricedMenuItem);
+			}
+		}else {
+			// if price not inputed by user, item is not currentPricedItem
+			MenuItem newMenuItem = createNewItem(name, category, menu);
+		}
+
+		RestoApplication.save();
+
+	}
+	
+	public static boolean checkIfExisting (String name, Menu aMenu) throws InvalidInputException {
+		boolean exists = false;
+		
+		List<MenuItem> menuItems = aMenu.getMenuItems();
+		
+		for (int i=0; i<menuItems.size();i++) {
+			MenuItem menuItem = menuItems.get(i);
+			
+			if(menuItem.getName().equals(name)) {
+				
+				exists=true;
+				String category = menuItem.getItemCategory().toString();
+				throw new InvalidInputException(name+ " existing in "+category);
+			}
+		}
+		
+		
+		
+		return exists;
+	}
+
+	public static MenuItem createNewItem(String name, String category, Menu aMenu) throws RuntimeException {
+
+		MenuItem newMenuItem = new MenuItem(name, aMenu);
 		if (category.equals("Appetizer")) {
 			newMenuItem.setItemCategory(MenuItem.ItemCategory.Appetizer);
 		} else if (category.equalsIgnoreCase("Main")) {
@@ -521,41 +588,36 @@ public class RestoAppController {
 			newMenuItem.setItemCategory(MenuItem.ItemCategory.NonAlcoholicBeverage);
 		}
 
-		// TODO price can be "", if it is not a currentMenuItem
-		if (price.equals(null) || category.equals(null) || name.equals(null) || price.equals("") || name.equals("")) {
-			throw new InvalidInputException("Cannot have empty input");
+		return newMenuItem;
+	}
+	
+	public static void removeMenuItem(String name, String category) throws InvalidInputException{
+		boolean removed = false;
+		
+		RestoApp ra = RestoApplication.getRestoApp();
+		
+		if (category.equals(null) || name.equals(null) || name.equals("")) {
+			throw new InvalidInputException("Cannot have empty input for name");
 		}
-
-		int dotCount = 0;
-		for (int i = 0; i < price.length(); i++) {
-
-			if ((price.charAt(i) > 47 && price.charAt(i) < 58) || price.charAt(i) == 46) { // Check if price is only
-				// numbers and .
-				if (price.charAt(i) == 46) {
-					dotCount++; // Keep track of how many . (there can only be 1)
-				}
-			} else {
-				throw new InvalidInputException("Invalid price format (ex: 2.99)");
+		
+		Menu menu = ra.getMenu();
+		List<MenuItem> menuItems = menu.getMenuItems();
+		for (int i =0; i < menuItems.size(); i++){		
+			MenuItem menuItem = menuItems.get(i);
+			
+			if (menuItem.getName().equals(name)){
+				menuItem.delete();
+				removed = true;
+				break;
 			}
-
 		}
-
-		if (dotCount > 1) {
-			throw new InvalidInputException("You cannot have more than one decimal point");
+		
+		if(!removed){
+			throw new InvalidInputException(name+" is not a valid item to remove");
 		}
-
-		double priceDouble = Double.parseDouble(price);
-
-		if (priceDouble < 0) {
-			throw new InvalidInputException("Cannot have a negative price");
-		} else if (priceDouble == 0) {
-			throw new InvalidInputException("Cannot have 0 as price");
-		} else {
-			// PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble,
-			// newMenuItem);
-		}
-
+		
 		RestoApplication.save();
+	
 
 	}
 

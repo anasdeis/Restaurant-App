@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
-import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 
 import javax.swing.JLabel;
@@ -18,6 +17,7 @@ public class MenuPage extends JFrame {
     private JTextField priceTextField;
     private JComboBox<String> categoryComboBox;
     private String error;
+
 
     MenuPage() {
         setTitle("Menu");
@@ -39,8 +39,7 @@ public class MenuPage extends JFrame {
         JButton btnAlcoholicBeverage = new JButton("Alcoholic Beverage");
         btnAlcoholicBeverage.setBounds(42, 155, 144, 25);
         getContentPane().add(btnAlcoholicBeverage);
-
-
+        
         setVisible(true);
 
         JButton btnNonAlcoholicBeverage = new JButton("Non Alcoholic Beverage");
@@ -51,9 +50,9 @@ public class MenuPage extends JFrame {
         btnNonAlcoholicBeverage.setBounds(223, 155, 144, 25);
         getContentPane().add(btnNonAlcoholicBeverage);
 
-        JLabel lblNewItem = new JLabel("New Item");
-        lblNewItem.setBounds(23, 227, 56, 16);
-        getContentPane().add(lblNewItem);
+        JLabel lblName = new JLabel("Name");
+        lblName.setBounds(23, 227, 56, 16);
+        getContentPane().add(lblName);
 
         newItemTextField = new JTextField();
         newItemTextField.setBounds(91, 224, 276, 22);
@@ -74,12 +73,16 @@ public class MenuPage extends JFrame {
         priceTextField.setColumns(10);
 
         JButton btnAddItem = new JButton("Add Item");
-        btnAddItem.setBounds(157, 309, 97, 25);
+        btnAddItem.setBounds(91, 309, 109, 25);
         getContentPane().add(btnAddItem);
 
         categoryComboBox = new JComboBox<String>();
         categoryComboBox.setBounds(91, 253, 276, 22);
         getContentPane().add(categoryComboBox);
+        
+        JButton btnRemoveItem = new JButton("Remove Item");
+        btnRemoveItem.setBounds(258, 309, 109, 25);
+        getContentPane().add(btnRemoveItem);
         categoryComboBox.addItem("Appetizer");
         categoryComboBox.addItem("Main");
         categoryComboBox.addItem("Dessert");
@@ -162,11 +165,12 @@ public class MenuPage extends JFrame {
             successMessage.setLocationRelativeTo(this);
             successMessage.setVisible(true);
             
-        } catch (InvalidInputException e) {
+        } catch (Exception e) {
             error = e.getMessage();
             JDialog er = new JDialog(this, error, false);
             er.setSize(325, 20);
             er.setLocationRelativeTo(this);
+            //er.pack();
             er.setVisible(true);
         }
 
@@ -174,8 +178,8 @@ public class MenuPage extends JFrame {
     }
     
     private void clearFields() {
+    	
     	this.newItemTextField.setText("");
     	this.priceTextField.setText("");
     }
-    
 }
