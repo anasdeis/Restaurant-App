@@ -89,12 +89,17 @@ public class RestoAppPage extends JFrame {
 	// Seats
 	private JComboBox<String> seatList;
 	private JLabel seatsLabel;
-	private JButton addTableOrSeatButton;
+	// Bill
+	private JButton addSeatButton;
 	private JButton issueBillForOneTable;
 	private JButton issueBillForEachCustomerInOneTable;
 	private JButton issueBillForGroupCustomerInOneTable;
 	private JButton issueBillForGroupCustomerInMultipleTable;
 
+	// seat overview
+	private JScrollPane overviewScrollPane;
+	private DefaultListModel<Seat> listModel = new DefaultListModel<>();
+	private JList<Seat> seatListToBeBilled = new JList<>(listModel);
 
 	/**
 	 * Creates new form RestoAppPage
@@ -175,7 +180,9 @@ public class RestoAppPage extends JFrame {
 		issueBillForEachCustomerInOneTable = new JButton("Bill Mode2 (Each Customer in One Table)");
 		issueBillForGroupCustomerInOneTable = new JButton("Bill Mode3 (Group in One Table)");
 		issueBillForGroupCustomerInMultipleTable = new JButton("Bill Mode4 (Group in Multiple Tables)");
-		
+		overviewScrollPane = new JScrollPane(seatListToBeBilled);
+		this.add(overviewScrollPane);
+		Dimension d = seatListToBeBilled.getPreferredSize();
 
 		tableList.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -301,10 +308,10 @@ public class RestoAppPage extends JFrame {
 			}
 		});
 		
-		addTableOrSeatButton = new JButton("Add Table/Seat To Bill");
-		addTableOrSeatButton.addActionListener(new java.awt.event.ActionListener() {
+		addSeatButton = new JButton("Add Seat To Bill");
+		addSeatButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addTableOrSeatButtonActionPerformed(evt);
+				addSeatButtonActionPerformed(evt);
 			}
 		});
 		viewOrdersButton.addActionListener(new java.awt.event.ActionListener() {
@@ -349,7 +356,8 @@ public class RestoAppPage extends JFrame {
 								.addComponent(contactPhoneNumberTextField).addComponent(numberInPartyTextField)
 								.addComponent(reserveButton))
 						.addGroup(layout.createParallelGroup().addComponent(seatsLabel))
-						.addGroup(layout.createParallelGroup().addComponent(seatList).addComponent(addTableOrSeatButton).addComponent(issueBillForOneTable).addComponent(issueBillForEachCustomerInOneTable).addComponent(issueBillForGroupCustomerInOneTable).addComponent(issueBillForGroupCustomerInMultipleTable)
+						.addGroup(layout.createParallelGroup().addComponent(seatList).addComponent(addSeatButton).addComponent(issueBillForOneTable).addComponent(issueBillForEachCustomerInOneTable)
+								.addComponent(issueBillForGroupCustomerInOneTable).addComponent(issueBillForGroupCustomerInMultipleTable).addComponent(overviewScrollPane)
 								
 								)
 						));
@@ -361,7 +369,7 @@ public class RestoAppPage extends JFrame {
 								.addComponent(numberOfSeatsTextField).addComponent(tablesLabel).addComponent(tableList)
 								.addComponent(menuButton).addComponent(seatsLabel).addComponent(seatList))
 						.addGroup(layout.createParallelGroup().addComponent(widthLabel).addComponent(widthTextField)
-								.addComponent(removeTableButton).addComponent(viewOrdersButton).addComponent(addTableOrSeatButton))
+								.addComponent(removeTableButton).addComponent(viewOrdersButton).addComponent(addSeatButton))
 						.addGroup(layout.createParallelGroup().addComponent(lengthLabel).addComponent(lengthTextField)
 								.addComponent(numberSeatsLabel).addComponent(contactNameLabel)
 								.addComponent(contactNameTextField).addComponent(issueBillForOneTable))
@@ -383,7 +391,7 @@ public class RestoAppPage extends JFrame {
 						.addGroup(
 								layout.createParallelGroup().addComponent(startOrderButton).addComponent(endOrderButton)
 										.addComponent(newNumberOfSeatsLabel).addComponent(newNumberOfSeatsTextField))
-						.addGroup(layout.createParallelGroup().addComponent(updateTableButton))
+						.addGroup(layout.createParallelGroup().addComponent(updateTableButton)).addComponent(overviewScrollPane)
 						.addComponent(horizontalLineBottom)
 						.addGroup(layout.createParallelGroup().addComponent(displayApp, 450, 450, 450))));
 		pack();
@@ -421,6 +429,19 @@ public class RestoAppPage extends JFrame {
 		refreshData();
 		repaint();
 	}
+	
+	protected void addSeatButtonActionPerformed(ActionEvent evt) {
+		try {
+			if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
+				listModel.addElement(RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),
+						selectedSeatIndex));
+			}
+		} catch (Exception e) {
+			
+		}
+		refreshData();
+		repaint();			
+			}
 
 	protected void moveTableButtonActionPerformed(ActionEvent evt) {
 
@@ -628,7 +649,4 @@ public class RestoAppPage extends JFrame {
 		}
 	}
 	//TODO
-	public void addTableOrSeatButtonActionPerformed(ActionEvent evt) {
-		error = null;
-	}
 }
