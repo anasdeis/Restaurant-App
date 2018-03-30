@@ -13,7 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 
-// This view class is the general menu page, with options to select the category to view annd add/remove an item from the menu
+/*
+ * This view class is the general menu page, with options to select the category to view annd add/remove an item from the menu
+ */
 public class MenuPage extends JFrame {
 	private JTextField nameTextField;
 	private JTextField priceTextField;

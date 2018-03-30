@@ -8,7 +8,7 @@ import java.util.*;
 
 // line 56 "../../../../../RestoAppPersistence.ump"
 // line 1 "../../../../../RestoAppTableStateMachine.ump"
-// line 28 "../../../../../RestoApp v3.ump"
+// line 30 "../../../../../RestoApp v3.ump"
 public class Table implements Serializable
 {
 
@@ -931,7 +931,7 @@ public class Table implements Serializable
       return false;
   }
 
-  // line 38 "../../../../../RestoApp v3.ump"
+  // line 40 "../../../../../RestoApp v3.ump"
    public boolean doesOverlap(int x, int y, int width, int length){
     RestoApp ra = RestoApplication.getRestoApp();
         List<ca.mcgill.ecse223.resto.model.Table> tables = ra.getCurrentTables();

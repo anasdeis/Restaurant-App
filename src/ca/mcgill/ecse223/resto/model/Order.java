@@ -8,7 +8,7 @@ import java.sql.Time;
 import java.util.*;
 
 // line 26 "../../../../../RestoAppPersistence.ump"
-// line 69 "../../../../../RestoApp v3.ump"
+// line 71 "../../../../../RestoApp v3.ump"
 public class Order implements Serializable
 {
 
@@ -34,12 +34,13 @@ public class Order implements Serializable
   private List<OrderItem> orderItems;
   private RestoApp restoApp;
   private List<Bill> bills;
+  private Waiter waiter;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Order(Date aDate, Time aTime, RestoApp aRestoApp, Table... allTables)
+  public Order(Date aDate, Time aTime, RestoApp aRestoApp, Waiter aWaiter, Table... allTables)
   {
     date = aDate;
     time = aTime;
@@ -57,6 +58,11 @@ public class Order implements Serializable
       throw new RuntimeException("Unable to create order due to restoApp");
     }
     bills = new ArrayList<Bill>();
+    boolean didAddWaiter = setWaiter(aWaiter);
+    if (!didAddWaiter)
+    {
+      throw new RuntimeException("Unable to create order due to waiter");
+    }
   }
 
   //------------------------
@@ -190,6 +196,11 @@ public class Order implements Serializable
   {
     int index = bills.indexOf(aBill);
     return index;
+  }
+
+  public Waiter getWaiter()
+  {
+    return waiter;
   }
 
   public boolean isNumberOfTablesValid()
@@ -489,6 +500,25 @@ public class Order implements Serializable
     return wasAdded;
   }
 
+  public boolean setWaiter(Waiter aWaiter)
+  {
+    boolean wasSet = false;
+    if (aWaiter == null)
+    {
+      return wasSet;
+    }
+
+    Waiter existingWaiter = waiter;
+    waiter = aWaiter;
+    if (existingWaiter != null && !existingWaiter.equals(aWaiter))
+    {
+      existingWaiter.removeOrder(this);
+    }
+    waiter.addOrder(this);
+    wasSet = true;
+    return wasSet;
+  }
+
   public void delete()
   {
     ArrayList<Table> copyOfTables = new ArrayList<Table>(tables);
@@ -512,6 +542,9 @@ public class Order implements Serializable
       Bill aBill = bills.get(i - 1);
       aBill.delete();
     }
+    Waiter placeholderWaiter = waiter;
+    this.waiter = null;
+    placeholderWaiter.removeOrder(this);
   }
 
 
@@ -521,7 +554,8 @@ public class Order implements Serializable
             "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null");
+            "  " + "restoApp = "+(getRestoApp()!=null?Integer.toHexString(System.identityHashCode(getRestoApp())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "waiter = "+(getWaiter()!=null?Integer.toHexString(System.identityHashCode(getWaiter())):"null");
   }  
   //------------------------
   // DEVELOPER CODE - PROVIDED AS-IS
