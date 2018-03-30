@@ -606,9 +606,16 @@ public class RestoAppController {
 			MenuItem menuItem = menuItems.get(i);
 			
 			if (menuItem.getName().equals(name)){
-				menuItem.delete();
-				removed = true;
-				break;
+				String tempCategory = menuItem.getItemCategory().toString();
+				category = category.replaceAll("\\s", ""); //remove space in between Category types
+				if(tempCategory.equals(category)) {
+					menuItem.delete();
+					removed = true;
+					break;
+				}
+				
+				throw new InvalidInputException(name + " is in " + menuItem.getItemCategory().toString());
+				
 			}
 		}
 		

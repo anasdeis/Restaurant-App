@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
+import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 
 import javax.swing.JLabel;
@@ -13,7 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 
 public class MenuPage extends JFrame {
-    private JTextField newItemTextField;
+    private JTextField nameTextField;
     private JTextField priceTextField;
     private JComboBox<String> categoryComboBox;
     private String error;
@@ -54,10 +55,10 @@ public class MenuPage extends JFrame {
         lblName.setBounds(23, 227, 56, 16);
         getContentPane().add(lblName);
 
-        newItemTextField = new JTextField();
-        newItemTextField.setBounds(91, 224, 276, 22);
-        getContentPane().add(newItemTextField);
-        newItemTextField.setColumns(10);
+        nameTextField = new JTextField();
+        nameTextField.setBounds(91, 224, 276, 22);
+        getContentPane().add(nameTextField);
+        nameTextField.setColumns(10);
 
         JLabel lblPrice = new JLabel("Price");
         lblPrice.setBounds(23, 285, 56, 16);
@@ -152,14 +153,20 @@ public class MenuPage extends JFrame {
 
 
         });
+        
+        btnRemoveItem.addActionListener(new java.awt.event.ActionListener() {
+        	public void actionPerformed(java.awt.event.ActionEvent evt) {
+        		btnRemoveItemActionPerformed(evt);
+        	}
+        });
 
     }
 
     protected void btnAddItemActionPerformed(ActionEvent evt) {
         try {
             String selected = this.categoryComboBox.getItemAt(categoryComboBox.getSelectedIndex());
-            RestoAppController.addMenuItem(newItemTextField.getText(), selected, priceTextField.getText());
-            String message = "Successfully added " + newItemTextField.getText() + " as a " + selected;
+            RestoAppController.addMenuItem(nameTextField.getText(), selected, priceTextField.getText());
+            String message = "Successfully added " + nameTextField.getText() + " as a " + selected;
             JDialog successMessage = new JDialog(this, message, false);
             successMessage.setSize(500, 20);
             successMessage.setLocationRelativeTo(this);
@@ -176,10 +183,29 @@ public class MenuPage extends JFrame {
 
         clearFields();
     }
+    protected void btnRemoveItemActionPerformed(ActionEvent evt) {
+    	String selected = this.categoryComboBox.getItemAt(categoryComboBox.getSelectedIndex());
+    	try {
+			RestoAppController.removeMenuItem(nameTextField.getText(), selected);
+			String message = "Successfully removed " + selected+", " + nameTextField.getText();
+	        JDialog successMessage = new JDialog(this, message, false);
+	        successMessage.setSize(500, 20);
+	        successMessage.setLocationRelativeTo(this);
+	        successMessage.setVisible(true);
+		} catch (InvalidInputException e) {
+			error = e.getMessage();
+            JDialog er = new JDialog(this, error, false);
+            er.setSize(325, 20);
+            er.setLocationRelativeTo(this);
+            //er.pack();
+            er.setVisible(true);
+		}
+    	
+    }
     
     private void clearFields() {
     	
-    	this.newItemTextField.setText("");
+    	this.nameTextField.setText("");
     	this.priceTextField.setText("");
     }
 }
