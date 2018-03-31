@@ -181,13 +181,11 @@ public class RestoAppPage extends JFrame {
 		//add seats to list of seat 
 		//addTableOrSeatButton = new JButton("Add Table/Seat To Bill");
 		// 4 ways to issue bill 
-		issueBillForOneTable = new JButton("Bill Mode1 (One Table)");
-		issueBillForEachCustomerInOneTable = new JButton("Bill Mode2 (Each Customer in One Table)");
-		issueBillForGroupCustomerInOneTable = new JButton("Bill Mode3 (Group in One Table)");
-		issueBillForGroupCustomerInMultipleTable = new JButton("Bill Mode4 (Group in Multiple Tables)");
 		overviewScrollPane = new JScrollPane(seatListToBeBilled);
+		overviewScrollPane.setPreferredSize(new Dimension(48,48));
 		this.add(overviewScrollPane);
 		overviewScrollPaneTable = new JScrollPane(tableListToBeBilled);
+		overviewScrollPaneTable.setPreferredSize(new Dimension(48,48));
 		this.add(overviewScrollPaneTable);
 
 		tableList.addActionListener(new java.awt.event.ActionListener() {
@@ -294,6 +292,20 @@ public class RestoAppPage extends JFrame {
 				menuButtonActionPerformed(evt);
 			}
 		});
+		issueBillForOneTable = new JButton("Bill Mode1 (One Table)");
+		issueBillForOneTable.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				modeOneButtonActionPerformed(evt);
+			}
+		});
+		//TODO
+		issueBillForEachCustomerInOneTable = new JButton("Bill Mode2 (Each Customer in One Table)");
+		issueBillForGroupCustomerInOneTable = new JButton("Bill Mode3 (Group in One Table)");
+		issueBillForGroupCustomerInMultipleTable = new JButton("Bill Mode4 (Group in Multiple Tables)");
+		
+		
+		
+		
 		reserveButton = new JButton("Reserve Table");
 		reserveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -525,6 +537,13 @@ public class RestoAppPage extends JFrame {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	protected void modeOneButtonActionPerformed(ActionEvent evt) {
+
+		error = null;
+
+		new BillPageModeOne();
 	}
 
 	protected void reserveButtonActionPerformed(ActionEvent evt) {
