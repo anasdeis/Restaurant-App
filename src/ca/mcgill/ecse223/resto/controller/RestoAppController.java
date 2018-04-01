@@ -278,6 +278,153 @@ public class RestoAppController {
         return false;
     }
 
+    public static void cancelOrderItem(OrderItem orderItem) throws InvalidInputException {
+
+        if (orderItem == null) {
+            throw (new InvalidInputException("An order item must be specified for cancelling it. "));
+        }
+
+        List<Seat> seats = orderItem.getSeats();
+        Order order = orderItem.getOrder();
+        List<Table> tables = new ArrayList<Table>();
+
+        for (Seat seat : seats) {
+            Table table = seat.getTable();
+            Order lastOrder = null;
+            if (table.numberOfOrders() > 0) {
+                lastOrder = table.getOrder(table.numberOfOrders() - 1);
+            } else {
+                throw (new InvalidInputException("The table #" + table.getNumber() + " must have an order if " +
+                        "one of its seats has an order item. "));
+            }
+            if (lastOrder.equals(order) && !tables.contains(table)) {
+                tables.add(table);
+            }
+        }
+        for (Table table : tables) {
+            table.cancelOrderItem(orderItem);
+        }
+
+        try {
+
+            RestoApplication.save();
+
+        } catch (RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
+    public static void cancelOrderItemForSeat(Seat seat) throws InvalidInputException {
+        RestoApp r = RestoApplication.getRestoApp();
+        List<Table> currentTables = r.getCurrentTables();
+
+        if (seat == null) {
+            throw (new InvalidInputException("A seat must be specified for cancelling its order items. "));
+        }
+
+        Table table = seat.getTable();
+        if (!currentTables.contains(table)) {
+            throw (new InvalidInputException("The table #" + seat.getTable().getNumber() + " of the specified seat" +
+                    " is not a current table. "));
+        }
+
+        List<Seat> currentSeats = table.getCurrentSeats();
+        if (currentSeats.contains(seat)) {
+            throw (new InvalidInputException("The specified seat is not a current seat. "));
+        }
+
+        Order lastOrder = null;
+        if (table.numberOfOrders() > 0) {
+            lastOrder = table.getOrder(table.numberOfOrders() - 1);
+        } else {
+            throw (new InvalidInputException("The table #" + table.getNumber() + " has no order(s)"));
+        }
+
+        List<OrderItem> orderItems = seat.getOrderItems();
+        for (OrderItem orderItem : orderItems) {
+            Order order = orderItem.getOrder();
+            if (lastOrder.equals(order)) {
+                cancelOrderItem(orderItem);
+            }
+        }
+
+        try {
+
+            RestoApplication.save();
+        } catch (RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
+    public static void cancelOrder(Table table) throws InvalidInputException {
+        RestoApp r = RestoApplication.getRestoApp();
+        List<Table> currentTables = r.getCurrentTables();
+
+        if (table == null) {
+            throw (new InvalidInputException("A table must be specified for cancelling its order. "));
+        }
+
+        if (currentTables.contains(table)) {
+            throw (new InvalidInputException("The table #" + table.getNumber() + " is not a current table. "));
+        }
+
+        table.cancelOrder();
+
+        try {
+
+            RestoApplication.save();
+
+        } catch (RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
+    public static void cancelOrder(Order order) throws InvalidInputException {
+        RestoApp r = RestoApplication.getRestoApp();
+
+        if (order == null) {
+            throw (new InvalidInputException("An order must be specified for cancelling it. "));
+        }
+
+        Order lastOrder = null;
+        List<Table> tables = order.getTables();
+
+        for (Table table : tables) {
+
+            if (lastOrder == null) {
+
+                if (table.numberOfOrders() > 0) {
+                    lastOrder = table.getOrder(table.numberOfOrders() - 1);
+                } else {
+                    throw (new InvalidInputException("The table #" + table.getNumber() + " has no order(s)"));
+                }
+            } else {
+                Order comparedOrder = null;
+                if (table.numberOfOrders() > 0) {
+                    comparedOrder = table.getOrder(table.numberOfOrders() - 1);
+                } else {
+                    throw (new InvalidInputException("The table #" + table.getNumber() + " has no order(s)"));
+                }
+
+                if (!comparedOrder.equals(lastOrder)) {
+                    throw (new InvalidInputException("Current orders for selected tables do not macth. "));
+                }
+            }
+        }
+
+        for (Table table : tables) {
+            cancelOrder(table);
+        }
+
+        try {
+
+            RestoApplication.save();
+
+        } catch (RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
     public static Seat getSpecificSeat(Table table, Integer seatIndex) throws Exception {
         List<Seat> seats = getSeatForEachCustomerAtOneTable(table);
 
