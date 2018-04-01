@@ -74,11 +74,11 @@ public class RestoAppController {
         String error = "";
 
         if (table == null) {
-            error += "Table cannot be null! ";
+            error += "A table must be specified for removing. ";
         }
 
         if (table.hasReservations()) {
-            error += "Table is reserved! ";
+            error += "Table #" + table.getNumber() + " is reserved. Cannot be removed. ";
         }
 
         if (error.length() > 0) {
@@ -89,7 +89,7 @@ public class RestoAppController {
         for (Order order : currentOrders) {
             List<Table> tables = order.getTables();
             if (tables.contains(table)) {
-                throw (new InvalidInputException("Table is in use!"));
+                throw (new InvalidInputException("Table #" + table.getNumber() + " is in use!"));
             }
         }
 
@@ -109,11 +109,13 @@ public class RestoAppController {
         String error = "";
         RestoApp r = RestoApplication.getRestoApp();
         long currentTime = Calendar.getInstance().getTime().getTime();
-        Date dateNow = new Date(currentTime);
-        Time timeNow = new Time(currentTime);
 
         if (date == null) {
             error += "Please enter the date of the reservation. ";
+        } else {
+            if (currentTime > date.getTime()) {
+                error += "Please enter a valid date/time for the reservation. Make sure it is in the future. ";
+            }
         }
 
         if (time == null) {
@@ -132,10 +134,6 @@ public class RestoAppController {
             error += "Please enter your phone number. ";
         }
 
-        if (contactPhoneNumber == null || contactPhoneNumber.isEmpty()) {
-            error += "Please enter your phone number. ";
-        }
-
         if (numberInParty <= 0) {
             error += "Please enter a positive number for the number of people (larger than 0). ";
         }
@@ -144,20 +142,8 @@ public class RestoAppController {
             throw new InvalidInputException(error.trim());
         }
 
-        if (dateNow.compareTo(date) > 0) {
-            error += "Please enter a valid date for the reservation. Make sure it is in the future. ";
-        }
-
-        if (timeNow.compareTo(time) > 0) {
-            error += "Please enter a valid time for the reservation. Make sure it is in the future. ";
-        }
-
-        if (error.length() > 0) {
-            throw new InvalidInputException(error.trim());
-        }
-
         List<Table> currentTables = r.getCurrentTables();
-        Table[] allTablesArray = currentTables.toArray(new Table[currentTables.size()]);
+        Table[] allTablesArray = tables.toArray(new Table[tables.size()]);
         int seatCapacity = 0;
 
         for (Table table : tables) {
@@ -167,18 +153,22 @@ public class RestoAppController {
 
             seatCapacity += table.numberOfCurrentSeats();
 
-            List<Reservation> reservations = table.getReservations();
+            if (table.hasReservations()) {
+                List<Reservation> reservations = table.getReservations();
 
-            for (Reservation reservation : reservations) {
-                if ((reservation.getDate().compareTo(date) == 0)
-                        && (reservation.getTime().compareTo(time) == 0)) {
-                    throw (new InvalidInputException("Please choose another time, table reserved at the requested time"));
+                for (Reservation reservation : reservations) {
+                    if (reservation.getDate() != null && reservation.getTime() != null) {
+                        long timeDiffInHours = (Math.abs(reservation.getDate().getTime() - date.getTime())) / 3600000L;
+                        if (timeDiffInHours < 2) {
+                            throw (new InvalidInputException("Please choose another time, table reserved at the requested time. "));
+                        }
+                    }
                 }
             }
         }
 
         if (seatCapacity < numberInParty) {
-            throw (new InvalidInputException("Not enough seats for selected table(s)! "));
+            throw (new InvalidInputException("Not enough seats for selected table(s). "));
         }
 
         try {
@@ -200,11 +190,11 @@ public class RestoAppController {
         String error = "";
 
         if (tables == null) {
-            throw (new InvalidInputException("tables is null, please add a table! "));
+            throw (new InvalidInputException("No table(s) specified to start order. "));
         }
         for (Table table : tables) {
             if (!currentTables.contains(table)) {
-                throw (new InvalidInputException("Not a current table! "));
+                throw (new InvalidInputException("The table #" + table.getNumber() + " is not a current table. "));
             }
         }
 
@@ -250,7 +240,7 @@ public class RestoAppController {
         String error = "";
 
         if (order == null) {
-            throw (new InvalidInputException("order is null, please add an order! "));
+            throw (new InvalidInputException("An order must be specified to end it. "));
         }
 
         if (!currentOrders.contains(order)) {
@@ -488,15 +478,15 @@ public class RestoAppController {
 
         String error = "";
         if (table == null) {
-            error += "Table cannot be null! ";
+            error += "A table must be specified for moving. ";
         }
 
         if (x < 0) {
-            error += "x cannot be negative! ";
+            error += "The x location must be non-negative. ";
         }
 
         if (y < 0) {
-            error += "y cannot be negative! ";
+            error += "The y location must be non-negative. ";
         }
 
         if (error.length() > 0) {
@@ -653,18 +643,18 @@ public class RestoAppController {
 
         String error = "";
         if (table == null) {
-            error += "The table does not exist, please select a table";
+            error += "A table must be specified for updating. ";
         }
         if (numberOfSeats <= 0) {
             error += "The number of seats must be greater than 0";
         }
 
         if (newNumber < 0) {
-            error += "You entered a negative number. Please enter a positive table number";
+            error += "The table number must be non-negative.";
         }
 
         if (table.hasReservations()) {
-            error += "The table is reserved, you cannot update its details";
+            error += "The table #" + table.getNumber() + " is reserved, you cannot update its details";
         }
 
         if (error.length() > 0) {
@@ -678,12 +668,12 @@ public class RestoAppController {
             boolean inUse = tables.contains(table);
 
             if (inUse) {
-                throw (new InvalidInputException("Table is in use, choose another table. "));
+                throw (new InvalidInputException("The table #" + table.getNumber() + " is in use, choose another table. "));
             }
         }
 
         if (!table.setNumber(newNumber))
-            throw (new InvalidInputException("Cannot create due to duplicate number. "));
+            throw (new InvalidInputException("Cannot update table number due to duplicate number. "));
 
         int n = table.numberOfCurrentSeats();
 

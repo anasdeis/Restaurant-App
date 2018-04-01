@@ -2,6 +2,10 @@ package ca.mcgill.ecse223.resto.view;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.sql.Date;
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -553,7 +557,7 @@ public class RestoAppPage extends JFrame {
         int[] intArray = new int[stringArray.length]; // create a new int array to store the int values
 
         if (intArray.length == 0) {
-            error = "Enter the set of table # that you want to start order for";
+            error = "Enter the set of table(s) # that you want to reserve";
         } else {
 
             try {
@@ -577,9 +581,7 @@ public class RestoAppPage extends JFrame {
                 for (int tableNumber : intArray) {
                     int i = 1;
                     for (Table table : tables) {
-                        System.out.println("Table #" + table.getNumber());
                         if (tableNumber == (table.getNumber())) {
-                            System.out.println("Success " + table.getNumber());
                             selectedTables.add(table);
                             continue outerloop;
                         }
@@ -591,11 +593,18 @@ public class RestoAppPage extends JFrame {
                     }
                 }
 
-                RestoAppController.reserveTable(null, null, Integer.parseInt(numberInPartyTextField.getText()),
+                String myDate = "2018/10/29 17:10:45";
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                java.util.Date date = sdf.parse(myDate);
+                long dateTime = date.getTime();
+                Date dateSql = new Date(dateTime);
+                Time timeSql = new Time(dateTime);
+
+                RestoAppController.reserveTable(dateSql, timeSql, Integer.parseInt(numberInPartyTextField.getText()),
                         contactNameTextField.getText().trim(), contactEmailAddressTextField.getText().trim(),
                         contactPhoneNumberTextField.getText().trim(), selectedTables);
 
-            } catch (NumberFormatException | InvalidInputException e) {
+            } catch (NumberFormatException | InvalidInputException | ParseException e) {
                 error = e.getMessage();
             }
         }
@@ -613,7 +622,7 @@ public class RestoAppPage extends JFrame {
         int[] intArray = new int[stringArray.length]; // create a new int array to store the int values
 
         if (intArray.length == 0) {
-            error = "Enter the set of table # that you want to start order for";
+            error = "Enter the set of table(s) # that you want to start order for";
         } else {
 
             try {
@@ -722,7 +731,7 @@ public class RestoAppPage extends JFrame {
                 tableList.addItem("" + table.getNumber());
                 index++;
             }
-            selectedTableIndex = -1;
+
             tableList.setSelectedIndex(selectedTableIndex);
 
         }
