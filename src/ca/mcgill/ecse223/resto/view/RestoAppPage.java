@@ -512,7 +512,8 @@ public class RestoAppPage extends JFrame {
 
                 .addGroup(layout.createSequentialGroup()
 
-                        .addGroup(layout.createParallelGroup().addComponent(userLabel)
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(userLabel)
                         		.addComponent(numberOfSeatsLabel)
                         		.addComponent(widthLabel)
                                 .addComponent(lengthLabel)
@@ -804,14 +805,11 @@ public class RestoAppPage extends JFrame {
     protected void orderButtonActionPerformed(ActionEvent evt) {
 
         error = null;
-        if (selectedTableIndex != 1) {
             try {
-                new OrderPage(selectedTableIndex);
+                new OrderPage();
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-        }
     }
 
     protected void modeOneButtonActionPerformed(ActionEvent evt) {

@@ -979,4 +979,29 @@ public class RestoAppController {
         }
 
     }
+    public static List<OrderItem> getOrderItems(Table table) throws InvalidInputException {
+    	RestoApp r = RestoApplication.getRestoApp();
+    	List<Table> currentTables = r.getCurrentTables();
+    	List<OrderItem> orderItemsFromTable = new ArrayList<OrderItem>();
+    	if(currentTables.contains(table)) {
+    		if(table.getStatusFullName().equals("Available")) {
+    			throw (new InvalidInputException("No orders!"));
+    		}
+    		List<Seat> currentSeats = table.getSeats();    		
+    		for (Seat seat : currentSeats) {
+    			List<OrderItem> orderItems = seat.getOrderItems();
+    			for (OrderItem orderItem : orderItems) {
+					if(orderItem.getOrder()!=null) {
+						orderItemsFromTable.add(orderItem);
+					}
+				}
+			}
+    	}
+    	else {
+    		throw (new InvalidInputException("No such table"));
+    	}
+
+    	
+    	return orderItemsFromTable;
+    }
 }
