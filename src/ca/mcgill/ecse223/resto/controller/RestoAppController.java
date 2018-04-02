@@ -844,4 +844,117 @@ public class RestoAppController {
             throw new InvalidInputException(e.getMessage());
         }
     }
+    
+    public static void orderMenuItem(MenuItem menuitem, int quantity, List<Seat> seats) throws InvalidInputException {
+    	RestoApp r = RestoApplication.getRestoApp();
+    	String error = "";
+    	
+    	if (menuitem == null ) {
+    		error += "Please enter a menu item to order";
+    	}
+    	
+    	if (seats == null || seats.isEmpty()) {
+    		error += "Please enter the seats to order";
+    	}
+    	
+    	if (quantity < 1) {
+    		error += "Please enter the quantity to order";
+    	}
+    	
+    	// **
+		if (error.length() > 0) {
+            throw (new InvalidInputException(error.trim()));
+        }
+    		
+   		boolean current = menuitem.hasCurrentPricedMenuItem();
+   		if (current == false) {
+    		throw (new InvalidInputException("No price associated with" + menuitem));
+   		}
+   		
+   		List<Table> currentTables = r.getCurrentTables();
+   		Order lastOrder = null;
+   		//Seat seat = new Seat();
+   		
+   		for (Seat seat : seats) {
+   			
+   			Table table = seat.getTable();
+   			
+	   			boolean containsTable = currentTables.contains(table);
+	   			if(containsTable == false) {
+		    		throw (new InvalidInputException("Table " + table.getNumber() + "is not in the list of tables on the system"));
+	   			}
+   			
+   			List<Seat> currentSeats = table.getCurrentSeats();
+   			
+	   			boolean containsSeat = currentSeats.contains(seat);
+	   			if(containsSeat == false) {
+	   				throw (new InvalidInputException("Seat entered is not in the list of seats on table" + table.getNumber()));
+	   			}
+   			
+   			if (lastOrder == null) {
+   				if(table.numberOfOrders() > 0) {
+   					lastOrder = table.getOrder(table.numberOfOrders()-1);
+   				}
+   				else {
+   					throw (new InvalidInputException("No orders were made"));
+   				}
+   			}
+   			else {
+   				Order comparedOrder = null;
+   				if(table.numberOfOrders() > 0) {
+   					comparedOrder = table.getOrder(table.numberOfOrders()-1);
+   					if (comparedOrder.equals(lastOrder)) {
+	   					throw (new InvalidInputException("Error: same order"));
+   					}
+   				}
+   				else {
+   					throw (new InvalidInputException("No orders were made"));
+   				}
+   			}
+   		}
+   		
+   		if (lastOrder == null) {
+			throw (new InvalidInputException("No orders were made"));
+   		}
+   		
+   		PricedMenuItem pmi = menuitem.getCurrentPricedMenuItem();
+   		boolean itemCreated = false;
+   		OrderItem newitem = null;
+   		
+   		for (Seat seat : seats) {
+   			Table table = seat.getTable();
+   			
+   			if(itemCreated) {
+   				table.addToOrderItem(newitem, seat);
+   			}
+   			else {
+   				OrderItem lastitem = null;
+   				if (lastOrder.numberOfOrderItems() > 0) {
+   					lastitem = lastOrder.getOrderItem(lastOrder.numberOfOrderItems()-1);
+   					
+   				}
+   				table.orderItem(quantity, lastOrder, seat, pmi);
+   				
+   				if ((lastOrder.numberOfOrderItems() > 0) && 
+   						(!lastOrder.getOrderItem(lastOrder.numberOfOrderItems()-1).equals(lastitem))) {
+   					itemCreated = true;
+   					newitem = lastOrder.getOrderItem(lastOrder.numberOfOrderItems()-1);
+   				}
+   			}
+   		}
+   		
+   		if (itemCreated == false) {
+   			throw (new InvalidInputException ("Error"));
+   		}
+	   		
+   		//**
+   		
+    	try {
+            RestoApplication.save();
+    	}
+    	catch(RuntimeException e) {
+            throw new InvalidInputException(e.getMessage());
+    	}
+    	
+    }
 }
