@@ -806,7 +806,7 @@ public class RestoAppPage extends JFrame {
 
         error = null;
             try {
-                new OrderPage();
+     //           new OrderPage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
