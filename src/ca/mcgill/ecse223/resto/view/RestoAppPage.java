@@ -105,6 +105,7 @@ public class RestoAppPage extends JFrame {
     private JButton cancelOrderButton;
     private JComboBox<String> ordersList;
     private JLabel orderDate;
+    private JLabel ordersLabel;
     private Integer selectedOrderIndex = -1;
     private HashMap<Integer, Order> orders;
 
@@ -206,6 +207,7 @@ public class RestoAppPage extends JFrame {
         // startOrder
         selectedTablesLabel = new JLabel("Enter table # separated by whitespace: ");
         selectedTablesTextField = new JTextField();
+        ordersLabel = new JLabel("Orders:");
 
         ordersList = new JComboBox<String>(new String[0]);
         orderDate = new JLabel();
@@ -259,7 +261,7 @@ public class RestoAppPage extends JFrame {
                                 Collections.sort(reservationTimeArray);
                             } catch (ClassCastException | UnsupportedOperationException | IllegalArgumentException e) {
                                 e.printStackTrace();
-                                error = e.getMessage();
+                                error += e.getMessage();
                             }
                             for (long time : reservationTimeArray) {
                                 for (Reservation reservation : reservationsTable) {
@@ -285,7 +287,7 @@ public class RestoAppPage extends JFrame {
                                 Collections.sort(orderTimeArray);
                             } catch (ClassCastException | UnsupportedOperationException | IllegalArgumentException e) {
                                 e.printStackTrace();
-                                error = e.getMessage();
+                                error += e.getMessage();
                             }
                             for (long time : orderTimeArray) {
                                 for (Order order : ordersTable) {
@@ -323,7 +325,9 @@ public class RestoAppPage extends JFrame {
                     }
                 } else {
                     selectedReservationIndex = -1;
+                    reservationList.removeAllItems();
                     selectedOrderIndex = -1;
+                    ordersList.removeAllItems();
                     refreshData();
                 }
             }
@@ -513,9 +517,9 @@ public class RestoAppPage extends JFrame {
                 .addGroup(layout.createSequentialGroup()
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(userLabel)
-                        		.addComponent(numberOfSeatsLabel)
-                        		.addComponent(widthLabel)
+                                .addComponent(userLabel)
+                                .addComponent(numberOfSeatsLabel)
+                                .addComponent(widthLabel)
                                 .addComponent(lengthLabel)
                                 .addComponent(xLocationLabel)
                                 .addComponent(yLocationLabel)
@@ -523,8 +527,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(newNumberOfSeatsLabel))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(userNameLabel)
-                        		.addComponent(numberOfSeatsTextField)
+                                .addComponent(userNameLabel)
+                                .addComponent(numberOfSeatsTextField)
                                 .addComponent(widthTextField)
                                 .addComponent(lengthTextField)
                                 .addComponent(yLocationTextField)
@@ -536,8 +540,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(updateTableButton))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(tablesLabel)
-                        		.addComponent(numberSeatsLabel)
+                                .addComponent(tablesLabel)
+                                .addComponent(numberSeatsLabel)
                                 .addComponent(tableWidthLabel)
                                 .addComponent(tableLengthLabel)
                                 .addComponent(tableLocationXLabel)
@@ -545,8 +549,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(selectedTablesLabel))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(tableList)
-                        		.addComponent(removeTableButton)
+                                .addComponent(tableList)
+                                .addComponent(removeTableButton)
                                 .addComponent(tableStatusLabel)
                                 .addComponent(contactNameLabel)
                                 .addComponent(contactEmailAddressLabel)
@@ -559,8 +563,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(startOrderButton))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(menuButton)
-                        		.addComponent(viewOrdersButton)
+                                .addComponent(menuButton)
+                                .addComponent(viewOrdersButton)
                                 .addComponent(contactNameTextField)
                                 .addComponent(contactEmailAddressTextField)
                                 .addComponent(contactPhoneNumberTextField)
@@ -570,12 +574,13 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(reservationDate)
                                 .addComponent(deleteReservationButton))
 
-                        .addGroup(layout.createParallelGroup().
-                        		addComponent(seatsLabel))
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(seatsLabel)
+                                .addComponent(ordersLabel))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(seatList)
-                        		.addComponent(issueBillForOneTable)
+                                .addComponent(seatList)
+                                .addComponent(issueBillForOneTable)
                                 .addComponent(issueBillForEachCustomerInOneTable)
                                 .addComponent(issueBillForGroupCustomerInOneTable)
                                 .addComponent(issueBillForGroupCustomerInMultipleTable)
@@ -584,10 +589,10 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(endOrderButton))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(addTableButton)
-                        		.addComponent(addSeatButton)
-                        		.addComponent(overviewScrollPaneTable)
-                        		.addComponent(overviewScrollPane))
+                                .addComponent(addTableButton)
+                                .addComponent(addSeatButton)
+                                .addComponent(overviewScrollPaneTable)
+                                .addComponent(overviewScrollPane))
                 )
         );
 
@@ -596,23 +601,23 @@ public class RestoAppPage extends JFrame {
 
 
                 .addGroup(layout.createSequentialGroup()
-                		.addComponent(errorMessage)
+                        .addComponent(errorMessage)
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(horizontalLineTop))
+                                .addComponent(horizontalLineTop))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(userLabel)
-                        		.addComponent(userNameLabel)
-                        		.addComponent(tablesLabel)
-                        		.addComponent(tableList)
+                                .addComponent(userLabel)
+                                .addComponent(userNameLabel)
+                                .addComponent(tablesLabel)
+                                .addComponent(tableList)
                                 .addComponent(menuButton)
                                 .addComponent(seatsLabel)
                                 .addComponent(seatList)
                                 .addComponent(addTableButton))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(numberOfSeatsLabel)
+                                .addComponent(numberOfSeatsLabel)
                                 .addComponent(numberOfSeatsTextField)
                                 .addComponent(numberSeatsLabel)
                                 .addComponent(removeTableButton)
@@ -621,23 +626,23 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(addSeatButton))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(widthLabel)
-                        		.addComponent(widthTextField)
+                                .addComponent(widthLabel)
+                                .addComponent(widthTextField)
                                 .addComponent(tableWidthLabel)
                                 .addComponent(tableStatusLabel)
                                 .addComponent(issueBillForEachCustomerInOneTable)
                                 .addComponent(overviewScrollPaneTable))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(lengthLabel)
-                        		.addComponent(lengthTextField)
-                        		.addComponent(tableLengthLabel)
+                                .addComponent(lengthLabel)
+                                .addComponent(lengthTextField)
+                                .addComponent(tableLengthLabel)
                                 .addComponent(contactNameLabel)
                                 .addComponent(contactNameTextField)
                                 .addComponent(issueBillForGroupCustomerInOneTable))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(xLocationLabel)
+                                .addComponent(xLocationLabel)
                                 .addComponent(xLocationTextField)
                                 .addComponent(tableLocationXLabel)
                                 .addComponent(contactEmailAddressLabel)
@@ -646,19 +651,19 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(overviewScrollPane))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(yLocationLabel)
+                                .addComponent(yLocationLabel)
                                 .addComponent(yLocationTextField)
                                 .addComponent(tableLocationYLabel)
                                 .addComponent(contactPhoneNumberLabel)
                                 .addComponent(contactPhoneNumberTextField))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(createTableButton)
+                                .addComponent(createTableButton)
                                 .addComponent(numberInPartyLabel)
                                 .addComponent(numberInPartyTextField))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(moveTableButton)
+                                .addComponent(moveTableButton)
                                 .addComponent(dateLabel)
                                 .addComponent(dateTextField))
 
@@ -667,30 +672,31 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(newTableNumberTextField)
                                 .addComponent(reservedStatusLabel)
                                 .addComponent(reservationList)
+                                .addComponent(ordersLabel)
                                 .addComponent(ordersList))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(newNumberOfSeatsLabel)
-                        		.addComponent(newNumberOfSeatsTextField)
-                        		.addComponent(selectedTablesLabel)
-                        		.addComponent(selectedTablesTextField)
-                        		.addComponent(reservationDate)
+                                .addComponent(newNumberOfSeatsLabel)
+                                .addComponent(newNumberOfSeatsTextField)
+                                .addComponent(selectedTablesLabel)
+                                .addComponent(selectedTablesTextField)
+                                .addComponent(reservationDate)
                                 .addComponent(orderDate))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(updateTableButton)
-                        		.addComponent(reserveButton)
+                                .addComponent(updateTableButton)
+                                .addComponent(reserveButton)
                                 .addComponent(deleteReservationButton)
                                 .addComponent(endOrderButton))
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(startOrderButton))
+                                .addComponent(startOrderButton))
 
 
                         .addComponent(horizontalLineBottom)
 
                         .addGroup(layout.createParallelGroup()
-                        		.addComponent(displayApp, 450, 450, 450))));
+                                .addComponent(displayApp, 450, 450, 450))));
         pack();
 
     }
@@ -804,11 +810,11 @@ public class RestoAppPage extends JFrame {
     protected void orderButtonActionPerformed(ActionEvent evt) {
 
         error = null;
-            try {
-     //           new OrderPage();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            //           new OrderPage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     protected void modeOneButtonActionPerformed(ActionEvent evt) {
@@ -964,11 +970,11 @@ public class RestoAppPage extends JFrame {
             error = "Order needs to be selected to end it!";
 
         } else {
-             try {
-               RestoAppController.endOrder(orders.get(selectedOrderIndex));
-              } catch (InvalidInputException e) {
-                 error = e.getMessage();
-              }
+            try {
+                RestoAppController.endOrder(orders.get(selectedOrderIndex));
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
         }
         refreshData();
         repaint();
