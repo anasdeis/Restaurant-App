@@ -625,7 +625,6 @@ public class RestoAppPage extends JFrame {
                         		.addComponent(widthTextField)
                                 .addComponent(tableWidthLabel)
                                 .addComponent(tableStatusLabel)
-                                .addComponent(endOrderButton)
                                 .addComponent(issueBillForEachCustomerInOneTable)
                                 .addComponent(overviewScrollPaneTable))
 
@@ -806,7 +805,7 @@ public class RestoAppPage extends JFrame {
 
         error = null;
             try {
-                new OrderPage();
+     //           new OrderPage();
             } catch (Exception e) {
                 e.printStackTrace();
             }
