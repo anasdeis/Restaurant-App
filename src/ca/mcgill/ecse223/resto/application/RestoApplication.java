@@ -6,7 +6,7 @@ import ca.mcgill.ecse223.resto.view.RestoAppPage;
 
 public class RestoApplication {
 
-	private static String filename = "menuV2.resto";
+	private static String filename = "menu.resto";
 
 	private static RestoApp ra;
 
