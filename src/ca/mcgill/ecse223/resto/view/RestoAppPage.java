@@ -98,6 +98,7 @@ public class RestoAppPage extends JFrame {
     private JTextField selectedTablesTextField;
     private JLabel selectedTablesLabel;
     private JButton endOrderButton;
+    private JButton deleteOrderButton;
     private JButton viewOrdersButton;
     private JButton cancelItemButton;
     private JButton cancelSeatButton;
@@ -208,6 +209,7 @@ public class RestoAppPage extends JFrame {
         selectedTablesLabel = new JLabel("Enter table # separated by whitespace: ");
         selectedTablesTextField = new JTextField();
         ordersLabel = new JLabel("Orders:");
+
 
         ordersList = new JComboBox<String>(new String[0]);
         orderDate = new JLabel();
@@ -439,7 +441,7 @@ public class RestoAppPage extends JFrame {
         deleteReservationButton = new JButton("Delete Reservation");
         deleteReservationButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createTableButtonActionPerformed(evt);
+                deleteReservationButtonActionPerformed(evt);
             }
         });
         startOrderButton = new JButton("Start Order");
@@ -474,28 +476,34 @@ public class RestoAppPage extends JFrame {
                 orderButtonActionPerformed(evt);
             }
         });
-        cancelItemButton = new JButton("Cancel Item");
+    /*    cancelItemButton = new JButton("Cancel Item");
         cancelItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSeatButtonActionPerformed(evt);
+                cancelItemButtonActionPerformed(evt);
             }
         });
         cancelSeatButton = new JButton("Cancel Seat");
         cancelSeatButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSeatButtonActionPerformed(evt);
+                cancelSeatButtonActionPerformed(evt);
             }
         });
         cancelTableButton = new JButton("Cancel Table");
         cancelTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSeatButtonActionPerformed(evt);
+                cancelTableButtonActionPerformed(evt);
             }
         });
         cancelOrderButton = new JButton("Cancel Order");
         cancelOrderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSeatButtonActionPerformed(evt);
+                cancelOrderButtonActionPerformed(evt);
+            }
+        });*/
+        deleteOrderButton = new JButton("Delete Order");
+        deleteOrderButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteOrderButtonActionPerformed(evt);
             }
         });
 
@@ -565,6 +573,7 @@ public class RestoAppPage extends JFrame {
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(menuButton)
                                 .addComponent(viewOrdersButton)
+                                .addComponent(endOrderButton)
                                 .addComponent(contactNameTextField)
                                 .addComponent(contactEmailAddressTextField)
                                 .addComponent(contactPhoneNumberTextField)
@@ -586,7 +595,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(issueBillForGroupCustomerInMultipleTable)
                                 .addComponent(ordersList)
                                 .addComponent(orderDate)
-                                .addComponent(endOrderButton))
+                                .addComponent(deleteOrderButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(addTableButton)
@@ -630,6 +639,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(widthTextField)
                                 .addComponent(tableWidthLabel)
                                 .addComponent(tableStatusLabel)
+                                .addComponent(endOrderButton)
                                 .addComponent(issueBillForEachCustomerInOneTable)
                                 .addComponent(overviewScrollPaneTable))
 
@@ -687,7 +697,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(updateTableButton)
                                 .addComponent(reserveButton)
                                 .addComponent(deleteReservationButton)
-                                .addComponent(endOrderButton))
+                                .addComponent(deleteOrderButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(startOrderButton))
@@ -703,6 +713,8 @@ public class RestoAppPage extends JFrame {
 
 
     protected void createTableButtonActionPerformed(ActionEvent evt) {
+
+        error = null;
 
         try {
             RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()),
@@ -811,11 +823,11 @@ public class RestoAppPage extends JFrame {
 
         error = null;
 
-            try {
-                new OrderPage();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            new OrderPage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -836,12 +848,30 @@ public class RestoAppPage extends JFrame {
         } else {
 
             try {
-                RestoAppController.endReservation(reservations.get(selectedTableIndex));
+                RestoAppController.endReservation(reservations.get(selectedReservationIndex));
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
         }
+        refreshData();
+    }
 
+    protected void deleteOrderButtonActionPerformed(ActionEvent evt) {
+
+        error = null;
+
+        if (selectedOrderIndex < 0) {
+            error = "Reservation needs to be selected for deleting!";
+
+        } else {
+
+            try {
+                RestoAppController.deleteOrder(orders.get(selectedOrderIndex));
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+        refreshData();
     }
 
     protected void reserveButtonActionPerformed(ActionEvent evt) {
@@ -982,21 +1012,64 @@ public class RestoAppPage extends JFrame {
         repaint();
     }
 
-    protected void cancelItemButtonActionPerformed(ActionEvent evt) {
+  /* protected void cancelItemButtonActionPerformed(ActionEvent evt) {
 
+        error = null;
+
+        if (selectorderitem < 0){
+            error = "An order item must be specified for cancelling. ";
+        }
+
+        try{
+            RestoAppController.cancelOrderItem(orderitem);
+        } catch(InvalidInputException e){
+            error = e.getMessage();
+        }
     }
 
     protected void cancelSeatButtonActionPerformed(ActionEvent evt) {
 
+        error = null;
+
+        if (selectseat < 0){
+            error = "An seat must be specified for cancelling its order items. ";
+        }
+
+        try{
+            RestoAppController.cancelOrderItemForSeat(seat);
+        } catch(InvalidInputException e){
+            error = e.getMessage();
+        }
     }
 
-    protected void cancelTableButtonActionPerformed(ActionEvent evt) {
 
+    protected void cancelTableButtonActionPerformed(ActionEvent evt) {
+        error = null;
+
+        if (selecttable < 0){
+            error = "A table must be specified for cancelling its order items. ";
+        }
+
+        try{
+            RestoAppController.cancelOrder(table);
+        } catch(InvalidInputException e){
+            error = e.getMessage();
+        }
     }
 
     protected void cancelOrderButtonActionPerformed(ActionEvent evt) {
+        error = null;
 
-    }
+        if (selectorder < 0){
+            error = "An order must be specified for cancelling its order items. ";
+        }
+
+        try{
+            RestoAppController.cancelOrder(order);
+        } catch(InvalidInputException e){
+            error = e.getMessage();
+        }
+    }*/
 
     private void refreshData() {
         // error
