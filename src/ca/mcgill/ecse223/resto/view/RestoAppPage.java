@@ -6,10 +6,10 @@ import java.sql.Date;
 import java.sql.Time;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
 
+import javax.naming.spi.ResolveResult;
 import javax.swing.*;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
@@ -72,6 +72,8 @@ public class RestoAppPage extends JFrame {
 
     // ReserveTable
     private JButton reserveButton;
+    private JComboBox<String> reservationList;
+    private Integer selectedReservationIndex = -1;
     private JLabel numberInPartyLabel;
     private JLabel contactNameLabel;
     private JLabel contactEmailAddressLabel;
@@ -79,12 +81,15 @@ public class RestoAppPage extends JFrame {
     private JLabel reservedStatusLabel;
     private JLabel tableStatusLabel;
     private JLabel dateLabel;
+    private JLabel reservationDate;
 
     private JTextField numberInPartyTextField;
     private JTextField contactNameTextField;
     private JTextField contactEmailAddressTextField;
     private JTextField contactPhoneNumberTextField;
     private JTextField dateTextField;
+
+    private HashMap<Integer, Reservation> reservations;
 
     //Orders
     private JButton startOrderButton;
@@ -182,12 +187,16 @@ public class RestoAppPage extends JFrame {
         tableStatusLabel = new JLabel("Table Status: ");
         tableStatusLabel.setForeground(Color.red);
         dateLabel = new JLabel("Set date and time (yyyy/MM/dd HH:mm:ss)");
+        reservationDate = new JLabel();
+
         numberInPartyTextField = new JTextField();
         contactEmailAddressTextField = new JTextField();
         contactPhoneNumberTextField = new JTextField();
         contactNameTextField = new JTextField();
         numberInPartyTextField = new JTextField();
         dateTextField = new JTextField();
+        reservationList = new JComboBox<String>(new String[0]);
+
         // startOrder
         selectedTablesLabel = new JLabel("Enter table # separated by whitespace: ");
         selectedTablesTextField = new JTextField();
@@ -209,7 +218,6 @@ public class RestoAppPage extends JFrame {
         userLabel = new JLabel("User: ");
         userNameLabel = new JLabel("ANAS BOSS");
         userNameLabel.setForeground(Color.BLUE);
-
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
@@ -228,6 +236,31 @@ public class RestoAppPage extends JFrame {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
+                            // select reservation - also combo box for table visualization
+                            reservations = new HashMap<Integer, Reservation>();
+                            reservationList.removeAllItems();
+                            List<Reservation> reservationsTable = table.getReservations();
+                            List<Long> timeArray = new ArrayList<Long>();
+
+                            Integer index = 0;
+                            for (Reservation reservation : reservationsTable) {
+                                timeArray.add(reservation.getDate().getTime());
+                            }
+                            try {
+                                Collections.sort(timeArray);
+                            } catch (ClassCastException | UnsupportedOperationException | IllegalArgumentException e) {
+                                e.printStackTrace();
+                            }
+                            for (long time : timeArray) {
+                                for (Reservation reservation : reservationsTable) {
+                                    if (time == reservation.getDate().getTime()) {
+                                        reservations.put(index, reservation);
+                                        reservationList.addItem("Reservation " + (index + 1));
+                                        index++;
+                                    }
+                                }
+                            }
                             numberSeatsLabel.setText("Seats: " + table.getCurrentSeats().size());
                             tableLocationXLabel.setText("Location X: " + table.getX());
                             tableLocationYLabel.setText("Location Y: " + table.getY());
@@ -236,13 +269,6 @@ public class RestoAppPage extends JFrame {
                             tableStatusLabel.setText("Table Status: " + table.getStatusFullName());
 
                             if (table.hasReservations()) {
-                                contactEmailAddressLabel.setText(
-                                        "Contact E-mail address: " + table.getReservation(0).getContactEmailAddress());
-                                contactNameLabel.setText("Contact Name: " + table.getReservation(0).getContactName());
-                                contactPhoneNumberLabel
-                                        .setText("Contact Phone: " + table.getReservation(0).getContactPhoneNumber());
-                                numberInPartyLabel
-                                        .setText("Number of People: " + table.getReservation(0).getNumberInParty());
                                 reservedStatusLabel.setText("Reservation Status: Reserved, has "
                                         + table.getReservations().size() + " reservation(s)");
                             } else {
@@ -255,6 +281,7 @@ public class RestoAppPage extends JFrame {
                         }
                     }
                 } else {
+                    selectedReservationIndex = -1;
                     refreshData();
                 }
             }
@@ -281,6 +308,27 @@ public class RestoAppPage extends JFrame {
                 }
             }
         });
+
+        reservationList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+                selectedReservationIndex = cb.getSelectedIndex();
+                if (selectedReservationIndex != -1) {
+                    Reservation reservation = reservations.get(selectedReservationIndex);
+                    reservationDate.setText(reservation.getDate().toString() + " " + reservation.getTime().toString());
+                    contactEmailAddressLabel.setText(
+                            "Contact E-mail address: " + reservation.getContactEmailAddress());
+                    contactNameLabel.setText("Contact Name: " + reservation.getContactName());
+                    contactPhoneNumberLabel
+                            .setText("Contact Phone: " + reservation.getContactPhoneNumber());
+                    numberInPartyLabel
+                            .setText("Number of People: " + reservation.getNumberInParty());
+                } else {
+                    refreshData();
+                }
+            }
+        });
+
         createTableButton = new JButton("Create Table");
         createTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -445,7 +493,7 @@ public class RestoAppPage extends JFrame {
 
                                 .addComponent(contactEmailAddressTextField).addComponent(contactPhoneNumberTextField)
 
-                                .addComponent(numberInPartyTextField).addComponent(dateTextField))
+                                .addComponent(numberInPartyTextField).addComponent(dateTextField).addComponent(reservationList).addComponent(reservationDate))
 
                         .addGroup(layout.createParallelGroup().addComponent(seatsLabel))
 
@@ -516,9 +564,9 @@ public class RestoAppPage extends JFrame {
 
                                 layout.createParallelGroup().addComponent(newTableNumberLabel)
 
-                                        .addComponent(newTableNumberTextField).addComponent(reservedStatusLabel))
+                                        .addComponent(newTableNumberTextField).addComponent(reservedStatusLabel).addComponent(reservationList))
 
-                        .addGroup(layout.createParallelGroup().addComponent(newNumberOfSeatsLabel).addComponent(newNumberOfSeatsTextField).addComponent(selectedTablesLabel).addComponent(selectedTablesTextField))
+                        .addGroup(layout.createParallelGroup().addComponent(newNumberOfSeatsLabel).addComponent(newNumberOfSeatsTextField).addComponent(selectedTablesLabel).addComponent(selectedTablesTextField).addComponent(reservationDate))
 
                         .addGroup(layout.createParallelGroup().addComponent(updateTableButton).addComponent(reserveButton))
 
@@ -606,7 +654,6 @@ public class RestoAppPage extends JFrame {
                 error = e.getMessage();
             }
         }
-
         refreshData();
         repaint();
     }
@@ -818,7 +865,6 @@ public class RestoAppPage extends JFrame {
         errorMessage.setText(error);
         if (error == null || error.length() == 0) {
             // populate page with data
-
             // TextField
             // create table
             numberOfSeatsTextField.setText("");
@@ -835,6 +881,7 @@ public class RestoAppPage extends JFrame {
             contactEmailAddressTextField.setText("");
             contactPhoneNumberTextField.setText("");
             dateTextField.setText("");
+            reservationDate.setText("");
             // start order
             selectedTablesTextField.setText("");
 
@@ -856,6 +903,7 @@ public class RestoAppPage extends JFrame {
             // select table - also combo box for table visualization
             tables = new HashMap<Integer, Table>();
             tableList.removeAllItems();
+
             Integer index = 0;
             for (Table table : RestoAppController.getTables()) {
                 tables.put(index, table);
@@ -864,6 +912,7 @@ public class RestoAppPage extends JFrame {
             }
 
             tableList.setSelectedIndex(selectedTableIndex);
+            reservationList.setSelectedIndex(selectedReservationIndex);
 
         }
     }
