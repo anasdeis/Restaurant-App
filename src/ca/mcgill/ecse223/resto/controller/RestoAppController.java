@@ -950,7 +950,7 @@ public class RestoAppController {
                 String tempCategory = menuItem.getItemCategory().toString();
                 category = category.replaceAll("\\s", ""); //remove space in between Category types
                 if (tempCategory.equals(category)) {
-                    menuItem.delete();
+                	menuItem.setCurrentPricedMenuItem(null);
                     removed = true;
                     break;
                 }
@@ -968,6 +968,37 @@ public class RestoAppController {
 
 
     }
+    
+    public static void updateMenuItem(MenuItem menuItem, String name, ItemCategory category, double price) throws InvalidInputException {
+    	
+    	if(menuItem.equals(null) || name == "" || name.equals(null) || category.equals(null) || price < 0 ) {
+    		throw new InvalidInputException ("Invalid input");
+    	}
+    	
+    	boolean current = menuItem.hasCurrentPricedMenuItem();
+    	boolean duplicate = menuItem.setName(name);
+    	
+    	if (!current) {
+    		throw new InvalidInputException (menuItem.getName()+ " is not a curent priced menu Item");
+    	}
+    	
+    	if(!duplicate) {
+    		throw new InvalidInputException ("Cannot set name to " + name);
+    	}
+    	
+    	menuItem.setItemCategory(category);
+    	if(price != menuItem.getCurrentPricedMenuItem().getPrice()) {
+            RestoApp ra = RestoApplication.getRestoApp();
+    		PricedMenuItem pmi = menuItem.addPricedMenuItem(price, ra);
+    		menuItem.setCurrentPricedMenuItem(pmi);
+    	}
+    	
+    	RestoApplication.save();
+    	
+    	
+    }
+    
+    
 
     public static void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException {
         RestoApp ra = RestoApplication.getRestoApp();
