@@ -19,6 +19,7 @@ import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Waiter;
 
 public class RestoAppPage extends JFrame {
 
@@ -142,6 +143,10 @@ public class RestoAppPage extends JFrame {
     private JTextField waiterNameTextField;
     private JTextField waiterPhoneNumberTextField;
     private JTextField waiterEmailAddressTextField;
+    private JComboBox<String> waiterList;
+    private JButton loginWaiterButton;
+    private Integer selectedWaiterIndex = -1;
+
     int i;
 
     /**
@@ -254,6 +259,21 @@ public class RestoAppPage extends JFrame {
                 createWaiterButtonActionPerformed(evt);
             }
         });
+        loginWaiterButton = new JButton("Login");
+        loginWaiterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginWaiterButtonActionPerformed(evt);
+            }
+        });
+        
+        waiterList = new JComboBox<String>(new String[0]);
+		waiterList.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		        JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+		        selectedWaiterIndex = cb.getSelectedIndex();
+			}
+		});
+        
         
         
         tableList.addActionListener(new java.awt.event.ActionListener() {
@@ -613,7 +633,9 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(tableLengthLabel)
                                 .addComponent(tableLocationXLabel)
                                 .addComponent(tableLocationYLabel)
-                                .addComponent(selectedTablesLabel))
+                                .addComponent(selectedTablesLabel)
+                                .addComponent(waiterList)
+                                .addComponent(loginWaiterButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(tableList)
@@ -769,10 +791,12 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(deleteTableOrderButton))
                         .addGroup(layout.createParallelGroup()
                         		.addComponent(waiterPhoneNumberLabel)
-                        		.addComponent(waiterPhoneNumberTextField))
+                        		.addComponent(waiterPhoneNumberTextField)
+                        		.addComponent(waiterList))
                         .addGroup(layout.createParallelGroup()
                         		.addComponent(waiterEmailAddressLabel)
-                        		.addComponent(waiterEmailAddressTextField))
+                        		.addComponent(waiterEmailAddressTextField)
+                        		.addComponent(loginWaiterButton))
                         .addGroup(layout.createParallelGroup()
                         		.addComponent(addWaiterButton))
 
@@ -1196,6 +1220,18 @@ public class RestoAppPage extends JFrame {
     	refreshData();
     	repaint();
     }
+    
+    protected void loginWaiterButtonActionPerformed(ActionEvent evt){
+    	
+    	String waiterToLogin = waiterList.getItemAt(selectedWaiterIndex);
+        for (Waiter waiter : RestoAppController.getWaiters()) {
+            if(waiter.getWaiterName().equals(waiterToLogin)){
+            	RestoAppController.login(waiter);
+            }
+        }
+    	refreshData();
+    	repaint();
+    }
 
     private void refreshData() {
         // error
@@ -1255,10 +1291,19 @@ public class RestoAppPage extends JFrame {
                 tableList.addItem("" + table.getNumber());
                 index++;
             }
+            
+            waiterList.removeAllItems();
+//            for (Waiter waiter : RestoAppController.getWaiters()) {
+//                waiterList.addItem(waiter.getWaiterName());
+//            }
+
+			selectedWaiterIndex = -1;
+            waiterList.setSelectedIndex(selectedWaiterIndex);
 
             tableList.setSelectedIndex(selectedTableIndex);
             reservationList.setSelectedIndex(selectedReservationIndex);
             ordersList.setSelectedIndex(selectedOrderIndex);
+
 
         }
     }

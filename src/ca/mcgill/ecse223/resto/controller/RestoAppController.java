@@ -1221,6 +1221,13 @@ public class RestoAppController {
             throw new InvalidInputException(e.getMessage());
         }
     }
-	
+    
+    public static List<Waiter> getWaiters() {
+        return RestoApplication.getRestoApp().getWaiters();
+    }
+    
+    public static void login(Waiter waiter){
+    	RestoApplication.getRestoApp().setLogedOnWaiter(waiter);
+    }
 }
 
