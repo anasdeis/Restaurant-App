@@ -122,9 +122,17 @@ public class RestoAppPage extends JFrame {
     private DefaultListModel<Table> listModelTable = new DefaultListModel<>();
     private JList<Table> tableListToBeBilled = new JList<>(listModelTable);
 
-    //User
+    // Waiter
     private JLabel userLabel;
     private JLabel userNameLabel;
+    private JLabel waiterNameLabel;
+    private JLabel waiterEmailAddressLabel;
+    private JLabel waiterPhoneNumberLabel;
+    private JButton addWaiterButton;
+    private JTextField waiterNameTextField;
+    private JTextField waiterPhoneNumberTextField;
+    private JTextField waiterEmailAddressTextField;
+    
 
     /**
      * Creates new form RestoAppPage
@@ -214,10 +222,24 @@ public class RestoAppPage extends JFrame {
         overviewScrollPaneTable.setPreferredSize(new Dimension(48, 48));
         this.add(overviewScrollPaneTable);
 
-        //User
+        // Waiter
         userLabel = new JLabel("User: ");
-        userNameLabel = new JLabel("ANAS BOSS");
+        userNameLabel = new JLabel(RestoAppController.getCurrentUser());
         userNameLabel.setForeground(Color.BLUE);
+        waiterNameLabel = new JLabel("Waiter Name: ");
+        waiterEmailAddressLabel = new JLabel ("Waiter Email Address: ");
+        waiterPhoneNumberLabel = new JLabel("Waiter Phone Number: ");
+        waiterNameTextField = new JTextField();
+        waiterPhoneNumberTextField = new JTextField();
+        waiterEmailAddressTextField = new JTextField();
+        addWaiterButton = new JButton("Create Waiter");
+        addWaiterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createWaiterButtonActionPerformed(evt);
+            }
+        });
+        
+        
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
@@ -903,6 +925,21 @@ public class RestoAppPage extends JFrame {
 
     protected void cancelOrderButtonActionPerformed(ActionEvent evt) {
 
+    }
+    
+    protected void createWaiterButtonActionPerformed(ActionEvent evt){
+    	
+        try {
+        	String name = waiterNameTextField.getText();
+        	String phoneNumber = waiterPhoneNumberTextField.getText();
+        	String emailAddress = waiterEmailAddressTextField.getText();
+        	
+            RestoAppController.createWaiter(name, phoneNumber, emailAddress);
+        } catch (NumberFormatException | InvalidInputException e) {
+            error = e.getMessage();
+        }
+    	refreshData();
+    	repaint();
     }
 
     private void refreshData() {

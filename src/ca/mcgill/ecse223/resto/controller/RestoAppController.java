@@ -17,6 +17,7 @@ import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Waiter;
 
 public class RestoAppController {
 
@@ -957,4 +958,43 @@ public class RestoAppController {
     	}
     	
     }
+
+	public static String getCurrentUser() {
+    	RestoApp r = RestoApplication.getRestoApp();
+    	if(r.getLogedOnWaiter() != null){
+    		return r.getLogedOnWaiter().getWaiterName();
+    	}
+    	else{
+    		return "";
+    	}
+	}
+	
+    public static void createWaiter(String waiterName, String waiterEmailAddress, String waiterPhoneNumber)
+            throws InvalidInputException {
+        RestoApp ra = RestoApplication.getRestoApp();
+
+        String error = "";
+        if (waiterName.length() <= 0) {
+            error = error +"Waiter name cannot be empty. ";
+        }
+        if (waiterPhoneNumber.length() <= 0) {
+            error = error + "Waiter phone number cannot be empty. ";
+        }
+        if (waiterEmailAddress.length() <= 0 ) {
+            error = error + "The email address cannot be empty. ";
+        }
+        if (error.length() > 0) {
+            throw new InvalidInputException(error.trim());
+        }
+
+        try {
+
+            ra.addWaiter(waiterName, waiterEmailAddress, waiterPhoneNumber);
+            RestoApplication.save();
+
+        } catch (RuntimeException e) {
+            throw new InvalidInputException(e.getMessage());
+        }
+    }
+	
 }
