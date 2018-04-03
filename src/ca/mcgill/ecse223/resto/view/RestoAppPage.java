@@ -912,7 +912,7 @@ public class RestoAppPage extends JFrame {
     protected void deleteOrderButtonActionPerformed(ActionEvent evt) {
 
         error = null;
-        System.out.println("delete");
+
         if (selectedOrderIndex < 0) {
             error = "Reservation needs to be selected for deleting!";
 
@@ -930,7 +930,7 @@ public class RestoAppPage extends JFrame {
     protected void deleteTableOrderButtonActionPerformed(ActionEvent evt) {
 
         error = null;
-        System.out.println("delete2");
+
         if (selectedOrderIndex < 0 && selectedTableIndex < 0) {
             error = "The table and the order needs to be specified for deleting!";
 

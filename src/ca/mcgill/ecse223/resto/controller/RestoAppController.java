@@ -297,10 +297,8 @@ public class RestoAppController {
         Order newOrder = null;
 
         for (Table table : tables) {
-            System.out.println("start " + table.getNumber());
             if (orderCreated) {
                 boolean add = table.addToOrder(newOrder);
-                System.out.println("add " + add);
             } else {
                 Order lastOrder = null;
                 if (table.numberOfOrders() > 0) {
@@ -308,19 +306,15 @@ public class RestoAppController {
                 }
 
                 table.startOrder();
-                System.out.println("start2 " + table.getNumber());
                 if ((table.numberOfOrders() > 0) && (!table.getOrder(table.numberOfOrders() - 1).equals(lastOrder))) {
                     orderCreated = true;
                     newOrder = table.getOrder(table.numberOfOrders() - 1);
-                    System.out.println("start3 " + table.getNumber());
                 }
             }
         }
-        System.out.println("booleam " + orderCreated);
         if (orderCreated) {
             List<Table> tabless = newOrder.getTables();
             for (Table atable : tabless) {
-                System.out.println("Table #" + atable.getNumber());
             }
         }
         if (!orderCreated) {
@@ -353,20 +347,19 @@ public class RestoAppController {
         }
 
         List<Table> tables = order.getTables();
-        List<Table> copyOfTables = new ArrayList<Table>();
+        List<Table> copyOfTables = new ArrayList<Table>(tables);
 
-        for (Table table : tables) {
-            copyOfTables.add(table);
-        }
 
         for (Table table : copyOfTables) {
             if ((table.numberOfOrders() > 0) && (table.getOrder(table.numberOfOrders() - 1).equals(order))) {
-                table.endOrder(order);
+                boolean success = table.endOrder(order);
+                if (!success) {
+                    System.out.println("Cannot end order for table #" + table.getNumber());
+                }
             }
         }
 
         if (allTablesAvailableOrDifferentCurrentOrder(tables, order)) {
-            System.out.println("stop2");
             r.removeCurrentOrder(order);
         }
 
@@ -679,17 +672,17 @@ public class RestoAppController {
      */
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
+
     public static void issueBill(List<Seat> seats) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
         List<Table> currentTables = r.getCurrentTables();
         Order lastOrder = null;
 
-        if(seats == null || seats.isEmpty()){
+        if (seats == null || seats.isEmpty()) {
             throw (new InvalidInputException("Seats have to be specified to issue bill. "));
         }
 
-        for (Seat seat: seats) {
+        for (Seat seat : seats) {
             Table table = seat.getTable();
 
             if (!currentTables.contains(table)) {
@@ -722,9 +715,10 @@ public class RestoAppController {
         if (lastOrder == null) {
             throw new InvalidInputException("The specified seats don't have an order!");
         }
+
         boolean billCreated = false;
         Bill newBill = null;
-        for (Seat seat: seats) {
+        for (Seat seat : seats) {
             Table table = seat.getTable();
             if (billCreated) {
                 table.addToBill(newBill, seat);
@@ -741,12 +735,12 @@ public class RestoAppController {
             }
         }
         if (!billCreated) {
-            throw new InvalidInputException("Error: The is an issue with generating a bill!");
+            throw new InvalidInputException("Error: There is an issue with generating a bill!");
         }
         RestoApplication.save();
     }
-    
-    
+
+
     public static int generateTableNumber() {
         RestoApp ra = RestoApplication.getRestoApp();
         List<Table> tables = ra.getCurrentTables();
@@ -1127,7 +1121,6 @@ public class RestoAppController {
         } catch (RuntimeException e) {
             throw new InvalidInputException(e.getMessage());
         }
-
     }
 
     public static List<OrderItem> getOrderItems(Table table) throws InvalidInputException {
@@ -1140,7 +1133,7 @@ public class RestoAppController {
 
         if (currentTables.contains(table)) {
             if (table.getStatusFullName().equals("Available")) {
-                throw (new InvalidInputException("Table #" + table.getNumber() + " has no current order!"));
+                throw (new InvalidInputException("Table #" + table.getNumber() + " is available!"));
             }
 
             Order lastOrder = null;

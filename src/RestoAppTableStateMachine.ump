@@ -5,15 +5,23 @@ class Table {
             new Order(new java.sql.Date(Calendar.getInstance().getTime().getTime()), new java.sql.Time(Calendar.getInstance().getTime().getTime()), this.getRestoApp(), this);
          } -> NothingOrdered;
          addToOrder(Order o) / {
-            o.addTable(this);
+            boolean success = o.addTable(this);
+            if (!success){
+                System.out.println("Warning! Cannot start an order for table #" + this.getNumber() + " at the moment. ");
+            }
          } -> NothingOrdered; 
       }
       NothingOrdered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
             // create a new order item with the provided quantity, order, seat, and priced menu item
-         } -> Ordered; 
+            new OrderItem(quantity, i, o, s);
+         } -> Ordered;
          addToOrderItem(OrderItem i, Seat s) / {
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
+            boolean isAdded = i.addSeat(s);
+            if (!isAdded){
+                System.out.println("Warning! This orderItem has already been added. ");
+            }
          } -> Ordered;
          endOrder(Order o) / {
             if (!o.removeTable(this)) {
@@ -26,25 +34,42 @@ class Table {
       Ordered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
             // create a new order item with the provided quantity, order, seat, and priced menu item
+            new OrderItem(quantity, i, o, s);
          } -> Ordered; 
          addToOrderItem(OrderItem i, Seat s) / {
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
+            boolean isAdded = i.addSeat(s);
+            if (!isAdded){
+                System.out.println("Warning! This orderItem has already been added. ");
+            }
          } -> Ordered;
          cancelOrderItem(OrderItem i) [iIsLastItem(i)] / {
             // delete order item
+            i.delete();
          } -> NothingOrdered;
          cancelOrderItem(OrderItem i) [!iIsLastItem(i)] / {
             // delete order item
+            i.delete();
          } -> Ordered;
          cancelOrder() / {
             // delete all order items of the table
+            try {
+            List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+            }catch(InvalidInputException e){
+                throw (new InvalidInputException(e.getMessage()));
+                }
+            for(OrderItem orderitem : orderItemsList){
+                orderitem.delete();
+                }
          } -> NothingOrdered;
          billForSeat(Order o, Seat s) / {
+         // TODO
             // create a new bill with the provided order and seat; if the provided seat is already assigned to
             // another bill for the current order, then the seat is first removed from the other bill and if no seats
             // are left for the bill, the bill is deleted
          } -> Ordered;
          addToBill(Bill b, Seat s) / {
+         // TODO
             // add provided seat to provided bill unless seat has already been added, in which case nothing needs
             // to be done; if the provided seat is already assigned to another bill for the current order, then the
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
@@ -56,20 +81,41 @@ class Table {
    
    // check that the provided quantity is an integer greater than 0
    private boolean quantityIsPositive(int quantity) {
-      // TODO
+
+      if (quantity > 0){
+        return true;
+
+      } else {
       return false;
+
+      }
    }
 
    // check that the provided order item is the last item of the current order of the table
    private boolean iIsLastItem(OrderItem i) {
-      // TODO
+
+      try {
+          List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+      }catch(InvalidInputException e){
+          throw (new InvalidInputException(e.getMessage()));
+      }
+
+      if (orderItemsList.size() == 1){
+          return true;
+      }
+
       return false;
    }
 
    // check that all seats of the table have a bill that belongs to the current order of the table 
    private boolean allSeatsBilled() {
-      // TODO
+
+      List<Seat> currentSeats = this.getCurrentSeats();
+      Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
+      if(lastOrder.numberOfBills() == currentSeats.size()){
+          return true;
+      }
+
       return false;
    }
-
 }
