@@ -7,16 +7,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import ca.mcgill.ecse223.resto.application.RestoApplication;
-import ca.mcgill.ecse223.resto.model.Menu;
-import ca.mcgill.ecse223.resto.model.MenuItem;
+import ca.mcgill.ecse223.resto.model.*;
 import ca.mcgill.ecse223.resto.model.MenuItem.ItemCategory;
-import ca.mcgill.ecse223.resto.model.Order;
-import ca.mcgill.ecse223.resto.model.OrderItem;
-import ca.mcgill.ecse223.resto.model.PricedMenuItem;
-import ca.mcgill.ecse223.resto.model.Reservation;
-import ca.mcgill.ecse223.resto.model.RestoApp;
-import ca.mcgill.ecse223.resto.model.Seat;
-import ca.mcgill.ecse223.resto.model.Table;
 
 public class RestoAppController {
 
@@ -692,40 +684,45 @@ public class RestoAppController {
         RestoApp r = RestoApplication.getRestoApp();
         List<Table> currentTables = r.getCurrentTables();
         Order lastOrder = null;
+
+        if(seats == null || seats.isEmpty()){
+            throw (new InvalidInputException("Seats have to be specified to issue bill. "));
+        }
+
         for (Seat seat: seats) {
             Table table = seat.getTable();
-            Boolean current = currentTables.contains(table);
-            if (current == false) {
-                throw new InvalidInputException("Input table does not exist!");
+
+            if (!currentTables.contains(table)) {
+                throw new InvalidInputException("Table #" + table.getNumber() + " is not a current table!");
             }
+
             List<Seat> currentSeats = table.getCurrentSeats();
-            current = currentSeats.contains(seat);
-            if (current == false) {
-                throw new InvalidInputException("Input seat does not exist!");
+            if (!currentSeats.contains(seat)) {
+                throw new InvalidInputException("The specified seat is not a current seat!");
             }
             lastOrder = table.getOrder(table.numberOfOrders() - 1);
             if (lastOrder == null) {
                 if (table.numberOfOrders() > 0) {
                     lastOrder = table.getOrder(table.numberOfOrders() - 1);
                 } else {
-                    throw new InvalidInputException("There is no order!");
+                    throw new InvalidInputException("There is no order for a specified seat!");
                 }
             } else {
                 Order comparedOrder = null;
                 if (table.numberOfOrders() > 0) {
                     comparedOrder = table.getOrder(table.numberOfOrders() - 1);
                 } else {
-                    throw new InvalidInputException("There is no order!");
+                    throw new InvalidInputException("There is no order for a specified seat!");
                 }
                 if (!comparedOrder.equals(lastOrder)) {
-                    throw new InvalidInputException("Something wrong with order!");
+                    throw new InvalidInputException("Seats specified don't match to the same order!");
                 }
             }
         }
         if (lastOrder == null) {
-            throw new InvalidInputException("Something wrong with order!");
+            throw new InvalidInputException("The specified seats don't have an order!");
         }
-        Boolean billCreated = false;
+        boolean billCreated = false;
         Bill newBill = null;
         for (Seat seat: seats) {
             Table table = seat.getTable();
@@ -743,8 +740,8 @@ public class RestoAppController {
                 }
             }
         }
-        if (billCreated == false) {
-            throw new InvalidInputException("There is no bill!");
+        if (!billCreated) {
+            throw new InvalidInputException("Error: The is an issue with generating a bill!");
         }
         RestoApplication.save();
     }
