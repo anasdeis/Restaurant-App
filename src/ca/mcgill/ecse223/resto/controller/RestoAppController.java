@@ -73,6 +73,10 @@ public class RestoAppController {
             error += "Table #" + table.getNumber() + " is reserved. Cannot be removed. ";
         }
 
+        if (!table.getStatusFullName().equals("Available")) {
+            error += "Table #" + table.getNumber() + " is not available at the moment, you cannot remove it. ";
+        }
+
         if (error.length() > 0) {
             throw (new InvalidInputException(error.trim()));
         }
@@ -810,6 +814,10 @@ public class RestoAppController {
             error += "The y location must be non-negative. ";
         }
 
+        if (!table.getStatusFullName().equals("Available")) {
+            error += "Table #" + table.getNumber() + " is not available at the moment, you cannot move it. ";
+        }
+
         if (error.length() > 0) {
             throw (new InvalidInputException(error.trim()));
         }
@@ -975,7 +983,11 @@ public class RestoAppController {
         }
 
         if (table.hasReservations()) {
-            error += "The table #" + table.getNumber() + " is reserved, you cannot update its details";
+            error += "Table #" + table.getNumber() + " is reserved, you cannot update its details. ";
+        }
+
+        if (!table.getStatusFullName().equals("Available")) {
+            error += "Table #" + table.getNumber() + " is not available at the moment, you cannot update its details. ";
         }
 
         if (error.length() > 0) {
