@@ -76,10 +76,7 @@ public class OrderPage extends JFrame {
 				for (Table table : tables) {
 					if(tableNumber.equals(table.getNumber())) {
 						selectedTable = table;
-						List<Order> orders = table.getOrders();
-						for (Order order : orders) {
-							orderList.addItem(order.getNumber()+"");
-						}
+						refreshData();
 						try {
 							List<OrderItem> orderItems = RestoAppController.getOrderItems(table);
 							for (OrderItem orderItem : orderItems) {
@@ -90,8 +87,8 @@ public class OrderPage extends JFrame {
 						}
 					}
 				}
-				refreshData();
 			}
+			
 		});
 		orderItemList.addActionListener(new java.awt.event.ActionListener() {
 
@@ -108,7 +105,6 @@ public class OrderPage extends JFrame {
 						}
 					}
 				} catch (InvalidInputException e) {
-					// TODO Auto-generated catch block
 					error = e.getMessage();
 				}
 
@@ -135,7 +131,6 @@ public class OrderPage extends JFrame {
 								.addComponent(quantityLabel)
 								.addComponent(orderNumberLabel)
 								.addComponent(horizontalLineBottom)
-
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(orderItemList)
@@ -156,23 +151,18 @@ public class OrderPage extends JFrame {
 								.addComponent(tableList)
 								.addComponent(orderItemsLabel)
 								.addComponent(orderItemList)
-
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(orderItemDetailsLabel)
-
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(horizontalLineTop)
-
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(quantityLabel)
-
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(orderNumberLabel)
-
 								)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(horizontalLineBottom)
@@ -184,7 +174,8 @@ public class OrderPage extends JFrame {
 	protected void refreshData() {
 		errorMessage.setText(error);
 		if (error == null || error.length() == 0) {
-
+			
+			orderList.removeAllItems();
 			tableList.removeAllItems();
 			quantityLabel.setText("Quantity: ");
 			orderNumberLabel.setText("Order Number: ");
@@ -193,6 +184,11 @@ public class OrderPage extends JFrame {
 			for (Table table : tables) {
 				tableList.addItem(table.getNumber()+"");
 			}
+			List<Order> orders = selectedTable.getOrders();
+			for (Order order : orders) {
+				orderList.addItem(order.getNumber()+"");
+			}
+
 		}
 		pack();
 	}
