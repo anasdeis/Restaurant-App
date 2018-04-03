@@ -232,7 +232,7 @@ public class RestoAppPage extends JFrame {
         waiterNameTextField = new JTextField();
         waiterPhoneNumberTextField = new JTextField();
         waiterEmailAddressTextField = new JTextField();
-        addWaiterButton = new JButton("Create Waiter");
+        addWaiterButton = new JButton("Add Waiter");
         addWaiterButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createWaiterButtonActionPerformed(evt);
@@ -473,7 +473,11 @@ public class RestoAppPage extends JFrame {
 
                 .addGroup(layout.createSequentialGroup()
 
-                        .addGroup(layout.createParallelGroup().addComponent(userLabel)
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(userLabel)
+                        		.addComponent(waiterNameLabel)
+                        		.addComponent(waiterPhoneNumberLabel)
+                        		.addComponent(waiterEmailAddressLabel)
                         		.addComponent(numberOfSeatsLabel)
                         		.addComponent(widthLabel)
                                 .addComponent(lengthLabel)
@@ -484,6 +488,10 @@ public class RestoAppPage extends JFrame {
 
                         .addGroup(layout.createParallelGroup()
                         		.addComponent(userNameLabel)
+                        		.addComponent(waiterNameTextField)
+                        		.addComponent(waiterPhoneNumberTextField)
+                        		.addComponent(waiterEmailAddressTextField)
+                        		.addComponent(addWaiterButton)
                         		.addComponent(numberOfSeatsTextField)
                                 .addComponent(widthTextField)
                                 .addComponent(lengthTextField)
@@ -637,8 +645,17 @@ public class RestoAppPage extends JFrame {
                         		.addComponent(reserveButton))
 
                         .addGroup(layout.createParallelGroup()
+                        		.addComponent(waiterNameLabel)
+                        		.addComponent(waiterNameTextField)
                         		.addComponent(startOrderButton))
-
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(waiterPhoneNumberLabel)
+                        		.addComponent(waiterPhoneNumberTextField))
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(waiterEmailAddressLabel)
+                        		.addComponent(waiterEmailAddressTextField))
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(addWaiterButton))
                         .addComponent(horizontalLineBottom)
 
                         .addGroup(layout.createParallelGroup()
@@ -966,7 +983,12 @@ public class RestoAppPage extends JFrame {
             reservationDate.setText("");
             // start order
             selectedTablesTextField.setText("");
-
+            
+            //Waiter
+            waiterNameTextField.setText("");
+            waiterPhoneNumberTextField.setText("");
+            waiterEmailAddressTextField.setText("");
+            
             // LabelField
             // select table
             numberSeatsLabel.setText("Seats: ");
