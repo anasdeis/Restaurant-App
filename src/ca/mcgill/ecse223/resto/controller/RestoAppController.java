@@ -205,6 +205,32 @@ public class RestoAppController {
         }
     }
 
+    public static void deleteTableReservation(Reservation reservation, Table table) throws InvalidInputException {
+        RestoApp r = RestoApplication.getRestoApp();
+        List<Reservation> reservations = r.getReservations();
+
+        if (reservation == null) {
+            throw (new InvalidInputException("A reservation must be specified for deleting it. "));
+        }
+
+        if (reservations.contains(reservation)) {
+            if (!reservation.removeTable(table)) {
+                if (reservation.numberOfTables() == 1) {
+                    reservation.delete();
+                }
+            }
+
+        } else {
+            throw (new InvalidInputException("The reservation must exist for deleting it. "));
+        }
+
+        try {
+            RestoApplication.save();
+        } catch (RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
     public static void deleteOrder(Order order) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
         List<Order> orders = r.getOrders();
@@ -223,6 +249,36 @@ public class RestoAppController {
                 throw (new InvalidInputException("The order must exist for deleting it. "));
             }
         }
+        try {
+            RestoApplication.save();
+        } catch (RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
+    public static void deleteTableOrder(Order order, Table table) throws InvalidInputException {
+        RestoApp r = RestoApplication.getRestoApp();
+        List<Order> orders = r.getOrders();
+        List<Order> currentOrders = r.getCurrentOrders();
+
+        if (order == null) {
+            throw (new InvalidInputException("An order must be specified for deleting it. "));
+        }
+
+        if (currentOrders.contains(order)) {
+            throw (new InvalidInputException("Cannot delete a current order, only past orders that haven't been removed."));
+        } else {
+            if (orders.contains(order)) {
+                if (!order.removeTable(table)) {
+                    if (order.numberOfTables() == 1) {
+                        order.delete();
+                    }
+                }
+            } else {
+                throw (new InvalidInputException("The order must exist for deleting it. "));
+            }
+        }
+
         try {
             RestoApplication.save();
         } catch (RuntimeException e) {
@@ -249,8 +305,10 @@ public class RestoAppController {
         Order newOrder = null;
 
         for (Table table : tables) {
+            System.out.println("start " + table.getNumber());
             if (orderCreated) {
-                table.addToOrder(newOrder);
+                boolean add = table.addToOrder(newOrder);
+                System.out.println("add " + add);
             } else {
                 Order lastOrder = null;
                 if (table.numberOfOrders() > 0) {
@@ -258,13 +316,21 @@ public class RestoAppController {
                 }
 
                 table.startOrder();
+                System.out.println("start2 " + table.getNumber());
                 if ((table.numberOfOrders() > 0) && (!table.getOrder(table.numberOfOrders() - 1).equals(lastOrder))) {
                     orderCreated = true;
                     newOrder = table.getOrder(table.numberOfOrders() - 1);
+                    System.out.println("start3 " + table.getNumber());
                 }
             }
         }
-
+        System.out.println("booleam " + orderCreated);
+        if (orderCreated) {
+            List<Table> tabless = newOrder.getTables();
+            for (Table atable : tabless) {
+                System.out.println("Table #" + atable.getNumber());
+            }
+        }
         if (!orderCreated) {
             throw (new InvalidInputException("No order created! "));
         }
@@ -295,19 +361,24 @@ public class RestoAppController {
         }
 
         List<Table> tables = order.getTables();
+        List<Table> copyOfTables = new ArrayList<Table>();
 
         for (Table table : tables) {
+            copyOfTables.add(table);
+        }
+
+        for (Table table : copyOfTables) {
             if ((table.numberOfOrders() > 0) && (table.getOrder(table.numberOfOrders() - 1).equals(order))) {
                 table.endOrder(order);
             }
         }
 
         if (allTablesAvailableOrDifferentCurrentOrder(tables, order)) {
+            System.out.println("stop2");
             r.removeCurrentOrder(order);
         }
 
         try {
-
             RestoApplication.save();
 
         } catch (RuntimeException e) {
@@ -317,7 +388,7 @@ public class RestoAppController {
 
     private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
         for (Table table : tables) {
-            if ((table.getStatusFullName() == "Available")
+            if ((table.getStatusFullName().equals("Available"))
                     || (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
                 return true;
             }
