@@ -787,13 +787,15 @@ public class RestoAppController {
         }
 
         RestoApp ra = RestoApplication.getRestoApp();
-        ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
         Menu menu = ra.getMenu();
+        List<MenuItem> menuItems = menu.getMenuItems();
+        ArrayList<MenuItem> itemList = new ArrayList<MenuItem>();
 
-        for (int j = 0; j < menu.numberOfMenuItems(); j++) {
-            MenuItem currItem = menu.getMenuItem(j);
-            if (currItem.getItemCategory().equals(itemCategory)) {
-                itemList.add(currItem);
+        for (MenuItem menuItem : menuItems) {
+            boolean current = menuItem.hasCurrentPricedMenuItem();
+            ItemCategory category = menuItem.getItemCategory();
+            if (current && category.equals(itemCategory)) {
+                itemList.add(menuItem);
             }
         }
         return itemList;
