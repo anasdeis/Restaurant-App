@@ -1,4 +1,5 @@
 class Table {
+
    status {
       Available {
          startOrder() / {
@@ -38,8 +39,8 @@ class Table {
          } -> Ordered; 
          addToOrderItem(OrderItem i, Seat s) / {
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
-            boolean isAdded = i.addSeat(s);
-            if (!isAdded){
+            boolean isAdded1 = i.addSeat(s);
+            if (!isAdded1){
                 System.out.println("Warning! This orderItem has already been added. ");
             }
          } -> Ordered;
@@ -55,12 +56,13 @@ class Table {
             // delete all order items of the table
             try {
             List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+            for(OrderItem orderitem : orderItemsList){
+                orderitem.delete();
+            }
             }catch(InvalidInputException e){
                 throw (new InvalidInputException(e.getMessage()));
                 }
-            for(OrderItem orderitem : orderItemsList){
-                orderitem.delete();
-                }
+            
          } -> NothingOrdered;
          billForSeat(Order o, Seat s) / {
          // TODO
@@ -96,13 +98,14 @@ class Table {
 
       try {
           List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+          if (orderItemsList.size() == 1){
+          return true;
+      }
       }catch(InvalidInputException e){
           throw (new InvalidInputException(e.getMessage()));
       }
 
-      if (orderItemsList.size() == 1){
-          return true;
-      }
+     
 
       return false;
    }
