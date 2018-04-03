@@ -882,7 +882,7 @@ public class RestoAppController {
                 throw new InvalidInputException("Cannot have a negative price");
             } else {
                 MenuItem newMenuItem = createNewItem(name, category, menu);
-                PricedMenuItem newPricedMenuItem = ra.addPricedMenuItem(priceDouble, newMenuItem);
+                PricedMenuItem newPricedMenuItem = newMenuItem.addPricedMenuItem(priceDouble,ra);
                 newMenuItem.setCurrentPricedMenuItem(newPricedMenuItem);
             }
         } else {
