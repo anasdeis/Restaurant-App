@@ -600,7 +600,8 @@ public class RestoAppController {
         return orderTotal;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /*
     public static Double issuedBill(List<Integer> orderedQuantity, List<Double> price) throws Exception {
         if (orderedQuantity.size() > price.size())
             throw new Exception("Missing price!");
@@ -612,8 +613,72 @@ public class RestoAppController {
         }
         return total;
     }
+     */
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    
+    public static void issueBill(List<Seat> seats) throws InvalidInputException {
+        RestoApp r = RestoApplication.getRestoApp();
+        List<Table> currentTables = r.getCurrentTables();
+        Order lastOrder = null;
+        for (Seat seat: seats) {
+            Table table = seat.getTable();
+            Boolean current = currentTables.contains(table);
+            if (current == false) {
+                throw new InvalidInputException("Input table does not exist!");
+            }
+            List<Seat> currentSeats = table.getCurrentSeats();
+            current = currentSeats.contains(seat);
+            if (current == false) {
+                throw new InvalidInputException("Input seat does not exist!");
+            }
+            lastOrder = table.getOrder(table.numberOfOrders() - 1);
+            if (lastOrder == null) {
+                if (table.numberOfOrders() > 0) {
+                    lastOrder = table.getOrder(table.numberOfOrders() - 1);
+                } else {
+                    throw new InvalidInputException("There is no order!");
+                }
+            } else {
+                Order comparedOrder = null;
+                if (table.numberOfOrders() > 0) {
+                    comparedOrder = table.getOrder(table.numberOfOrders() - 1);
+                } else {
+                    throw new InvalidInputException("There is no order!");
+                }
+                if (!comparedOrder.equals(lastOrder)) {
+                    throw new InvalidInputException("Something wrong with order!");
+                }
+            }
+        }
+        if (lastOrder == null) {
+            throw new InvalidInputException("Something wrong with order!");
+        }
+        Boolean billCreated = false;
+        Bill newBill = null;
+        for (Seat seat: seats) {
+            Table table = seat.getTable();
+            if (billCreated) {
+                table.addToBill(newBill, seat);
+            } else {
+                Bill lastBill = null;
+                if (lastOrder.numberOfBills() > 0) {
+                    lastBill = lastOrder.getBill(lastOrder.numberOfBills() - 1);
+                }
+                table.billForSeat(lastOrder, seat);
+                if (lastOrder.numberOfBills() > 0 && !lastOrder.getBill(lastOrder.numberOfBills() - 1).equals(lastBill)) {
+                    billCreated = true;
+                    newBill = lastOrder.getBill(lastOrder.numberOfBills() - 1);
+                }
+            }
+        }
+        if (billCreated == false) {
+            throw new InvalidInputException("There is no bill!");
+        }
+        RestoApplication.save();
+    }
+    
+    
     public static int generateTableNumber() {
         RestoApp ra = RestoApplication.getRestoApp();
         List<Table> tables = ra.getCurrentTables();
