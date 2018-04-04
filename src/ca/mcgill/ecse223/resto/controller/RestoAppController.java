@@ -356,10 +356,7 @@ public class RestoAppController {
 
         for (Table table : copyOfTables) {
             if ((table.numberOfOrders() > 0) && (table.getOrder(table.numberOfOrders() - 1).equals(order))) {
-                boolean success = table.endOrder(order);
-                if (!success) {
-                    System.out.println("Cannot end order for table #" + table.getNumber());
-                }
+                table.endOrder(order);
             }
         }
 
@@ -697,7 +694,7 @@ public class RestoAppController {
             if (!currentSeats.contains(seat)) {
                 throw new InvalidInputException("The specified seat is not a current seat!");
             }
-            lastOrder = table.getOrder(table.numberOfOrders() - 1);
+
             if (lastOrder == null) {
                 if (table.numberOfOrders() > 0) {
                     lastOrder = table.getOrder(table.numberOfOrders() - 1);
@@ -741,7 +738,12 @@ public class RestoAppController {
         if (!billCreated) {
             throw new InvalidInputException("Error: There is an issue with generating a bill!");
         }
-        RestoApplication.save();
+
+        try{
+            RestoApplication.save();
+        } catch(RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
     }
 
 
@@ -1258,7 +1260,7 @@ public class RestoAppController {
             if (table.numberOfOrders() > 0) {
                 lastOrder = table.getOrder(table.numberOfOrders() - 1);
             } else {
-                throw (new InvalidInputException("A table that is not available should have an order. "));
+                throw (new InvalidInputException("The table #" + table.getNumber() + " has no orders."));
             }
 
             List<Seat> currentSeats = table.getCurrentSeats();
