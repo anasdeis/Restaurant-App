@@ -115,8 +115,10 @@ public class RestoAppPage extends JFrame {
     // Seats
     private JComboBox<String> seatList;
     private JLabel seatsLabel;
-    // Bill
+	private HashMap<Integer, Seat> seats;
     private JButton addSeatButton;
+    
+    // Bill
     private JButton addTableButton;
     private JButton issueBillForOneTable;
     private JButton issueBillForEachCustomerInOneTable;
@@ -248,11 +250,16 @@ public class RestoAppPage extends JFrame {
                     List<Table> tables = RestoAppController.getTables();
                     for (Table table : tables) {
                         if (selectedTableNumber.equals(table.getNumber())) {
+                        	seats = new HashMap<Integer, Seat>();
+                            seatList.removeAllItems();
+                            Integer seatIndex = 0;
                             try {
-                                List<Seat> seats = RestoAppController.getSeatForEachCustomerAtOneTable(table);
-                                seatList.removeAllItems();
-                                for (int i = 0; i < seats.size(); i++) {
-                                    seatList.addItem("" + i);
+                                List<Seat> seatsInTable = RestoAppController.getSeatForEachCustomerAtOneTable(table);
+                                
+                                for (Seat seat : seatsInTable) {
+                                    seats.put(seatIndex, seat);
+                                    seatList.addItem("" + seatIndex);
+                                    seatIndex++;
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -359,8 +366,8 @@ public class RestoAppPage extends JFrame {
                 if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
                     try {
                         // getting the seat object from the dropdown item
-                        Seat specificSeat = RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),
-                                selectedSeatIndex);
+                        Seat specificSeat = seats.get(selectedSeatIndex);
+                        //RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),selectedSeatIndex);
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -371,13 +378,12 @@ public class RestoAppPage extends JFrame {
                 }
             }
         });
-
+        
         reservationList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedReservationIndex = cb.getSelectedIndex();
-
                 if (selectedReservationIndex > -1) {
                     Reservation reservation = reservations.get(selectedReservationIndex);
                     reservationDate.setText(reservation.getDate().toString() + " " + reservation.getTime().toString());
@@ -393,7 +399,7 @@ public class RestoAppPage extends JFrame {
                 }
             }
         });
-
+                
         ordersList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -482,7 +488,7 @@ public class RestoAppPage extends JFrame {
             }
         });
 
-        addSeatButton = new JButton("Add Seat To Bill");
+        addSeatButton = new JButton("Add Seat To Order");
         addSeatButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addSeatButtonActionPerformed(evt);
@@ -1084,7 +1090,13 @@ public class RestoAppPage extends JFrame {
         refreshData();
         repaint();
     }
-
+    
+    //***
+    protected void AddSeatToOrderItemButtonActionPerformed(ActionEvent evt) {
+    	//everytime pressed add to list selectedSeatsToOrderList
+    	//
+    }
+    
   /* protected void cancelItemButtonActionPerformed(ActionEvent evt) {
 
         error = null;
