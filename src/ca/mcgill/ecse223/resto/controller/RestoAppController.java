@@ -852,8 +852,8 @@ public class RestoAppController {
 		RestoApp ra = RestoApplication.getRestoApp();
 		Menu menu = ra.getMenu();
 
-		if (category.equals(null) || name.equals(null) || name.equals("")) {
-			throw new InvalidInputException("Cannot have empty input for name");
+		if (category.equals(null)|| category.equals("") || name.equals(null) || name.equals("")) {
+			throw new InvalidInputException("Name/Category cannot be empty");
 		}
 
 		checkIfExisting(name, menu);

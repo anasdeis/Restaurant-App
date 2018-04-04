@@ -254,6 +254,7 @@ public class MenuPage extends JFrame {
 			successMessage.setSize(500, 20);
 			successMessage.setLocationRelativeTo(this);
 			successMessage.setVisible(true);
+			clearFields();
 
 		} catch (Exception e) {
 			error = e.getMessage();
@@ -263,7 +264,7 @@ public class MenuPage extends JFrame {
 			er.setVisible(true);
 		}
 
-		clearFields();
+		
 	}
 
 	protected void btnRemoveItemActionPerformed(ActionEvent evt) {
