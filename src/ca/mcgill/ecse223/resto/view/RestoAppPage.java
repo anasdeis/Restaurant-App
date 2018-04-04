@@ -112,10 +112,13 @@ public class RestoAppPage extends JFrame {
     private Integer selectedOrderIndex = -1;
     private HashMap<Integer, Order> orders;
 
+    //Add Order
+    private JButton addOrderItemButton;
     // Seats
     private JComboBox<String> seatList;
     private JLabel seatsLabel;
 	private HashMap<Integer, Seat> seats;
+	private HashMap<Integer, Seat> selectedSeats;
     private JButton addSeatButton;
     private JLabel selectedSeatsLabel;
     private JComboBox<String> selectedSeatsList;
@@ -365,6 +368,18 @@ public class RestoAppPage extends JFrame {
             }
         });
         
+//        selectedSeatsList.addActionListener(new java.awt.event.ActionListener() {
+//
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+//                selectedSeatIndex = cb.getSelectedIndex();
+//            	
+////                }
+////                    refreshData();
+////                }
+//            }
+//        });
+        
         reservationList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -401,6 +416,14 @@ public class RestoAppPage extends JFrame {
             }
         });
 
+        addOrderItemButton = new JButton("Order Item");
+        addOrderItemButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createTableButtonActionPerformed(evt);
+            }
+        });
+
+        
         createTableButton = new JButton("Create Table");
         createTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -615,7 +638,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(deleteTableOrderButton))
 
                         .addGroup(layout.createParallelGroup()
-                                .addComponent(addSeatButton))
+                                .addComponent(addSeatButton)
+                                .addComponent(addOrderItemButton))
                 )
         );
 
@@ -653,7 +677,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(widthTextField)
                                 .addComponent(tableWidthLabel)
                                 .addComponent(tableStatusLabel)
-                                .addComponent(endOrderButton))
+                                .addComponent(endOrderButton)
+                                .addComponent(addOrderItemButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(lengthLabel)
@@ -759,16 +784,42 @@ public class RestoAppPage extends JFrame {
 
     protected void addSeatButtonActionPerformed(ActionEvent evt) {
         try {
+        	selectedSeats = new HashMap<Integer, Seat>();
+            Integer selectedSeatIndexSel = 0;
+            
             if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
-                selectedSeatsList.addItem("Table" + selectedTableNumber + ", Seat" + selectedSeatIndex);
+            	if (!(seats.get(selectedSeatIndex)).equals(selectedSeats.get(selectedSeatIndexSel))) {
+                	selectedSeats.put(selectedSeatIndexSel, seats.get(selectedSeatIndex));
+            		selectedSeatsList.addItem("Table" + selectedTableNumber + ", Seat" + selectedSeatIndex);
+	                selectedSeatIndexSel++;	
+            	}
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        refreshData();
+        //refreshData();
         repaint();
     }
 
+    protected void clearSeatButtonActionPerformed(ActionEvent evt) {
+    	try {
+    		selectedSeatsList.removeAllItems();
+    	}catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    }
+    
+//    protected void addOrderItemButtonActionPerformed(ActionEvent evt) {
+//    	try {
+//    		int k = 1;
+//    		//MenuItem qs;
+//    		//List<Seat> seatsToOrder = ((List<Seat>) selectedSeats); or loop
+//    		//RestoAppController.orderMenuItem(qs, k, seatsToOrder);
+//    	}catch (Exception e) {
+//    		e.printStackTrace();
+//    	}
+//    }
+    
     protected void moveTableButtonActionPerformed(ActionEvent evt) {
 
         error = null;
