@@ -433,7 +433,7 @@ public class RestoAppPage extends JFrame {
                 updateTableButtonActionPerformed(evt);
             }
         });
-        menuButton = new JButton("Menu");
+        menuButton = new JButton("Menu/Order Item");
         menuButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuButtonActionPerformed(evt);
