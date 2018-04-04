@@ -1136,11 +1136,33 @@ public class RestoAppController {
         }
     }
 
-    public static void orderMenuItem(MenuItem menuitem, int quantity, List<Seat> seats) throws InvalidInputException {
+    public static void orderMenuItem(String itemName, String itemCategory, int quantity, List<Seat> seats) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
         String error = "";
 
-        if (menuitem == null) {
+        MenuItem menuItem = null;
+		if (itemName.equals(null))  {
+			throw new InvalidInputException("Please input name of item to order");
+		}else {
+			RestoApp ra = RestoApplication.getRestoApp();
+			Menu menu = ra.getMenu();
+			List<MenuItem> menuItems = menu.getMenuItems();
+			
+			for (int i = 0; i < menuItems.size(); i++) {
+				menuItem = menuItems.get(i);
+				if (menuItem.getName().equals(itemName)) {
+					break;
+				}
+			}
+		}
+		
+		if(itemCategory.equals("")) {
+			if(!menuItem.getItemCategory().toString().equals(itemCategory.replaceAll("\\s", ""))) {
+				throw new InvalidInputException(itemName + " is in "+ menuItem.getItemCategory().toString());
+			}
+		}
+		
+        if (menuItem == null) {
             error += "Please enter a menu item to order";
         }
 
@@ -1157,8 +1179,8 @@ public class RestoAppController {
             throw (new InvalidInputException(error.trim()));
         }
 
-        if (!menuitem.hasCurrentPricedMenuItem()) {
-            throw (new InvalidInputException("No price associated with" + menuitem));
+        if (!menuItem.hasCurrentPricedMenuItem()) {
+            throw (new InvalidInputException("No price associated with" + menuItem));
         }
 
         List<Table> currentTables = r.getCurrentTables();
@@ -1202,7 +1224,7 @@ public class RestoAppController {
             throw (new InvalidInputException("No orders were made"));
         }
 
-        PricedMenuItem pmi = menuitem.getCurrentPricedMenuItem();
+        PricedMenuItem pmi = menuItem.getCurrentPricedMenuItem();
         boolean itemCreated = false;
         OrderItem newitem = null;
 
