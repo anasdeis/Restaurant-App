@@ -30,6 +30,7 @@ class Table {
                   o.delete();
                } else {
                       System.out.println("Warning! Failed to end order for table #" + this.getNumber());
+               }
             }
          } -> Available;
       }
@@ -91,7 +92,7 @@ class Table {
             List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
             for(OrderItem orderitem : orderItemsList){
                 List<Seat> sharedSeats = orderitem.getSeats();
-                for(Seat seat : sharedSeatsList) {
+                for(Seat seat : sharedSeats) {
                     if (currentTableSeats.contains(seat)) {
                         if (!orderitem.removeSeat(seat)) {
                             if (orderitem.numberOfSeats() == 1) {
@@ -196,7 +197,7 @@ class Table {
             for(OrderItem orderitem : orderItemsList){
               List<Seat> sharedSeats = orderitem.getSeats();
               hasBill = false;
-              for (Seat seat : seats){
+              for (Seat seat : sharedSeats){
                 if(seat.hasBills() && bills.contains(seat.getBill(seat.numberOfBills() - 1))){
                   hasBill = true;
                   break;
