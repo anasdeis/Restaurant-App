@@ -540,10 +540,6 @@ public class RestoAppController {
     }
 
     /*
-     * situation1 Issued a bill for one table situation2 Issued a bill for each
-     * customer in one table situation3 Issued a bill for group of customers in one
-     * table situation4 Issued a bill for group of customers in different tables
-     */
     // shared helper method for displaying ordered items and prices
     public static List<Integer> getQuantityOfOrderedItem(List<OrderItem> orderList) {
         List<Integer> listOfQuantity = new ArrayList<Integer>();
@@ -561,9 +557,10 @@ public class RestoAppController {
         }
         return listOfPrice;
     }
-
+*/
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Situation1 Get all ordered items for the whole table
+    /*
     public static List<OrderItem> getOrderedItemForOneTable(Table table) throws Exception {
         // test if the table input is valid, if not, throw exceptions
         RestoApp r = RestoApplication.getRestoApp();
@@ -590,7 +587,7 @@ public class RestoAppController {
         }
         return orderTotal;
     }
-
+*/
     // situation2 Get ordered seats for each customers in one table
     public static List<Seat> getSeatForEachCustomerAtOneTable(Table table) throws Exception {
         // test if the table input is valid, if not, throw exceptions
@@ -613,7 +610,7 @@ public class RestoAppController {
         List<Seat> currentSeat = table.getCurrentSeats();
         return currentSeat;
     }
-
+/*
     // situation2 Get ordered items for each seat in on table (use the same order as
     // seatList to get all orderList one by one)
     public static List<OrderItem> getOrderForEacgCustomerAtOneTable(Seat seat) {
@@ -656,7 +653,7 @@ public class RestoAppController {
         }
         return orderTotal;
     }
-
+*/
     //////////////////////////////////////////////////////////////////////////////////////////////////////////
     /*
     public static Double issuedBill(List<Integer> orderedQuantity, List<Double> price) throws Exception {
