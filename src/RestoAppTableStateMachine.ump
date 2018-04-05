@@ -122,7 +122,7 @@ class Table {
                     if(seatBill.numberOfIssuedForSeats() == 1){
                         seatBill.delete();
                         } else {
-                        System.out.println("Warning! The provided seat was already assigned to another bill.");
+                        System.out.println("Warning! The provided seat failed to remove a bill.");
                     }
                 }
             }
@@ -135,16 +135,21 @@ class Table {
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
 
             Bill seatBill = s.getBill(numberOfBills() - 1);
+            Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
+            List<Bill> bills = lastOrder.getBills();
 
-               if (!seatBill.equals(b)){
+
+              if (!seatBill.equals(b)){
+		         if(bills.contains(seatBill)){
                    if(!seatBill.removeIssuedForSeat(s)){
                        if(seatBill.numberOfIssuedForSeats() == 1){
                            seatBill.delete();
                             } else {
-                               System.out.println("Warning! The provided seat was already assigned to another bill.");
+                               System.out.println("Warning! The provided seat failed to remove a bill.");
                        }
                    }
-               }
+		          }
+              }
 
              boolean success = s.addBill(b);
              if (!success){
@@ -191,23 +196,17 @@ class Table {
       Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
       List<Bill> bills = lastOrder.getBills();
 
-          try {
+           try {
             List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
-            boolean hasBill = false;
             for(OrderItem orderitem : orderItemsList){
               List<Seat> sharedSeats = orderitem.getSeats();
-              hasBill = false;
               for (Seat seat : sharedSeats){
-                if(seat.hasBills() && bills.contains(seat.getBill(seat.numberOfBills() - 1))){
-                  hasBill = true;
-                  break;
+                if(!seat.hasBills() || !bills.contains(seat.getBill(seat.numberOfBills() - 1))){
+                  return false;
                 }
               }
-              if (!hasBill){
-                return hasBill;
-              }
             }
-            return hasBill;
+            return true;
 
           } catch (InvalidInputException e){
             throw (new InvalidInputException(e.getMessage()));
