@@ -433,7 +433,7 @@ public class RestoAppController {
         }
 
         List<Seat> currentSeats = table.getCurrentSeats();
-        if (currentSeats.contains(seat)) {
+        if (!currentSeats.contains(seat)) {
             throw (new InvalidInputException("The specified seat is not a current seat. "));
         }
 
@@ -468,7 +468,7 @@ public class RestoAppController {
             throw (new InvalidInputException("A table must be specified for cancelling its order. "));
         }
 
-        if (currentTables.contains(table)) {
+        if (!currentTables.contains(table)) {
             throw (new InvalidInputException("The table #" + table.getNumber() + " is not a current table. "));
         }
 
