@@ -1139,7 +1139,6 @@ public class RestoAppController {
     public static void orderMenuItem(String itemName, String itemCategory, int quantity, List<Seat> seats) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
         String error = "";
-        System.out.println("sads");
         MenuItem menuItem = null;
 		if (itemName.isEmpty() || itemName == null)  {
 			throw new InvalidInputException("Please input name of item to order");

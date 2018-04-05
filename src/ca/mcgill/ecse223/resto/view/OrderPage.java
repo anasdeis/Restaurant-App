@@ -25,7 +25,7 @@ public class OrderPage extends JFrame {
 
 	private JComboBox<String> tableList;
 	private JComboBox<String> orderItemList;
-	private JComboBox<String> ordersList;
+	private JComboBox<String> orderList;
 
 	private JLabel tablesLabel;
 	private JLabel orderItemsLabel;
@@ -39,12 +39,11 @@ public class OrderPage extends JFrame {
 	private Integer selectedOrderIndex = -1;
 	private Integer selectedItemIndex = -1;
 	private Integer tableNumber = -1;
+	private Table selectedTable;
 
 	private HashMap<Integer, Table> tables;
 	private HashMap<Integer, Order> orders;
 	private HashMap<Integer, OrderItem> orderItems;
-
-	int i;
 
 	JSeparator horizontalLineTop = new JSeparator();
 	JSeparator horizontalLineBottom = new JSeparator();
@@ -53,7 +52,6 @@ public class OrderPage extends JFrame {
 
 	public OrderPage() {
 		initComponents();
-		refreshData();
 	}
 
 
@@ -64,9 +62,9 @@ public class OrderPage extends JFrame {
 		setSize(453, 394);
 		setVisible(true);
 
-		tableList = new JComboBox<String>(new String[0]);
-		orderItemList = new JComboBox<String>(new String[0]);
-		ordersList = new JComboBox<String>(new String[0]);
+		tableList = new JComboBox<String>();
+		orderItemList = new JComboBox<String>();
+		orderList = new JComboBox<String>();
 
 		tablesLabel = new JLabel("Table: ");
 		orderItemsLabel = new JLabel("Order Item(s): ");
@@ -77,125 +75,71 @@ public class OrderPage extends JFrame {
 		orderDateLabel = new JLabel();
 		errorMessage = new JLabel();
 		errorMessage.setForeground(Color.RED);
+		List<Table> tables = RestoAppController.getTables();
+		for (Table table : tables) {
+			tableList.addItem(table.getNumber()+"");
+		}
 
-		i = 0;
 
 		tableList.addActionListener(new java.awt.event.ActionListener() {
 
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				i++;
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
-				selectedTableIndex = cb.getSelectedIndex();
-				System.out.println("so " + selectedTableIndex);
-				//		if (i == 1) {
-				//			selectedTableIndex = -1;
-				//		}
-				if (selectedTableIndex != -1) {
-
-					Table table = tables.get(selectedTableIndex);
-
-					// select order - also combo box for order visualization
-					orders = new HashMap<Integer, Order>();
-					ordersList.removeAllItems();
-					List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
-					List<Order> ordersTable = table.getOrders();
-					List<Long> orderTimeArray = new ArrayList<Long>();
-
-					Integer orderIndex = 0;
-					for (Order order : ordersTable) {
-						orderTimeArray.add(order.getDate().getTime());
-					}
-					try {
-						Collections.sort(orderTimeArray);
-					} catch (RuntimeException e) {
-						error = e.getMessage();
-						selectedTableIndex = -1;
-						selectedItemIndex = -1;
-						selectedOrderIndex = -1;
-						refreshData();
-					}
-					for (long time : orderTimeArray) {
-						for (Order order : ordersTable) {
-							if (time == order.getDate().getTime()) {
-								orders.put(orderIndex, order);
-								if (currentOrders.contains(order)) {
-									ordersList.addItem("(Current) Order #" + (orderIndex + 1));
-								} else {
-									ordersList.addItem("Order #" + (orderIndex + 1));
+				if(cb.getSelectedIndex()!=-1) {
+					Integer tableNumber = Integer.parseInt(cb.getSelectedItem().toString());
+					for (Table table : tables) {
+						if(tableNumber.equals(table.getNumber())) {
+							selectedTable = table;
+							try {
+								List<OrderItem> orderItems = RestoAppController.getOrderItems(table);
+								for (OrderItem orderItem : orderItems) {
+									orderItemList.addItem(orderItem.getPricedMenuItem().getMenuItem().getName());
 								}
-								orderIndex++;
+
+							} catch (InvalidInputException e) {
+								error = e.getMessage();
 							}
 						}
-					}
-					try {
-						System.out.println("works");
-						Integer itemIndex = 0;
-						orderItems = new HashMap<Integer, OrderItem>();
-						orderItemList.removeAllItems();
-						System.out.println("works2");
-						List<OrderItem> orderItemsList = RestoAppController.getOrderItems(table);
-						System.out.println("works3");
-						for (OrderItem orderItem : orderItemsList) {
-							orderItems.put(itemIndex, orderItem);
-							orderItemList.addItem(orderItem.getPricedMenuItem().getMenuItem().getName());
-							itemIndex++;
-						}
-					} catch (InvalidInputException e) {
-						error = e.getMessage();
-						selectedTableIndex = -1;
-						selectedItemIndex = -1;
-						selectedOrderIndex = -1;
-						refreshData();
-					}
-
-				} else{
-					selectedItemIndex = -1;
-					selectedOrderIndex = -1;
-					refreshData();
-				}
-			}
-
-		});
-		orderItemList.addActionListener(new java.awt.event.ActionListener() {
-
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
-				selectedItemIndex = cb.getSelectedIndex();
-
-				if(selectedItemIndex != -1) {
-					try {
-						List<OrderItem> orderItems = RestoAppController.getOrderItems(tables.get(selectedTableIndex));
-						if (orderItems != null || !orderItems.isEmpty()) {
-							String orderItemName = orderItems.get(selectedItemIndex).getPricedMenuItem().getMenuItem().getName();
-							for (OrderItem orderItem : orderItems) {
-								if (orderItemName.equals(orderItem.getPricedMenuItem().getMenuItem().getName())) {
-									quantityLabel.setText("Quantity: " + orderItem.getQuantity());
-									orderNumberLabel.setText("Order Number: " + orderItem.getOrder().getNumber());
-								}
-							}
-						}
-					} catch (InvalidInputException e) {
-						error = e.getMessage();
 					}
 				}
 				refreshData();
 			}
 		});
+		orderItemList.addActionListener(new java.awt.event.ActionListener() {
 
-		ordersList.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
-				selectedOrderIndex = cb.getSelectedIndex();
+				String selectedOrderItem = cb.getSelectedItem().toString();
 
-				if (selectedOrderIndex > -1) {
-					Order order = orders.get(selectedOrderIndex);
-					orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
-				} else {
-					refreshData();
+				try {
+					List<OrderItem> orderItems = RestoAppController.getOrderItems(selectedTable);
+					for (OrderItem orderItem : orderItems) {
+						if(selectedOrderItem.equals(orderItem.getPricedMenuItem().getMenuItem().getName())) {
+							quantityLabel.setText("Quantity: " + orderItem.getQuantity());
+							orderNumberLabel.setText("Order Number: " + orderItem.getOrder().getNumber());
+						}
+					}
+				} catch (InvalidInputException e) {
+					error = e.getMessage();
 				}
+
+				refreshData();
 			}
 		});
+//		orderList.addActionListener(new java.awt.event.ActionListener() {
+//			public void actionPerformed(java.awt.event.ActionEvent evt) {
+//
+//				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+//				selectedOrderIndex = cb.getSelectedIndex();
+//
+//				if (selectedOrderIndex != -1) {
+//					Order order = orders.get(selectedOrderIndex);
+//					orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
+//				} else {
+//					refreshData();
+//				}
+//			}
+//		});
 
 		GroupLayout layout = new GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
@@ -222,7 +166,7 @@ public class OrderPage extends JFrame {
 								.addComponent(orderListLabel)
 						)
 						.addGroup(layout.createParallelGroup()
-								.addComponent(ordersList)
+								.addComponent(orderList)
 						)
 				)
 		);
@@ -252,37 +196,29 @@ public class OrderPage extends JFrame {
 						.addGroup(layout.createParallelGroup()
 								.addComponent(horizontalLineBottom)
 								.addComponent(orderListLabel)
-								.addComponent(ordersList)
+								.addComponent(orderList)
 						)));
 		pack();
 	}
 
 	protected void refreshData() {
 		errorMessage.setText(error);
-		System.out.println("hello " + selectedTableIndex);
 		if (error == null || error.length() == 0) {
 
 			tableList.removeAllItems();
-			orderItemList.removeAllItems();
-			ordersList.removeAllItems();
+			//orderItemList.removeAllItems();
+			orderList.removeAllItems();
+			
 
 			quantityLabel.setText("Quantity: ");
 			orderNumberLabel.setText("Order Number: ");
-			orderDateLabel.setText("");
 
 			// select table - also combo box for table visualization
-			tables = new HashMap<Integer, Table>();
-
-			Integer index = 0;
-			for (Table table : RestoAppController.getTables()) {
-				tables.put(index, table);
-				tableList.addItem("" + table.getNumber());
-				index++;
+			List<Table> tables = RestoAppController.getTables();
+			for (Table table : tables) {
+				tableList.addItem(table.getNumber()+"");
 			}
 
-			tableList.setSelectedIndex(selectedTableIndex);
-			ordersList.setSelectedIndex(selectedOrderIndex);
-			orderItemList.setSelectedIndex(selectedItemIndex);
 
 		}
 		pack();
