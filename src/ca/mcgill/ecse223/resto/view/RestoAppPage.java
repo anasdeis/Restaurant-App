@@ -129,6 +129,7 @@ public class RestoAppPage extends JFrame {
 	private HashMap<Integer, Seat> seats;
 	private HashMap<Integer, Seat> selectedSeats;
     private JButton addSeatButton;
+	private JButton clearSeatButton;
     private JLabel selectedSeatsLabel;
     private JComboBox<String> selectedSeatsList;
     
@@ -448,7 +449,15 @@ public class RestoAppPage extends JFrame {
             }
         });
 
-        addOrderItemButton = new JButton("Order Item");
+        
+	clearSeatButton = new JButton("Clear Seats");
+        clearSeatButton.addActionListener(new java.awt.event.ActionListener() {
+           public void actionPerformed(java.awt.event.ActionEvent evt) {
+               clearSeatButtonActionPerformed(evt);
+           }
+       });    
+	    
+	addOrderItemButton = new JButton("Order Item");
         addOrderItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addOrderItemButtonActionPerformed(evt);
@@ -681,6 +690,7 @@ public class RestoAppPage extends JFrame {
                                             
                                             .addGroup(layout.createParallelGroup()
                                                       .addComponent(addSeatButton)
+						      .addComponent(clearSeatButton)
                                                       )
                                             )
                                   );
@@ -712,7 +722,8 @@ public class RestoAppPage extends JFrame {
                                                     .addComponent(removeTableButton)
                                                     .addComponent(viewOrdersButton)
                                                     .addComponent(selectedSeatsLabel)
-                                                    .addComponent(selectedSeatsList))
+                                                    .addComponent(selectedSeatsList)
+						    .addComponent(clearSeatButton))
                                           
                                           .addGroup(layout.createParallelGroup()
                                                     .addComponent(widthLabel)
