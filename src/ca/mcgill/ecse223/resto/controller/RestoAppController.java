@@ -1155,12 +1155,12 @@ public class RestoAppController {
 			}
 		}
 		
-		
+		/*
 		if(itemCategory.toString() != "") {
 			if(!menuItem.getItemCategory().toString().equals(itemCategory.replaceAll("\\s", ""))) {
 				throw new InvalidInputException(itemName + " is in "+ menuItem.getItemCategory().toString());
 			}
-		}
+		}*/
 		
         if (menuItem == null) {
             error += "Please enter a menu item to order";
