@@ -241,7 +241,7 @@ public class RestoAppPage extends JFrame {
         orderItemCategory = new JComboBox<String>(new String[0]);
         orderItemCategory.setFont(new Font("Arial Narrow", Font.BOLD, 13));
         orderItemCategory.setBounds(68, 253, 140, 22);
-		getContentPane().add(orderItemCategory);
+		//getContentPane().add(orderItemCategory);
 		
 		orderItemCategory.addItem("");
 		orderItemCategory.addItem("Appetizer");
@@ -451,7 +451,7 @@ public class RestoAppPage extends JFrame {
         addOrderItemButton = new JButton("Order Item");
         addOrderItemButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createTableButtonActionPerformed(evt);
+                addOrderItemButtonActionPerformed(evt);
             }
         });
 
@@ -820,7 +820,6 @@ public class RestoAppPage extends JFrame {
 
         if (selectedTableIndex < 0) {
             error = "Table needs to be selected for removing!";
-
         } else {
             try {
                 RestoAppController.removeTable(tables.get(selectedTableIndex));
@@ -841,8 +840,7 @@ public class RestoAppPage extends JFrame {
             	if (!(seats.get(selectedSeatIndex)).equals(selectedSeats.get(selectedSeatIndexSel))) {
                 	selectedSeats.put(selectedSeatIndexSel, seats.get(selectedSeatIndex));
             		selectedSeatsList.addItem("Table" + selectedTableNumber + ", Seat" + selectedSeatIndex);
-                    listModel.addElement(RestoAppController.getSpecificSeat(tables.get(selectedTableIndex),
-                                                                            selectedSeatIndex));
+                    //listModel.addElement(RestoAppController.getSpecificSeat(tables.get(selectedTableIndex), selectedSeatIndex));
 	                selectedSeatIndexSel++;	
             	}
             }
@@ -862,18 +860,21 @@ public class RestoAppPage extends JFrame {
     }
     
     protected void addOrderItemButtonActionPerformed(ActionEvent evt) {
+    	error = null;
     	try {
+    		System.out.println("fdaf");
 			String itemName = orderItemName.getText();
-    		String itemCategory = (String) orderItemCategory.getItemAt(orderItemCategory.getSelectedIndex());
+    		String itemCategory = (orderItemCategory.getItemAt(orderItemCategory.getSelectedIndex())).toString();
 			String quantity = orderItemQuantityTextField.getText();
-       		List<Seat> seatsToOrder = null;//or loop or ((List<Seat>) selectedSeats);*** 
+			List<Seat> seatsToOrder = new ArrayList<>();
+			for (int l = 0; l < selectedSeats.size(); l++) {
+       			seatsToOrder.add(selectedSeats.get(l));
+       		}
+			//List<Seat> seatsToOrder = null;//or loop or ((List<Seat>) selectedSeats);*** 
     		RestoAppController.orderMenuItem(itemName, itemCategory, Integer.parseInt(quantity), seatsToOrder);
-    		selectedSeatsList.removeAllItems();
-    		orderItemName.setText("");
-    		orderItemQuantityTextField.setText("");
-    		orderItemCategory.getItemAt(0);
-    	}catch (InvalidInputException | RuntimeException e) {
-    		e.printStackTrace();
+    		refreshData();
+    	}catch (RuntimeException | InvalidInputException e) {
+    		error = e.getMessage();
     	}
     }
     
@@ -1162,10 +1163,10 @@ public class RestoAppPage extends JFrame {
     }
     
     //***
-    protected void AddSeatToOrderItemButtonActionPerformed(ActionEvent evt) {
+  //  protected void AddSeatToOrderItemButtonActionPerformed(ActionEvent evt) {
     	//everytime pressed add to list selectedSeatsToOrderList
     	//
-    }
+    //}
     
   /* protected void cancelItemButtonActionPerformed(ActionEvent evt) {
 
@@ -1267,6 +1268,10 @@ public class RestoAppPage extends JFrame {
             reservedStatusLabel.setText("Reservation Status: Unreserved ");
             tableStatusLabel.setText("Table Status: ");
 
+            selectedSeatsList.removeAllItems();
+    		orderItemName.setText("");
+    		orderItemQuantityTextField.setText("");
+    		orderItemCategory.getItemAt(0);
             // select table - also combo box for table visualization
             tables = new HashMap<Integer, Table>();
             tableList.removeAllItems();

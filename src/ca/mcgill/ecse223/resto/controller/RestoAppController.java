@@ -1139,9 +1139,9 @@ public class RestoAppController {
     public static void orderMenuItem(String itemName, String itemCategory, int quantity, List<Seat> seats) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
         String error = "";
-
+        System.out.println("sads");
         MenuItem menuItem = null;
-		if (itemName.equals(null))  {
+		if (itemName.isEmpty() || itemName == null)  {
 			throw new InvalidInputException("Please input name of item to order");
 		}else {
 			RestoApp ra = RestoApplication.getRestoApp();
@@ -1156,11 +1156,12 @@ public class RestoAppController {
 			}
 		}
 		
-		if(itemCategory.equals("")) {
+		/*
+		if(itemCategory.toString() != "") {
 			if(!menuItem.getItemCategory().toString().equals(itemCategory.replaceAll("\\s", ""))) {
 				throw new InvalidInputException(itemName + " is in "+ menuItem.getItemCategory().toString());
 			}
-		}
+		}*/
 		
         if (menuItem == null) {
             error += "Please enter a menu item to order";
@@ -1186,15 +1187,15 @@ public class RestoAppController {
         List<Table> currentTables = r.getCurrentTables();
         Order lastOrder = null;
         //Seat seat = new Seat();
-
+        //add if for null seats 
         for (Seat seat : seats) {
-
-            Table table = seat.getTable();
+        	
+        	Table table = seat.getTable();
 
             if (!currentTables.contains(table)) {
                 throw (new InvalidInputException("Table " + table.getNumber() + "is not in the list of tables on the system"));
             }
-
+            
             List<Seat> currentSeats = table.getCurrentSeats();
 
             if (!currentSeats.contains(seat)) {
@@ -1212,7 +1213,6 @@ public class RestoAppController {
                 if (table.numberOfOrders() > 0) {
                     comparedOrder = table.getOrder(table.numberOfOrders() - 1);
                     if (!comparedOrder.equals(lastOrder)) {
-                        throw (new InvalidInputException("Error: order doesn't match"));
                     }
                 } else {
                     throw (new InvalidInputException("No orders were made"));
