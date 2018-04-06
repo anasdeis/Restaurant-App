@@ -227,60 +227,6 @@ public class RestoAppController {
         }
     }
 
-    public static void deleteOrder(Order order) throws InvalidInputException {
-        RestoApp r = RestoApplication.getRestoApp();
-        List<Order> orders = r.getOrders();
-        List<Order> currentOrders = r.getCurrentOrders();
-
-        if (order == null) {
-            throw (new InvalidInputException("An order must be specified for deleting it. "));
-        }
-
-        if (currentOrders.contains(order)) {
-            throw (new InvalidInputException("Cannot delete a current order."));
-        } else {
-            if (orders.contains(order)) {
-                order.delete();
-            } else {
-                throw (new InvalidInputException("The order must exist for deleting it. "));
-            }
-        }
-        try {
-            RestoApplication.save();
-        } catch (RuntimeException e) {
-            throw (new InvalidInputException(e.getMessage()));
-        }
-    }
-
-    public static void deleteTableOrder(Order order, Table table) throws InvalidInputException {
-        RestoApp r = RestoApplication.getRestoApp();
-        List<Order> orders = r.getOrders();
-        List<Order> currentOrders = r.getCurrentOrders();
-
-        if (order == null) {
-            throw (new InvalidInputException("An order must be specified for deleting it. "));
-        }
-
-        if (currentOrders.contains(order)) {
-            throw (new InvalidInputException("Cannot delete a current order, only past orders that haven't been removed."));
-        } else {
-            if (orders.contains(order)) {
-                if (!order.removeTable(table)) {
-                    if (order.numberOfTables() == 1) {
-                        order.delete();
-                    }
-                }
-            } else {
-                throw (new InvalidInputException("The order must exist for deleting it. "));
-            }
-        }
-
-        try {
-            RestoApplication.save();
-        } catch (RuntimeException e) {
-            throw (new InvalidInputException(e.getMessage()));
-        }
-    }
 
     public static void startOrder(List<Table> tables) throws InvalidInputException {
 
@@ -535,59 +481,7 @@ public class RestoAppController {
         return seats.get(seatIndex);
     }
 
-    public static Table getSpecificTable(Integer tableIndex) {
-        return RestoApplication.getRestoApp().getCurrentTables().get(tableIndex);
-    }
 
-    /*
-    // shared helper method for displaying ordered items and prices
-    public static List<Integer> getQuantityOfOrderedItem(List<OrderItem> orderList) {
-        List<Integer> listOfQuantity = new ArrayList<Integer>();
-        for (OrderItem individualOrderItem : orderList) {
-            listOfQuantity.add(individualOrderItem.getQuantity());
-        }
-        return listOfQuantity;
-    }
-
-    // shared helper method for displaying ordered items and prices
-    public static List<Double> getPriceOfOrderedItem(List<OrderItem> orderList) {
-        List<Double> listOfPrice = new ArrayList<Double>();
-        for (OrderItem individualOrderItem : orderList) {
-            listOfPrice.add(individualOrderItem.getPricedMenuItem().getPrice());
-        }
-        return listOfPrice;
-    }
-*/
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Situation1 Get all ordered items for the whole table
-    /*
-    public static List<OrderItem> getOrderedItemForOneTable(Table table) throws Exception {
-        // test if the table input is valid, if not, throw exceptions
-        RestoApp r = RestoApplication.getRestoApp();
-        List<Table> tables = r.getCurrentTables();
-        boolean tableExist = false;
-
-        for (Table currentTable : tables) {
-            if (currentTable.equals(table)) {
-                tableExist = true;
-            }
-        }
-        if (tableExist == false) {
-            throw new Exception("The input table does not exist");
-        }
-        if (table.getOrders() == null)
-            throw new Exception("This table has no order!");
-
-        List<OrderItem> orderTotal = new ArrayList<OrderItem>();
-        List<Seat> currentSeat = table.getCurrentSeats();
-        for (Seat seat : currentSeat) {
-            for (OrderItem individualOrderedItem : seat.getOrderItems()) {
-                orderTotal.add(individualOrderedItem);
-            }
-        }
-        return orderTotal;
-    }
-*/
     // situation2 Get ordered seats for each customers in one table
     public static List<Seat> getSeatForEachCustomerAtOneTable(Table table) throws Exception {
         // test if the table input is valid, if not, throw exceptions
@@ -610,66 +504,6 @@ public class RestoAppController {
         List<Seat> currentSeat = table.getCurrentSeats();
         return currentSeat;
     }
-/*
-    // situation2 Get ordered items for each seat in on table (use the same order as
-    // seatList to get all orderList one by one)
-    public static List<OrderItem> getOrderForEacgCustomerAtOneTable(Seat seat) {
-        return seat.getOrderItems();
-    }
-
-    // situation3 Get ordered items for a group of customers in one table
-    public static List<OrderItem> getOrderForGroupCustomerAtOneTable(List<Seat> seatList) throws Exception {
-        // test if the table seats are in one table, if not, throw exceptions
-        RestoApp r = RestoApplication.getRestoApp();
-        List<Table> tables = r.getCurrentTables();
-        for (Table individualtable : tables) {
-            if (individualtable.getCurrentSeats().contains(seatList.get(0))) {
-                for (Seat seat : seatList) {
-                    if (!individualtable.getCurrentSeats().contains(seat)) {
-                        throw new Exception("The input seats are not in the same table");
-                    }
-                }
-
-            }
-        }
-        // get ordered items for the group of seats
-        List<OrderItem> orderTotal = new ArrayList<OrderItem>();
-        for (Seat seat : seatList) {
-            for (OrderItem order : seat.getOrderItems()) {
-                orderTotal.add(order);
-            }
-        }
-        return orderTotal;
-    }
-
-    // situation4 Get ordered items for a group of customers in multiple groups
-    public static List<OrderItem> getOrderForGroupCustomerATMultiTable(List<Seat> seatList) {
-        // get ordered items for the group of seats
-        List<OrderItem> orderTotal = new ArrayList<OrderItem>();
-        for (Seat seat : seatList) {
-            for (OrderItem order : seat.getOrderItems()) {
-                orderTotal.add(order);
-            }
-        }
-        return orderTotal;
-    }
-*/
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /*
-    public static Double issuedBill(List<Integer> orderedQuantity, List<Double> price) throws Exception {
-        if (orderedQuantity.size() > price.size())
-            throw new Exception("Missing price!");
-        if (orderedQuantity.size() < price.size())
-            throw new Exception("Missing order item!");
-        Double total = 0.0;
-        for (int i = 0; i < orderedQuantity.size(); i++) {
-            total = total + orderedQuantity.get(i) * price.get(i);
-        }
-        return total;
-    }
-     */
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     public static void issueBill(List<Seat> seats) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
@@ -736,9 +570,9 @@ public class RestoAppController {
             throw new InvalidInputException("Error: There is an issue with generating a bill!");
         }
 
-        try{
+        try {
             RestoApplication.save();
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             throw (new InvalidInputException(e.getMessage()));
         }
     }
@@ -845,232 +679,228 @@ public class RestoAppController {
     }
 
     public static void addMenuItem(String name, String category, String price) throws Exception {
-		String error = "";
-		RestoApp ra = RestoApplication.getRestoApp();
-		Menu menu = ra.getMenu();
+        String error = "";
+        RestoApp ra = RestoApplication.getRestoApp();
+        Menu menu = ra.getMenu();
 
-		if (category.equals(null)|| category.equals("") || name.equals(null) || name.equals("")) {
-			throw new InvalidInputException("Name/Category cannot be empty");
-		}
+        if (category.equals(null) || category.equals("") || name.equals(null) || name.equals("")) {
+            throw new InvalidInputException("Name/Category cannot be empty");
+        }
 
-		checkIfExisting(name, menu);
+        checkIfExisting(name, menu);
 
-		// if price is inputed
-		if (!(price.equals(null) || price.equals("") || price.equals("0"))) {
+        // if price is inputed
+        if (!(price.equals(null) || price.equals("") || price.equals("0"))) {
 
-			priceCheck(price);
-			double priceDouble = Double.parseDouble(price);
+            priceCheck(price);
+            double priceDouble = Double.parseDouble(price);
 
-			if (priceDouble < 0) {
-				throw new InvalidInputException("Cannot have a negative price");
-			} else {
-				MenuItem newMenuItem = createNewItem(name, category, menu);
-				PricedMenuItem newPricedMenuItem = newMenuItem.addPricedMenuItem(priceDouble, ra);
-				newMenuItem.setCurrentPricedMenuItem(newPricedMenuItem);
-			}
-		} else {
-			// if price not inputed by user, item is not currentPricedItem
-			MenuItem newMenuItem = createNewItem(name, category, menu);
-		}
+            if (priceDouble < 0) {
+                throw new InvalidInputException("Cannot have a negative price");
+            } else {
+                MenuItem newMenuItem = createNewItem(name, category, menu);
+                PricedMenuItem newPricedMenuItem = newMenuItem.addPricedMenuItem(priceDouble, ra);
+                newMenuItem.setCurrentPricedMenuItem(newPricedMenuItem);
+            }
+        } else {
+            // if price not inputed by user, item is not currentPricedItem
+            MenuItem newMenuItem = createNewItem(name, category, menu);
+        }
 
-		RestoApplication.save();
+        RestoApplication.save();
 
-	}
+    }
 
-	public static void priceCheck(String price) throws InvalidInputException {
+    public static void priceCheck(String price) throws InvalidInputException {
 
-		int dotCount = 0;
-		for (int i = 0; i < price.length(); i++) {
-			// Check if price is only numbers and .
-			if ((price.charAt(i) > 47 && price.charAt(i) < 58) || price.charAt(i) == 46) {
-				// Keep track of how many . (there can only be 1)
-				if (price.charAt(i) == 46) {
-					dotCount++;
-				}
-			} else {
-				throw new InvalidInputException("Invalid price format (ex: 2.99)");
-			}
+        int dotCount = 0;
+        for (int i = 0; i < price.length(); i++) {
+            // Check if price is only numbers and .
+            if ((price.charAt(i) > 47 && price.charAt(i) < 58) || price.charAt(i) == 46) {
+                // Keep track of how many . (there can only be 1)
+                if (price.charAt(i) == 46) {
+                    dotCount++;
+                }
+            } else {
+                throw new InvalidInputException("Invalid price format (ex: 2.99)");
+            }
 
-		}
+        }
 
-		if (dotCount > 1) {
-			throw new InvalidInputException("You cannot have more than one decimal point");
-		}
+        if (dotCount > 1) {
+            throw new InvalidInputException("You cannot have more than one decimal point");
+        }
 
-	}
+    }
 
-	public static boolean checkIfExisting(String name, Menu aMenu) throws InvalidInputException {
-		boolean exists = false;
+    public static boolean checkIfExisting(String name, Menu aMenu) throws InvalidInputException {
+        boolean exists = false;
 
-		List<MenuItem> menuItems = aMenu.getMenuItems();
+        List<MenuItem> menuItems = aMenu.getMenuItems();
 
-		for (int i = 0; i < menuItems.size(); i++) {
-			MenuItem menuItem = menuItems.get(i);
+        for (int i = 0; i < menuItems.size(); i++) {
+            MenuItem menuItem = menuItems.get(i);
 
-			if (menuItem.getName().equals(name)) {
+            if (menuItem.getName().equals(name)) {
 
-				exists = true;
-				String category = menuItem.getItemCategory().toString();
-				throw new InvalidInputException(name + " existing in " + category);
-			}
-		}
+                exists = true;
+                String category = menuItem.getItemCategory().toString();
+                throw new InvalidInputException(name + " existing in " + category);
+            }
+        }
 
-		return exists;
-	}
+        return exists;
+    }
 
-	public static MenuItem createNewItem(String name, String category, Menu aMenu) {
+    public static MenuItem createNewItem(String name, String category, Menu aMenu) {
 
-		MenuItem newMenuItem = new MenuItem(name, aMenu);
-		if (category.equals("Appetizer")) {
-			newMenuItem.setItemCategory(MenuItem.ItemCategory.Appetizer);
-		} else if (category.equalsIgnoreCase("Main")) {
-			newMenuItem.setItemCategory(MenuItem.ItemCategory.Main);
-		} else if (category.equalsIgnoreCase("Dessert")) {
-			newMenuItem.setItemCategory(MenuItem.ItemCategory.Dessert);
-		} else if (category.equalsIgnoreCase("Alcoholic Beverage")) {
-			newMenuItem.setItemCategory(MenuItem.ItemCategory.AlcoholicBeverage);
-		} else if (category.equalsIgnoreCase("Non Alcoholic Beverage")) {
-			newMenuItem.setItemCategory(MenuItem.ItemCategory.NonAlcoholicBeverage);
-		}
+        MenuItem newMenuItem = new MenuItem(name, aMenu);
+        if (category.equals("Appetizer")) {
+            newMenuItem.setItemCategory(MenuItem.ItemCategory.Appetizer);
+        } else if (category.equalsIgnoreCase("Main")) {
+            newMenuItem.setItemCategory(MenuItem.ItemCategory.Main);
+        } else if (category.equalsIgnoreCase("Dessert")) {
+            newMenuItem.setItemCategory(MenuItem.ItemCategory.Dessert);
+        } else if (category.equalsIgnoreCase("Alcoholic Beverage")) {
+            newMenuItem.setItemCategory(MenuItem.ItemCategory.AlcoholicBeverage);
+        } else if (category.equalsIgnoreCase("Non Alcoholic Beverage")) {
+            newMenuItem.setItemCategory(MenuItem.ItemCategory.NonAlcoholicBeverage);
+        }
 
-		return newMenuItem;
-	}
+        return newMenuItem;
+    }
 
-	public static void removeMenuItem(String name, String category) throws InvalidInputException {
-		boolean removed = false;
+    public static void removeMenuItem(String name, String category) throws InvalidInputException {
+        boolean removed = false;
 
-		RestoApp ra = RestoApplication.getRestoApp();
+        RestoApp ra = RestoApplication.getRestoApp();
 
-		if (category.equals(null) || name.equals(null) || name.equals("")) {
-			throw new InvalidInputException("Cannot have empty input for name");
-		}
+        if (category.equals(null) || name.equals(null) || name.equals("")) {
+            throw new InvalidInputException("Cannot have empty input for name");
+        }
 
-		Menu menu = ra.getMenu();
-		List<MenuItem> menuItems = menu.getMenuItems();
-		for (int i = 0; i < menuItems.size(); i++) {
-			MenuItem menuItem = menuItems.get(i);
+        Menu menu = ra.getMenu();
+        List<MenuItem> menuItems = menu.getMenuItems();
+        for (int i = 0; i < menuItems.size(); i++) {
+            MenuItem menuItem = menuItems.get(i);
 
-			if (menuItem.getName().equals(name)) {
-				String tempCategory = menuItem.getItemCategory().toString();
-				category = category.replaceAll("\\s", ""); // remove space in between Category types
-				if (tempCategory.equals(category)) {
-					menuItem.setCurrentPricedMenuItem(null);
-					removed = true;
-					break;
-				}
+            if (menuItem.getName().equals(name)) {
+                String tempCategory = menuItem.getItemCategory().toString();
+                category = category.replaceAll("\\s", ""); // remove space in between Category types
+                if (tempCategory.equals(category)) {
+                    menuItem.setCurrentPricedMenuItem(null);
+                    removed = true;
+                    break;
+                }
 
-				throw new InvalidInputException(name + " is in " + menuItem.getItemCategory().toString());
+                throw new InvalidInputException(name + " is in " + menuItem.getItemCategory().toString());
 
-			}
-		}
+            }
+        }
 
-		if (!removed) {
-			throw new InvalidInputException(name + " is not a valid item to remove");
-		}
+        if (!removed) {
+            throw new InvalidInputException(name + " is not a valid item to remove");
+        }
 
-		RestoApplication.save();
+        RestoApplication.save();
 
-	}
+    }
 
-	public static String updateMenuItem(String oldName, String newName,String oldCategory, String newCategory,String oldPrice, String newPrice)
-			throws InvalidInputException {
-		
-		//input validation
-		String message="";		
-		MenuItem menuItem = null;
-		if (oldName.equals("") || oldName.equals(null))  {
-			throw new InvalidInputException("Please input name of item to update");
-		}else {
-			RestoApp ra = RestoApplication.getRestoApp();
-			Menu menu = ra.getMenu();
-			List<MenuItem> menuItems = menu.getMenuItems();
-			
-			for (int i = 0; i < menuItems.size(); i++) {
-				menuItem = menuItems.get(i);
-				if (menuItem.getName().equals(oldName)) {
-					break;
-				}
-			}
-		}
-		
-		// if any of newName, newPrice, category fields are both empty
-		if((newName.equals("") || newName.equals(null)) && (newPrice.equals(null) || newPrice.equals("")) && (newCategory.equals("") || newCategory.equals(null))) {
-			throw new InvalidInputException("At least one of the fields is required to update");		
-		}
-		// if oldPrice field is filled, check if menuItem indeed has that price
-		if(!(oldPrice.equals(null) || oldPrice.equals(""))){
-			double tempPrice = Double.valueOf(oldPrice);
-			if(!(tempPrice == (menuItem.getCurrentPricedMenuItem().getPrice()))) {
-				throw new InvalidInputException("Wrong price of "+ oldName);
-			}
-		}else if(oldPrice.equals("")&& !newPrice.equals("")) {
-			throw new InvalidInputException("Input price for "+ oldName+ " to update price");
-		}
-		// if oldCategory is filled, check if menuItem is indeed the category
-			if(!oldCategory.equals("")) {
-				if(!menuItem.getItemCategory().toString().equals(oldCategory.replaceAll("\\s", ""))) {
-					throw new InvalidInputException(oldName + " is in "+ menuItem.getItemCategory().toString());
-				}
-			}else if(oldCategory.equals("")&& !newCategory.equals("")) {
-				throw new InvalidInputException(oldName+"'s category must be selected in order to change into "+ newCategory);
-			}
-			
-		
-		
-	
-		message = message + "Successfully updated "+oldName;
-		if(!(newName.equals("") || newName.equals(null))) {
-			boolean duplicate = menuItem.setName(newName);
-			message = message + " as "+ newName;
-			if (!duplicate) {
-				throw new InvalidInputException("Cannot set name to " + newName);
-			}
-		}
-		
-		if(!(newPrice.equals(null) || newPrice.equals(""))){
-			
-			priceCheck(newPrice);
-			double newPriceDouble = Double.parseDouble(newPrice);
-			if (newPriceDouble != menuItem.getCurrentPricedMenuItem().getPrice()) {
-				RestoApp ra = RestoApplication.getRestoApp();
-				PricedMenuItem pmi = menuItem.addPricedMenuItem(newPriceDouble, ra);
-				menuItem.setCurrentPricedMenuItem(pmi);
-				message = message + " to cost " + newPrice;
-			}
-		}
+    public static String updateMenuItem(String oldName, String newName, String oldCategory, String newCategory, String oldPrice, String newPrice)
+            throws InvalidInputException {
 
-		boolean current = menuItem.hasCurrentPricedMenuItem();
-		if (!current) {
-			throw new InvalidInputException(menuItem.getName() + " is not a curent priced menu Item");
-		}
-		
-		if(!(newCategory.equals("")|| newCategory.equals(null))) {
-		
-			ItemCategory category;
-			if(newCategory.equals("Appetizer")) {
-				category = MenuItem.ItemCategory.Appetizer;
-			}else if(newCategory.equals("Main")) {
-				category = MenuItem.ItemCategory.Main;
-			}else if(newCategory.equals("Dessert")) {
-				category = MenuItem.ItemCategory.Dessert;
-			}else if(newCategory.equals("Alcoholic Beverage")) {
-				category = MenuItem.ItemCategory.AlcoholicBeverage;
-			}else if(newCategory.equals("Non Alcoholic Beverage")) {
-				category = MenuItem.ItemCategory.NonAlcoholicBeverage;
-			}else {
-				throw new InvalidInputException(newCategory+" is not a valid category");
-			}
-			menuItem.setItemCategory(category);
-			message = message + " into " + newCategory;
-		}
-		
-		RestoApplication.save();
-		return message;
+        //input validation
+        String message = "";
+        MenuItem menuItem = null;
+        if (oldName.equals("") || oldName.equals(null)) {
+            throw new InvalidInputException("Please input name of item to update");
+        } else {
+            RestoApp ra = RestoApplication.getRestoApp();
+            Menu menu = ra.getMenu();
+            List<MenuItem> menuItems = menu.getMenuItems();
 
-	}
+            for (int i = 0; i < menuItems.size(); i++) {
+                menuItem = menuItems.get(i);
+                if (menuItem.getName().equals(oldName)) {
+                    break;
+                }
+            }
+        }
 
-    
-    
+        // if any of newName, newPrice, category fields are both empty
+        if ((newName.equals("") || newName.equals(null)) && (newPrice.equals(null) || newPrice.equals("")) && (newCategory.equals("") || newCategory.equals(null))) {
+            throw new InvalidInputException("At least one of the fields is required to update");
+        }
+        // if oldPrice field is filled, check if menuItem indeed has that price
+        if (!(oldPrice.equals(null) || oldPrice.equals(""))) {
+            double tempPrice = Double.valueOf(oldPrice);
+            if (!(tempPrice == (menuItem.getCurrentPricedMenuItem().getPrice()))) {
+                throw new InvalidInputException("Wrong price of " + oldName);
+            }
+        } else if (oldPrice.equals("") && !newPrice.equals("")) {
+            throw new InvalidInputException("Input price for " + oldName + " to update price");
+        }
+        // if oldCategory is filled, check if menuItem is indeed the category
+        if (!oldCategory.equals("")) {
+            if (!menuItem.getItemCategory().toString().equals(oldCategory.replaceAll("\\s", ""))) {
+                throw new InvalidInputException(oldName + " is in " + menuItem.getItemCategory().toString());
+            }
+        } else if (oldCategory.equals("") && !newCategory.equals("")) {
+            throw new InvalidInputException(oldName + "'s category must be selected in order to change into " + newCategory);
+        }
+
+
+        message = message + "Successfully updated " + oldName;
+        if (!(newName.equals("") || newName.equals(null))) {
+            boolean duplicate = menuItem.setName(newName);
+            message = message + " as " + newName;
+            if (!duplicate) {
+                throw new InvalidInputException("Cannot set name to " + newName);
+            }
+        }
+
+        if (!(newPrice.equals(null) || newPrice.equals(""))) {
+
+            priceCheck(newPrice);
+            double newPriceDouble = Double.parseDouble(newPrice);
+            if (newPriceDouble != menuItem.getCurrentPricedMenuItem().getPrice()) {
+                RestoApp ra = RestoApplication.getRestoApp();
+                PricedMenuItem pmi = menuItem.addPricedMenuItem(newPriceDouble, ra);
+                menuItem.setCurrentPricedMenuItem(pmi);
+                message = message + " to cost " + newPrice;
+            }
+        }
+
+        boolean current = menuItem.hasCurrentPricedMenuItem();
+        if (!current) {
+            throw new InvalidInputException(menuItem.getName() + " is not a curent priced menu Item");
+        }
+
+        if (!(newCategory.equals("") || newCategory.equals(null))) {
+
+            ItemCategory category;
+            if (newCategory.equals("Appetizer")) {
+                category = MenuItem.ItemCategory.Appetizer;
+            } else if (newCategory.equals("Main")) {
+                category = MenuItem.ItemCategory.Main;
+            } else if (newCategory.equals("Dessert")) {
+                category = MenuItem.ItemCategory.Dessert;
+            } else if (newCategory.equals("Alcoholic Beverage")) {
+                category = MenuItem.ItemCategory.AlcoholicBeverage;
+            } else if (newCategory.equals("Non Alcoholic Beverage")) {
+                category = MenuItem.ItemCategory.NonAlcoholicBeverage;
+            } else {
+                throw new InvalidInputException(newCategory + " is not a valid category");
+            }
+            menuItem.setItemCategory(category);
+            message = message + " into " + newCategory;
+        }
+
+        RestoApplication.save();
+        return message;
+
+    }
+
 
     public static void updateTable(Table table, int newNumber, int numberOfSeats) throws InvalidInputException {
         RestoApp ra = RestoApplication.getRestoApp();
@@ -1140,28 +970,28 @@ public class RestoAppController {
         RestoApp r = RestoApplication.getRestoApp();
         String error = "";
         MenuItem menuItem = null;
-		if (itemName.isEmpty() || itemName == null)  {
-			throw new InvalidInputException("Please input name of item to order");
-		}else {
-			RestoApp ra = RestoApplication.getRestoApp();
-			Menu menu = ra.getMenu();
-			List<MenuItem> menuItems = menu.getMenuItems();
-			
-			for (int i = 0; i < menuItems.size(); i++) {
-				menuItem = menuItems.get(i);
-				if (menuItem.getName().equals(itemName)) {
-					break;
-				}
-			}
-		}
-		
+        if (itemName.isEmpty() || itemName == null) {
+            throw new InvalidInputException("Please input name of item to order");
+        } else {
+            RestoApp ra = RestoApplication.getRestoApp();
+            Menu menu = ra.getMenu();
+            List<MenuItem> menuItems = menu.getMenuItems();
+
+            for (int i = 0; i < menuItems.size(); i++) {
+                menuItem = menuItems.get(i);
+                if (menuItem.getName().equals(itemName)) {
+                    break;
+                }
+            }
+        }
+
 		/*
 		if(itemCategory.toString() != "") {
 			if(!menuItem.getItemCategory().toString().equals(itemCategory.replaceAll("\\s", ""))) {
 				throw new InvalidInputException(itemName + " is in "+ menuItem.getItemCategory().toString());
 			}
 		}*/
-		
+
         if (menuItem == null) {
             error += "Please enter a menu item to order";
         }
@@ -1185,16 +1015,15 @@ public class RestoAppController {
 
         List<Table> currentTables = r.getCurrentTables();
         Order lastOrder = null;
-        //Seat seat = new Seat();
-        //add if for null seats 
+
         for (Seat seat : seats) {
-        	
-        	Table table = seat.getTable();
+
+            Table table = seat.getTable();
 
             if (!currentTables.contains(table)) {
                 throw (new InvalidInputException("Table " + table.getNumber() + "is not in the list of tables on the system"));
             }
-            
+
             List<Seat> currentSeats = table.getCurrentSeats();
 
             if (!currentSeats.contains(seat)) {

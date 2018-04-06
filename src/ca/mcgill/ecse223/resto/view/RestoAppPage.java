@@ -85,6 +85,7 @@ public class RestoAppPage extends JFrame {
     private JLabel tableStatusLabel;
     private JLabel dateLabel;
     private JLabel reservationDate;
+    private JLabel reservationLabel;
 
     private JTextField numberInPartyTextField;
     private JTextField contactNameTextField;
@@ -96,11 +97,9 @@ public class RestoAppPage extends JFrame {
 
     //Orders
     private JButton startOrderButton;
-    private JButton deleteTableOrderButton;
     private JTextField selectedTablesTextField;
     private JLabel selectedTablesLabel;
     private JButton endOrderButton;
-    private JButton deleteOrderButton;
     private JButton viewOrdersButton;
     private JButton cancelSeatButton;
     private JComboBox<String> ordersList;
@@ -142,7 +141,6 @@ public class RestoAppPage extends JFrame {
     //User
     private JLabel userLabel;
     private JLabel userNameLabel;
-    int i;
 
     /**
      * Creates new form RestoAppPage
@@ -207,6 +205,7 @@ public class RestoAppPage extends JFrame {
         tableStatusLabel.setForeground(Color.red);
         dateLabel = new JLabel("Set date and time (yyyy/MM/dd HH:mm:ss)");
         reservationDate = new JLabel();
+        reservationLabel = new JLabel("Reservations:");
 
         numberInPartyTextField = new JTextField();
         contactEmailAddressTextField = new JTextField();
@@ -253,20 +252,15 @@ public class RestoAppPage extends JFrame {
         orderItemCategory.setToolTipText("Item category of the item to add/remove");
 
 
-        i = 0;
-
         //User
         userLabel = new JLabel("User: ");
         userNameLabel = new JLabel("ANAS BOSS");
         userNameLabel.setForeground(Color.BLUE);
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                i++;
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedTableIndex = cb.getSelectedIndex();
-                if (i == 1) {
-                    selectedTableIndex = -1;
-                }
+
                 if (selectedTableIndex != -1) {
                     selectedTableNumber = Integer.parseInt(cb.getSelectedItem().toString());
                     List<Table> tables = RestoAppController.getTables();
@@ -313,33 +307,12 @@ public class RestoAppPage extends JFrame {
                                 }
                             }
 
-
-                            // select order - also combo box for order visualization
-                            orders = new HashMap<Integer, Order>();
-                            ordersList.removeAllItems();
-                            List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
-
-                            Integer orderIndex = 0;
-
-                            for (Order order : currentOrders) {
-                                if (table.getOrders().contains(order)) {
-                                    orders.put(orderIndex, order);
-                                    ordersList.addItem("Order #" + (order.getNumber()));
-                                    orderIndex++;
-                                }
-                            }
-
-
                             numberSeatsLabel.setText("Seats: " + table.getCurrentSeats().size());
                             tableLocationXLabel.setText("Location X: " + table.getX());
                             tableLocationYLabel.setText("Location Y: " + table.getY());
                             tableWidthLabel.setText("Width: " + table.getWidth());
                             tableLengthLabel.setText("Length: " + table.getLength());
                             tableStatusLabel.setText("Table Status: " + table.getStatusFullName());
-
-                            if (!table.hasOrders()) {
-                                orderDate.setText("No orders for table #" + table.getNumber());
-                            }
 
                             if (table.hasReservations()) {
                                 reservedStatusLabel.setText("Reservation Status: Reserved, has "
@@ -355,10 +328,6 @@ public class RestoAppPage extends JFrame {
                         }
                     }
                 } else {
-                    selectedReservationIndex = -1;
-                    reservationList.removeAllItems();
-                    selectedOrderIndex = -1;
-                    ordersList.removeAllItems();
                     refreshData();
                 }
             }
@@ -413,8 +382,6 @@ public class RestoAppPage extends JFrame {
                             .setText("Contact Phone: " + reservation.getContactPhoneNumber());
                     numberInPartyLabel
                             .setText("Number of People: " + reservation.getNumberInParty());
-                } else {
-                    refreshData();
                 }
             }
         });
@@ -426,6 +393,7 @@ public class RestoAppPage extends JFrame {
                 selectedOrderIndex = cb.getSelectedIndex();
 
                 if (selectedOrderIndex > -1) {
+
                     Order order = orders.get(selectedOrderIndex);
                     orderDate.setText(order.getDate().toString() + " " + order.getTime().toString());
                 } else {
@@ -554,18 +522,6 @@ public class RestoAppPage extends JFrame {
 
          });
 */
-        deleteOrderButton = new JButton("Delete Whole Order");
-        deleteOrderButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteOrderButtonActionPerformed(evt);
-            }
-        });
-        deleteTableOrderButton = new JButton("Delete Table Order");
-        deleteTableOrderButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteTableOrderButtonActionPerformed(evt);
-            }
-        });
 
         // horizontal line elements
         JSeparator horizontalLineTop = new JSeparator();
@@ -625,7 +581,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(contactPhoneNumberLabel)
                                 .addComponent(numberInPartyLabel)
                                 .addComponent(dateLabel)
-                                .addComponent(reservedStatusLabel)
+                                .addComponent(reservationLabel)
                                 .addComponent(selectedTablesTextField)
                                 .addComponent(reserveButton)
                                 .addComponent(startOrderButton))
@@ -633,7 +589,7 @@ public class RestoAppPage extends JFrame {
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(menuButton)
                                 .addComponent(viewOrdersButton)
-                                .addComponent(endOrderButton)
+                                .addComponent(reservedStatusLabel)
                                 .addComponent(contactNameTextField)
                                 .addComponent(contactEmailAddressTextField)
                                 .addComponent(contactPhoneNumberTextField)
@@ -662,8 +618,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(selectedSeatsListForBill)
                                 .addComponent(ordersList)
                                 .addComponent(orderDate)
-                                .addComponent(deleteOrderButton)
-                                .addComponent(deleteTableOrderButton))
+                                .addComponent(endOrderButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(addSeatButton)
@@ -709,7 +664,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(widthTextField)
                                 .addComponent(tableWidthLabel)
                                 .addComponent(tableStatusLabel)
-                                .addComponent(endOrderButton)
+                                .addComponent(reservedStatusLabel)
                                 .addComponent(categoryLabel)
                                 .addComponent(orderItemCategory)
                                 .addComponent(addSeatToBillButton))
@@ -755,7 +710,7 @@ public class RestoAppPage extends JFrame {
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(newTableNumberLabel)
                                 .addComponent(newTableNumberTextField)
-                                .addComponent(reservedStatusLabel)
+                                .addComponent(reservationLabel)
                                 .addComponent(reservationList)
                                 .addComponent(ordersLabel)
                                 .addComponent(ordersList))
@@ -772,12 +727,11 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(updateTableButton)
                                 .addComponent(reserveButton)
                                 .addComponent(deleteReservationButton)
-                                .addComponent(deleteOrderButton))
+                                .addComponent(endOrderButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(startOrderButton)
-                                .addComponent(deleteTableReservationButton)
-                                .addComponent(deleteTableOrderButton))
+                                .addComponent(deleteTableReservationButton))
 
 
                         .addComponent(horizontalLineBottom)
@@ -997,41 +951,6 @@ public class RestoAppPage extends JFrame {
         refreshData();
     }
 
-    protected void deleteOrderButtonActionPerformed(ActionEvent evt) {
-
-        error = null;
-
-        if (selectedOrderIndex < 0) {
-            error = "Reservation needs to be selected for deleting!";
-
-        } else {
-
-            try {
-                RestoAppController.deleteOrder(orders.get(selectedOrderIndex));
-            } catch (InvalidInputException e) {
-                error = e.getMessage();
-            }
-        }
-        refreshData();
-    }
-
-    protected void deleteTableOrderButtonActionPerformed(ActionEvent evt) {
-
-        error = null;
-
-        if (selectedOrderIndex < 0 && selectedTableIndex < 0) {
-            error = "The table and the order needs to be specified for deleting!";
-
-        } else {
-
-            try {
-                RestoAppController.deleteTableOrder(orders.get(selectedOrderIndex), tables.get(selectedTableIndex));
-            } catch (InvalidInputException e) {
-                error = e.getMessage();
-            }
-        }
-        refreshData();
-    }
 
     protected void reserveButtonActionPerformed(ActionEvent evt) {
 
@@ -1252,6 +1171,28 @@ public class RestoAppPage extends JFrame {
                 tables.put(index, table);
                 tableList.addItem("" + table.getNumber());
                 index++;
+            }
+
+            // select order - also combo box for order visualization
+            orders = new HashMap<Integer, Order>();
+            ordersList.removeAllItems();
+            List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
+
+            Integer orderIndex = 0;
+
+            for (Order order : currentOrders) {
+                List<Table> orderTables = order.getTables();
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                for (Table table : orderTables) {
+                    list.add(table.getNumber());
+                }
+                orders.put(orderIndex, order);
+                ordersList.addItem("Order #" + (order.getNumber()) + " ; Table(s): " + list.toString());
+                orderIndex++;
+            }
+
+            if (selectedTableIndex < 0) {
+                reservationList.removeAllItems();
             }
 
             tableList.setSelectedIndex(selectedTableIndex);

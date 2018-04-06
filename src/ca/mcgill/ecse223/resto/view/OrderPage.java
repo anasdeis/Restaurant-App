@@ -52,7 +52,9 @@ public class OrderPage extends JFrame {
     List<OrderItem> ordersForTable;
 
     public OrderPage() {
+
         initComponents();
+        refreshData();
     }
 
 
@@ -93,20 +95,6 @@ public class OrderPage extends JFrame {
                         if (tableNumber.equals(table.getNumber())) {
                             selectedTable = table;
 
-                            // select order - also combo box for order visualization
-                            orders = new HashMap<Integer, Order>();
-                            orderList.removeAllItems();
-                            List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
-
-                            Integer orderIndex = 0;
-
-                            for (Order order : currentOrders) {
-                                if (table.getOrders().contains(order)) {
-                                    orders.put(orderIndex, order);
-                                    orderList.addItem("Order #" + (order.getNumber()));
-                                    orderIndex++;
-                                }
-                            }
 
                             try {
                                 items = new HashMap<Integer, OrderItem>();
@@ -215,6 +203,7 @@ public class OrderPage extends JFrame {
                                 .addComponent(orderListLabel)
                         )
                         .addGroup(layout.createParallelGroup()
+                                .addComponent(orderDateLabel)
                                 .addComponent(orderList)
                         )
                 )
@@ -244,6 +233,7 @@ public class OrderPage extends JFrame {
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(orderNumberLabel)
+                                .addComponent(orderDateLabel)
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(horizontalLineBottom)
@@ -306,6 +296,7 @@ public class OrderPage extends JFrame {
 
             quantityLabel.setText("Quantity: ");
             orderNumberLabel.setText("Order Number: ");
+            orderDateLabel.setText("");
 
             tableList.removeAllItems();
 
@@ -318,12 +309,31 @@ public class OrderPage extends JFrame {
                 index++;
             }
 
-            tableList.setSelectedIndex(selectedTableIndex);
+            // select order - also combo box for order visualization
+            orders = new HashMap<Integer, Order>();
+            orderList.removeAllItems();
+            List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
 
-            if (selectedTableIndex < 0)
+            Integer orderIndex = 0;
+
+            for (Order order : currentOrders) {
+                List<Table> orderTables = order.getTables();
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                for (Table table : orderTables) {
+                    list.add(table.getNumber());
+                }
+                orders.put(orderIndex, order);
+                orderList.addItem("Order #" + (order.getNumber()) + " ; Table(s): " + list.toString());
+                orderIndex++;
+            }
+
+            if (selectedTableIndex < 0) {
                 orderItemList.removeAllItems();
+            }
 
+            tableList.setSelectedIndex(selectedTableIndex);
             orderItemList.setSelectedIndex(selectedItemIndex);
+            orderList.setSelectedIndex(selectedOrderIndex);
         }
         pack();
     }
