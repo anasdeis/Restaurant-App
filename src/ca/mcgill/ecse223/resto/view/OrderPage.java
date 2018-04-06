@@ -3,8 +3,6 @@ package ca.mcgill.ecse223.resto.view;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.awt.Color;
 
@@ -42,9 +40,10 @@ public class OrderPage extends JFrame {
     private Table selectedTable;
     private Integer cbSelectedItem;
 
-    private HashMap<Integer, Table> tables;
-    private HashMap<Integer, Order> orders;
-    private HashMap<Integer, OrderItem> items;
+    private List<Table> tables;
+
+    private List<Order> orders;
+    private List<OrderItem> items;
 
     JSeparator horizontalLineTop = new JSeparator();
     JSeparator horizontalLineBottom = new JSeparator();
@@ -97,15 +96,13 @@ public class OrderPage extends JFrame {
 
 
                             try {
-                                items = new HashMap<Integer, OrderItem>();
+                            	items = new ArrayList<OrderItem>();
                                 orderItemList.removeAllItems();
 
-                                Integer itemIndex = 0;
                                 List<OrderItem> orderItems = RestoAppController.getOrderItems(table);
                                 for (OrderItem orderItem : orderItems) {
-                                    items.put(itemIndex, orderItem);
+                                    items.add(orderItem);
                                     orderItemList.addItem(orderItem.getPricedMenuItem().getMenuItem().getName());
-                                    itemIndex++;
                                 }
 
                             } catch (InvalidInputException e) {
@@ -124,8 +121,7 @@ public class OrderPage extends JFrame {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 cbSelectedItem = cb.getSelectedIndex();
                 if (cbSelectedItem != -1 && selectedTableIndex != 1) {
-                    //                 String selectedOrderItem = cb.getSelectedItem().toString(); You can still use this instead
-                    // of HashMap, but my HashMap now works and is more intuitive than comparing strings.
+                 
                     OrderItem i = items.get(cbSelectedItem);
 
                     try {
@@ -306,7 +302,7 @@ public class OrderPage extends JFrame {
             tableList.removeAllItems();
 
             // select table - also combo box for table visualization
-            tables = new HashMap<Integer, Table>();
+            tables = new ArrayList<Table>();
             Integer index = 0;
             List<Table> currentTables = RestoAppController.getTables();
             for (Table table : currentTables) {
@@ -315,7 +311,7 @@ public class OrderPage extends JFrame {
             }
 
             // select order - also combo box for order visualization
-            orders = new HashMap<Integer, Order>();
+            orders = new ArrayList<Order>();
             orderList.removeAllItems();
             List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
 
@@ -327,7 +323,7 @@ public class OrderPage extends JFrame {
                 for (Table table : orderTables) {
                     list.add(table.getNumber());
                 }
-                orders.put(orderIndex, order);
+                orders.add(order);
                 orderList.addItem("Order #" + (order.getNumber()) + " ; Table(s): " + list.toString());
                 orderIndex++;
             }
