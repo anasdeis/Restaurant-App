@@ -38,7 +38,7 @@ public class OrderPage extends JFrame {
 	private Integer selectedItemIndex = -1;
 	private Integer tableNumber = -1;
 	private Table selectedTable;
-	private Integer cbSelectedItem;
+	//private Integer cbSelectedItemIndex;
 
 	private List<Table> tables;
 
@@ -100,9 +100,13 @@ public class OrderPage extends JFrame {
 								orderItemList.removeAllItems();
 
 								List<OrderItem> orderItems = RestoAppController.getOrderItems(table);
+								int i = 0;
 								for (OrderItem orderItem : orderItems) {
+									
 									items.add(orderItem);
-									orderItemList.addItem(orderItem.getPricedMenuItem().getMenuItem().getName());
+									orderItemList.addItem(orderItem.getPricedMenuItem().getMenuItem().getName()+""+i++);
+									
+									
 								}
 
 							} catch (InvalidInputException e) {
@@ -119,19 +123,16 @@ public class OrderPage extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				error = null;
 				JComboBox<String> cb = (JComboBox<String>) evt.getSource();
-				cbSelectedItem = cb.getSelectedIndex();
-				if (cbSelectedItem != -1 && selectedTableIndex != 1) {
-
-					OrderItem i = items.get(cbSelectedItem);
+				selectedItemIndex = cb.getSelectedIndex();
+				if (selectedItemIndex != -1 && selectedTableIndex != -1) {
+					OrderItem selectedItem = items.get(selectedItemIndex);
 
 					try {
 						List<OrderItem> orderItems = RestoAppController.getOrderItems(selectedTable);
-						for (OrderItem orderItem : orderItems) {
-							if (i.equals(orderItem)) {
-								quantityLabel.setText("Quantity: " + orderItem.getQuantity());
-								orderNumberLabel.setText("Order Number: " + orderItem.getOrder().getNumber());
+							if (orderItems.contains(selectedItem)) {
+								quantityLabel.setText("Quantity: " + selectedItem.getQuantity());
+								orderNumberLabel.setText("Order Number: " + selectedItem.getOrder().getNumber());
 							}
-						}
 					} catch (InvalidInputException e) {
 						error = e.getMessage();
 					}
@@ -247,12 +248,12 @@ public class OrderPage extends JFrame {
 
 		error = null;
 
-		if (cbSelectedItem < 0 || selectedTableIndex < 0) {
+		if (selectedItemIndex < 0 || selectedTableIndex < 0) {
 			error = "An order item and its table must be specified for cancelling. ";
 		} else {
 
 			try {
-				RestoAppController.cancelOrderItem(items.get(cbSelectedItem));
+				RestoAppController.cancelOrderItem(items.get(selectedItemIndex));
 			} catch (InvalidInputException e) {
 				error = e.getMessage();
 			}
