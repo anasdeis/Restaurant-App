@@ -120,6 +120,7 @@ public class OrderPage extends JFrame {
         orderItemList.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                error = null;
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 cbSelectedItem = cb.getSelectedIndex();
                 if (cbSelectedItem != -1 && selectedTableIndex != 1) {
@@ -185,9 +186,7 @@ public class OrderPage extends JFrame {
                                 .addComponent(errorMessage))
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(tablesLabel)
-                                .addComponent(cancelItemButton)
-                                .addComponent(cancelTableButton)
-                                .addComponent(cancelOrderButton))
+                                .addComponent(cancelTableButton))
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(tableList))
                         .addGroup(layout.createParallelGroup()
@@ -203,8 +202,10 @@ public class OrderPage extends JFrame {
                                 .addComponent(orderListLabel)
                         )
                         .addGroup(layout.createParallelGroup()
+                                .addComponent(cancelItemButton)
                                 .addComponent(orderDateLabel)
                                 .addComponent(orderList)
+                                .addComponent(cancelOrderButton)
                         )
                 )
         );
@@ -218,13 +219,13 @@ public class OrderPage extends JFrame {
                                 .addComponent(tableList)
                                 .addComponent(orderItemsLabel)
                                 .addComponent(orderItemList)
-                        )
-                        .addGroup(layout.createParallelGroup()
                                 .addComponent(cancelItemButton)
-                                .addComponent(orderItemDetailsLabel)
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(cancelTableButton)
+                                .addComponent(orderItemDetailsLabel)
+                        )
+                        .addGroup(layout.createParallelGroup()
                                 .addComponent(horizontalLineTop)
                         )
                         .addGroup(layout.createParallelGroup()
@@ -239,6 +240,9 @@ public class OrderPage extends JFrame {
                                 .addComponent(horizontalLineBottom)
                                 .addComponent(orderListLabel)
                                 .addComponent(orderList)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(cancelOrderButton)
                         )));
         pack();
     }
@@ -298,6 +302,7 @@ public class OrderPage extends JFrame {
             orderNumberLabel.setText("Order Number: ");
             orderDateLabel.setText("");
 
+
             tableList.removeAllItems();
 
             // select table - also combo box for table visualization
@@ -325,6 +330,10 @@ public class OrderPage extends JFrame {
                 orders.put(orderIndex, order);
                 orderList.addItem("Order #" + (order.getNumber()) + " ; Table(s): " + list.toString());
                 orderIndex++;
+            }
+
+            if (orders.isEmpty() || orders == null) {
+                orderDateLabel.setText("No current orders");
             }
 
             if (selectedTableIndex < 0) {

@@ -306,10 +306,9 @@ public class RestoAppController {
             }
         }
 
-        if (allTablesAvailableOrDifferentCurrentOrder(tables, order)) {
+        if (allTablesAvailableOrDifferentCurrentOrder(copyOfTables, order)) {
             r.removeCurrentOrder(order);
         }
-
         try {
             RestoApplication.save();
 
@@ -319,9 +318,9 @@ public class RestoAppController {
     }
 
     private static boolean allTablesAvailableOrDifferentCurrentOrder(List<Table> tables, Order order) {
+
         for (Table table : tables) {
-            if ((table.getStatusFullName().equals("Available"))
-                    || (!((table.getOrder(table.numberOfOrders() - 1)).equals(order)))) {
+            if ((table.getStatusFullName().equals("Available")) || !((table.getOrder(table.numberOfOrders() - 1)).equals(order))) {
                 return true;
             }
         }
@@ -986,7 +985,7 @@ public class RestoAppController {
         }
 
 		/*
-		if(itemCategory.toString() != "") {
+        if(itemCategory.toString() != "") {
 			if(!menuItem.getItemCategory().toString().equals(itemCategory.replaceAll("\\s", ""))) {
 				throw new InvalidInputException(itemName + " is in "+ menuItem.getItemCategory().toString());
 			}

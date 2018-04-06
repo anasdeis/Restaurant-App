@@ -29,6 +29,8 @@ public class RestoAppPage extends JFrame {
 
     private String error = null;
 
+    private Table selectedTable;
+
     // Create Table
     private JButton createTableButton;
     private JLabel numberOfSeatsLabel;
@@ -266,6 +268,7 @@ public class RestoAppPage extends JFrame {
                     List<Table> tables = RestoAppController.getTables();
                     for (Table table : tables) {
                         if (selectedTableNumber.equals(table.getNumber())) {
+                            selectedTable = table;
                             seats = new HashMap<Integer, Seat>();
                             seatList.removeAllItems();
                             Integer seatIndex = 0;
@@ -281,31 +284,6 @@ public class RestoAppPage extends JFrame {
                                 e.printStackTrace();
                             }
 
-                            // select reservation - also combo box for reservation visualization
-                            reservations = new HashMap<Integer, Reservation>();
-                            reservationList.removeAllItems();
-                            List<Reservation> reservationsTable = table.getReservations();
-                            List<Long> reservationTimeArray = new ArrayList<Long>();
-
-                            Integer reservationIndex = 0;
-                            for (Reservation reservation : reservationsTable) {
-                                reservationTimeArray.add(reservation.getDate().getTime());
-                            }
-                            try {
-                                Collections.sort(reservationTimeArray);
-                            } catch (ClassCastException | UnsupportedOperationException | IllegalArgumentException e) {
-                                e.printStackTrace();
-                                error += e.getMessage();
-                            }
-                            for (long time : reservationTimeArray) {
-                                for (Reservation reservation : reservationsTable) {
-                                    if (time == reservation.getDate().getTime()) {
-                                        reservations.put(reservationIndex, reservation);
-                                        reservationList.addItem("Reservation #" + (reservationIndex + 1));
-                                        reservationIndex++;
-                                    }
-                                }
-                            }
 
                             numberSeatsLabel.setText("Seats: " + table.getCurrentSeats().size());
                             tableLocationXLabel.setText("Location X: " + table.getX());
@@ -318,11 +296,6 @@ public class RestoAppPage extends JFrame {
                                 reservedStatusLabel.setText("Reservation Status: Reserved, has "
                                         + table.getReservations().size() + " reservation(s)");
                             } else {
-                                reservationDate.setText("No reservations for table #" + table.getNumber());
-                                contactEmailAddressLabel.setText("Contact E-mail address: ");
-                                contactNameLabel.setText("Contact Name:");
-                                contactPhoneNumberLabel.setText("Contact Phone: ");
-                                numberInPartyLabel.setText("Number of People: ");
                                 reservedStatusLabel.setText("Reservation Status: Unreserved ");
                             }
                         }
@@ -382,6 +355,8 @@ public class RestoAppPage extends JFrame {
                             .setText("Contact Phone: " + reservation.getContactPhoneNumber());
                     numberInPartyLabel
                             .setText("Number of People: " + reservation.getNumberInParty());
+                } else {
+                    refreshData();
                 }
             }
         });
@@ -1154,7 +1129,7 @@ public class RestoAppPage extends JFrame {
             contactNameLabel.setText("Contact Name:");
             contactPhoneNumberLabel.setText("Contact Phone: ");
             numberInPartyLabel.setText("Number of People: ");
-            reservedStatusLabel.setText("Reservation Status: Unreserved ");
+            reservedStatusLabel.setText("Reservation Status:");
             tableStatusLabel.setText("Table Status: ");
 
             selectedSeatsList.removeAllItems();
@@ -1191,8 +1166,45 @@ public class RestoAppPage extends JFrame {
                 orderIndex++;
             }
 
-            if (selectedTableIndex < 0) {
-                reservationList.removeAllItems();
+            if (orders.isEmpty() || orders == null) {
+                orderDate.setText("No current orders");
+            }
+
+            // select reservation - also combo box for reservation visualization
+            reservations = new HashMap<Integer, Reservation>();
+            reservationList.removeAllItems();
+
+            List<Reservation> reservationsApp = RestoApplication.getRestoApp().getReservations();
+            List<Long> reservationTimeArray = new ArrayList<Long>();
+
+            Integer reservationIndex = 0;
+            for (Reservation reservation : reservationsApp) {
+                reservationTimeArray.add(reservation.getDate().getTime());
+            }
+            try {
+                Collections.sort(reservationTimeArray);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                error += e.getMessage();
+            }
+            for (long time : reservationTimeArray) {
+                for (Reservation reservation : reservationsApp) {
+                    if (time == reservation.getDate().getTime()) {
+                        List<Table> reservationTables = reservation.getTables();
+                        ArrayList<Integer> list = new ArrayList<Integer>();
+                        for (Table table : reservationTables) {
+                            list.add(table.getNumber());
+                        }
+                        reservations.put(reservationIndex, reservation);
+                        reservationList.addItem("Reservation #" + (reservationIndex + 1) + " ; Table(s) " + list.toString());
+                        reservationIndex++;
+                    }
+                }
+            }
+
+
+            if (reservations.isEmpty() || reservations == null) {
+                reservationDate.setText("No reservations");
             }
 
             tableList.setSelectedIndex(selectedTableIndex);
