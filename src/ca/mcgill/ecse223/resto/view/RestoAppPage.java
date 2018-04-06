@@ -184,7 +184,6 @@ public class RestoAppPage extends JFrame {
         tableList = new JComboBox<String>(new String[0]);
         tablesLabel = new JLabel("Table: ");
 
-
         // Table Info Elements
         numberSeatsLabel = new JLabel("Seats: ");
         tableLocationXLabel = new JLabel("Location X: ");
@@ -193,15 +192,15 @@ public class RestoAppPage extends JFrame {
         tableLengthLabel = new JLabel("Length: ");
 
         // Update Table Elements
-        newNumberOfSeatsLabel = new JLabel("Enter New Number of Seats :");
-        newTableNumberLabel = new JLabel("Enter New Table Number :");
+        newNumberOfSeatsLabel = new JLabel("New Seat # :");
+        newTableNumberLabel = new JLabel("New Table # :");
 
         // Reserve Table elements
         numberInPartyLabel = new JLabel("Number of People:");
         contactEmailAddressLabel = new JLabel("Contact E-mail address:");
         contactPhoneNumberLabel = new JLabel("Contact Phone:");
         contactNameLabel = new JLabel("Contact Name:");
-        reservedStatusLabel = new JLabel("Reservation Status: ");
+        reservedStatusLabel = new JLabel("");
         reservedStatusLabel.setForeground(Color.red);
         tableStatusLabel = new JLabel("Table Status: ");
         tableStatusLabel.setForeground(Color.red);
@@ -218,7 +217,7 @@ public class RestoAppPage extends JFrame {
         reservationList = new JComboBox<String>(new String[0]);
 
         // startOrder
-        selectedTablesLabel = new JLabel("Enter table # separated by whitespace: ");
+        selectedTablesLabel = new JLabel("Enter table #(s): ");
         selectedTablesTextField = new JTextField();
         ordersLabel = new JLabel("Orders:");
 
@@ -228,7 +227,7 @@ public class RestoAppPage extends JFrame {
         // seats
         seatList = new JComboBox<String>(new String[0]);
         seatsLabel = new JLabel("Seats: ");
-        selectedSeatsLabel = new JLabel("Selected Seats for order item: ");
+        selectedSeatsLabel = new JLabel("Selected Seats: ");
         selectedSeatsList = new JComboBox<String>(new String[0]);
         selectedSeatsListForBill = new JComboBox<String>(new String[0]);
 
@@ -293,10 +292,10 @@ public class RestoAppPage extends JFrame {
                             tableStatusLabel.setText("Table Status: " + table.getStatusFullName());
 
                             if (table.hasReservations()) {
-                                reservedStatusLabel.setText("Reservation Status: Reserved, has "
+                                reservedStatusLabel.setText("Reserved, has "
                                         + table.getReservations().size() + " reservation(s)");
                             } else {
-                                reservedStatusLabel.setText("Reservation Status: Unreserved ");
+                                reservedStatusLabel.setText("Unreserved ");
                             }
                         }
                     }
@@ -1129,7 +1128,7 @@ public class RestoAppPage extends JFrame {
             contactNameLabel.setText("Contact Name:");
             contactPhoneNumberLabel.setText("Contact Phone: ");
             numberInPartyLabel.setText("Number of People: ");
-            reservedStatusLabel.setText("Reservation Status:");
+            reservedStatusLabel.setText("");
             tableStatusLabel.setText("Table Status: ");
 
             selectedSeatsList.removeAllItems();
@@ -1212,7 +1211,7 @@ public class RestoAppPage extends JFrame {
             ordersList.setSelectedIndex(selectedOrderIndex);
 
         }
+       
     }
-    //TODO
 }
 
