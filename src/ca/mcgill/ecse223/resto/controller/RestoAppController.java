@@ -977,8 +977,8 @@ public class RestoAppController {
             List<MenuItem> menuItems = menu.getMenuItems();
 
             for (int i = 0; i < menuItems.size(); i++) {
-                menuItem = menuItems.get(i);
-                if (menuItem.getName().equals(itemName)) {
+                if (menuItems.get(i).getName().equals(itemName)) {
+                    menuItem = menuItems.get(i);
                     break;
                 }
             }
@@ -992,7 +992,7 @@ public class RestoAppController {
 		}*/
 
         if (menuItem == null) {
-            error += "Please enter a menu item to order";
+            error += "Please enter a valid menu item to order";
         }
 
         if (seats == null || seats.isEmpty()) {
