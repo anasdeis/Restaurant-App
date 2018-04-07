@@ -474,36 +474,6 @@ public class RestoAppController {
         }
     }
 
-    public static Seat getSpecificSeat(Table table, Integer seatIndex) throws Exception {
-        List<Seat> seats = getSeatForEachCustomerAtOneTable(table);
-
-        return seats.get(seatIndex);
-    }
-
-
-    // situation2 Get ordered seats for each customers in one table
-    public static List<Seat> getSeatForEachCustomerAtOneTable(Table table) throws Exception {
-        // test if the table input is valid, if not, throw exceptions
-        RestoApp r = RestoApplication.getRestoApp();
-        List<Table> tables = r.getCurrentTables();
-        boolean tableExist = false;
-        for (Table currentTable : tables) {
-            if (currentTable.equals(table)) {
-                tableExist = true;
-            }
-        }
-        if (tableExist == false) {
-            throw new Exception("This table does not exist");
-        }
-        if (table.getOrders() == null)
-            throw new Exception("This table has no order!");
-        if (!table.hasCurrentSeats())
-            throw new Exception("This is no seat in this table!");
-        // get a list of all current seats
-        List<Seat> currentSeat = table.getCurrentSeats();
-        return currentSeat;
-    }
-
     public static void issueBill(List<Seat> seats) throws InvalidInputException {
         RestoApp r = RestoApplication.getRestoApp();
         List<Table> currentTables = r.getCurrentTables();
@@ -682,7 +652,7 @@ public class RestoAppController {
         RestoApp ra = RestoApplication.getRestoApp();
         Menu menu = ra.getMenu();
 
-        if (category.equals(null) || category.equals("") || name.equals(null) || name.equals("")) {
+        if (category == null || category.isEmpty() || name == null || name.isEmpty()) {
             throw new InvalidInputException("Name/Category cannot be empty");
         }
 

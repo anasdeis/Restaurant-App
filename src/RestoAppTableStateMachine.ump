@@ -10,7 +10,7 @@ class Table {
             if (!success){
                 System.out.println("Warning! Failed to add table #" + this.getNumber() + " to order. ");
             }
-         } -> NothingOrdered; 
+         } -> NothingOrdered;
       }
       NothingOrdered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
@@ -38,11 +38,11 @@ class Table {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
             // create a new order item with the provided quantity, order, seat, and priced menu item
             new OrderItem(quantity, i, o, s);
-         } -> Ordered; 
+         } -> Ordered;
          addToOrderItem(OrderItem i, Seat s) / {
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
             boolean wasAdded = i.addSeat(s);
-            if (!isAdded){
+            if (!wasAdded){
                 System.out.println("Warning! This orderItem has already been added to specified seat. ");
             }
          } -> Ordered;
@@ -105,9 +105,9 @@ class Table {
                     }
             }
             }catch(InvalidInputException e){
-                throw (new InvalidInputException(e.getMessage()));
+                e.printStackTrace();
                 }
-            
+
          } -> NothingOrdered;
          billForSeat(Order o, Seat s) / {
 
@@ -115,7 +115,7 @@ class Table {
             // another bill for the current order, then the seat is first removed from the other bill and if no seats
             // are left for the bill, the bill is deleted
             List<Bill> billsList = o.getBills();
-            Bill seatBill = s.getBill(numberOfBills() - 1);
+            Bill seatBill = s.getBill(s.numberOfBills() - 1);
 
             if (billsList.contains(seatBill)){
                 if(!seatBill.removeIssuedForSeat(s)){
@@ -134,7 +134,7 @@ class Table {
             // to be done; if the provided seat is already assigned to another bill for the current order, then the
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
 
-            Bill seatBill = s.getBill(numberOfBills() - 1);
+            Bill seatBill = s.getBill(s.numberOfBills() - 1);
             Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
             List<Bill> bills = lastOrder.getBills();
 
@@ -160,7 +160,7 @@ class Table {
          } -> Available;
       }
    }
-   
+
    // check that the provided quantity is an integer greater than 0
    private boolean quantityIsPositive(int quantity) {
 
@@ -183,14 +183,15 @@ class Table {
                return true;
           }
 
-          return false;
+
 
       }catch(InvalidInputException e){
-          throw (new InvalidInputException(e.getMessage()));
+          e.printStackTrace();
       }
+      return false;
    }
 
-   // check that all seats of the table have a bill that belongs to the current order of the table 
+   // check that all seats of the table have a bill that belongs to the current order of the table
    private boolean allSeatsBilled() {
 
       Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
@@ -202,14 +203,16 @@ class Table {
               List<Seat> sharedSeats = orderitem.getSeats();
               for (Seat seat : sharedSeats){
                 if(!seat.hasBills() || !bills.contains(seat.getBill(seat.numberOfBills() - 1))){
+                  System.out.println("Warning! All seats of a table must have a bill");
                   return false;
                 }
               }
             }
-            return true;
+
 
           } catch (InvalidInputException e){
-            throw (new InvalidInputException(e.getMessage()));
+            e.printStackTrace();
           }
+          return true;
    }
 }

@@ -11,6 +11,7 @@ import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
 import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.OrderItem;
+import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
 
 public class OrderPage extends JFrame {
@@ -102,9 +103,12 @@ public class OrderPage extends JFrame {
                                 int i = 1;
                                 for (OrderItem orderItem : orderItems) {
 
-                                    items.add(orderItem);
-                                    orderItemList.addItem(orderItem.getPricedMenuItem().getMenuItem().getName() + " " + i++);
+                                    List<Seat> orderItemSeats = orderItem.getSeats();
+                                    int numberOfSeats = orderItemSeats.size();
 
+                                    items.add(orderItem);
+                                    orderItemList.addItem(i++ + ". " + orderItem.getPricedMenuItem()
+                                            .getMenuItem().getName() + " (" + numberOfSeats + " seat(s))");
 
                                 }
 

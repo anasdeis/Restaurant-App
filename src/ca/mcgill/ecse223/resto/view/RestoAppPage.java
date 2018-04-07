@@ -15,10 +15,7 @@ import javax.swing.*;
 import ca.mcgill.ecse223.resto.application.RestoApplication;
 import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.controller.RestoAppController;
-import ca.mcgill.ecse223.resto.model.Order;
-import ca.mcgill.ecse223.resto.model.Reservation;
-import ca.mcgill.ecse223.resto.model.Seat;
-import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.*;
 
 public class RestoAppPage extends JFrame {
 
@@ -144,6 +141,7 @@ public class RestoAppPage extends JFrame {
 
     private JLabel seatsLabel;
     private JLabel selectedSeatsLabel;
+    private JLabel seatStatusLabel;
 
     private JComboBox<String> seatList;
     private JComboBox<String> selectedSeatsList;
@@ -241,6 +239,8 @@ public class RestoAppPage extends JFrame {
         // seats
         seatsLabel = new JLabel("Seats: ");
         selectedSeatsLabel = new JLabel("Selected Seats: ");
+        seatStatusLabel = new JLabel();
+        seatStatusLabel.setForeground(Color.red);
 
         seatList = new JComboBox<String>(new String[0]);
         selectedSeatsList = new JComboBox<String>(new String[0]);
@@ -319,13 +319,25 @@ public class RestoAppPage extends JFrame {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedSeatIndex = cb.getSelectedIndex();
-                //       List<Table> tables = RestoAppController.getTables();
+                List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
 
                 if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
+                    Table table = tables.get(selectedTableIndex);
+                    if (table.hasOrders() && currentOrders.contains(table.getOrder(table.numberOfOrders() - 1))) {
+                        List<Bill> bills = table.getOrder(table.numberOfOrders() - 1).getBills();
+                        Seat seat = seats.get(selectedSeatIndex);
+                        if (seat.hasBills() && bills.contains(seat.getBill(seat.numberOfBills() - 1))) {
+                            seatStatusLabel.setText("Billed");
+                        } else {
+                            seatStatusLabel.setText("Not billed");
+                        }
+                    }
                 } else {
                     refreshData();
                 }
+
             }
+
         });
 
         reservationList.addActionListener(new java.awt.event.ActionListener() {
@@ -355,8 +367,7 @@ public class RestoAppPage extends JFrame {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedOrderIndex = cb.getSelectedIndex();
 
-                if (selectedOrderIndex > -1) {
-
+                if (selectedOrderIndex != -1) {
                     Order order = orders.get(selectedOrderIndex);
                     orderDate.setText(order.getDate().toString() + " " + order.getTime().toString());
                 } else {
@@ -594,6 +605,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(endOrderButton))
 
                         .addGroup(layout.createParallelGroup()
+                                .addComponent(seatStatusLabel)
                                 .addComponent(addSeatButton)
                                 .addComponent(clearSeatButton)
                         )
@@ -618,7 +630,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(menuButton)
                                 .addComponent(seatsLabel)
                                 .addComponent(seatList)
-                                .addComponent(addSeatButton))
+                                .addComponent(seatStatusLabel))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(numberOfSeatsLabel)
@@ -628,7 +640,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(viewOrdersButton)
                                 .addComponent(selectedSeatsLabel)
                                 .addComponent(selectedSeatsList)
-                                .addComponent(clearSeatButton))
+                                .addComponent(addSeatButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(widthLabel)
@@ -637,7 +649,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(reservedStatusLabel)
                                 .addComponent(tableStatusLabel)
                                 .addComponent(categoryLabel)
-                                .addComponent(orderItemCategory))
+                                .addComponent(orderItemCategory)
+                                .addComponent(clearSeatButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(lengthLabel)
@@ -1045,6 +1058,7 @@ public class RestoAppPage extends JFrame {
             reservedStatusLabel.setText("Reservation Status:");
             tableStatusLabel.setText("Table Status: ");
 
+            seatStatusLabel.setText("");
             orderItemName.setText("");
             orderItemQuantityTextField.setText("");
             orderItemCategory.getItemAt(0);
@@ -1113,11 +1127,11 @@ public class RestoAppPage extends JFrame {
                 reservationDate.setText("No reservations");
             }
 
-            if (selectedTableIndex < 0) {
-                seatList.removeAllItems();
+            if(selectedTableIndex < 0) {
                 seats = new ArrayList<Seat>();
-                selectedSeatsList.removeAllItems();
+                seatList.removeAllItems();
                 selectedSeats = new ArrayList<Seat>();
+                selectedSeatsList.removeAllItems();
                 selectedTables = new ArrayList<Table>();
                 selectedTablesList.removeAllItems();
             }
@@ -1126,6 +1140,7 @@ public class RestoAppPage extends JFrame {
             reservationList.setSelectedIndex(selectedReservationIndex);
             ordersList.setSelectedIndex(selectedOrderIndex);
             seatList.setSelectedIndex(selectedSeatIndex);
+
         }
 
     }
