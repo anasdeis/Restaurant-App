@@ -147,20 +147,12 @@ public class RestoAppPage extends JFrame {
 
     private JComboBox<String> seatList;
     private JComboBox<String> selectedSeatsList;
-    private JComboBox<String> selectedSeatsListForBill;
 
     private List<Seat> seats;
     private List<Seat> selectedSeats;
 
     // Bill
-    private JButton addSeatToBillButton;
     private JButton issueBill;
-
-    private DefaultListModel<Seat> listModel = new DefaultListModel<>();
-    private JList<Seat> seatListToBeBilled = new JList<>(listModel);
-    private List<Seat> selectedSeatsToBill;
-    //**private List<Seat> selectedList;
-
 
     //User
     private JLabel userLabel;
@@ -253,7 +245,6 @@ public class RestoAppPage extends JFrame {
         seatList = new JComboBox<String>(new String[0]);
         selectedSeatsList = new JComboBox<String>(new String[0]);
         selectedTablesList = new JComboBox<String>(new String[0]);
-        selectedSeatsListForBill = new JComboBox<String>(new String[0]);
 
         //orderMenuItem
         categoryLabel = new JLabel("Category: ");
@@ -291,7 +282,6 @@ public class RestoAppPage extends JFrame {
                     List<Table> tables = RestoAppController.getTables();
                     for (Table table : tables) {
                         if (selectedTableNumber == table.getNumber()) {
-                            System.out.println("table size " + tables.size());
                             seats = new ArrayList<Seat>();
                             seatList.removeAllItems();
                             int seatIndex = 1;
@@ -435,12 +425,7 @@ public class RestoAppPage extends JFrame {
         issueBill = new JButton("Issue Bill");
         issueBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    billButtonActionPerformed(evt);
-                } catch (InvalidInputException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                issueBillButtonActionPerformed(evt);
             }
         });
 
@@ -490,13 +475,6 @@ public class RestoAppPage extends JFrame {
         addTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addTableButtonActionPerformed(evt);
-            }
-        });
-
-        addSeatToBillButton = new JButton("Add Seat To Bill");
-        addSeatToBillButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addSeatToBillButtonActionPerformed(evt);
             }
         });
 
@@ -601,7 +579,6 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(categoryLabel)
                                 .addComponent(orderItemLabel)
                                 .addComponent(orderItemQuantityLabel)
-                                .addComponent(addOrderItemButton)
                                 .addComponent(ordersLabel))
 
                         .addGroup(layout.createParallelGroup()
@@ -610,7 +587,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(orderItemCategory)
                                 .addComponent(orderItemName)
                                 .addComponent(orderItemQuantityTextField)
-                                .addComponent(selectedSeatsListForBill)
+                                .addComponent(addOrderItemButton)
+                                .addComponent(issueBill)
                                 .addComponent(ordersList)
                                 .addComponent(orderDate)
                                 .addComponent(endOrderButton))
@@ -618,8 +596,6 @@ public class RestoAppPage extends JFrame {
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(addSeatButton)
                                 .addComponent(clearSeatButton)
-                                .addComponent(addSeatToBillButton)
-                                .addComponent(issueBill)
                         )
                 )
         );
@@ -661,8 +637,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(reservedStatusLabel)
                                 .addComponent(tableStatusLabel)
                                 .addComponent(categoryLabel)
-                                .addComponent(orderItemCategory)
-                                .addComponent(addSeatToBillButton))
+                                .addComponent(orderItemCategory))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(lengthLabel)
@@ -688,14 +663,13 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(tableLocationYLabel)
                                 .addComponent(contactPhoneNumberLabel)
                                 .addComponent(contactPhoneNumberTextField)
-                                .addComponent(addOrderItemButton)
-                                .addComponent(selectedSeatsListForBill)
-                                .addComponent(issueBill))
+                                .addComponent(addOrderItemButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(createTableButton)
                                 .addComponent(numberInPartyLabel)
-                                .addComponent(numberInPartyTextField))
+                                .addComponent(numberInPartyTextField)
+                                .addComponent(issueBill))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(moveTableButton)
@@ -779,14 +753,11 @@ public class RestoAppPage extends JFrame {
 
         if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
             if (!selectedSeats.contains(seats.get(selectedSeatIndex))) {
-                System.out.println("list");
-                System.out.println("" + selectedSeatIndex);
                 selectedSeats.add(seats.get(selectedSeatIndex));
                 int seatNumber = selectedSeatIndex + 1;
                 selectedSeatsList.addItem("Table #" + selectedTableNumber + " ; Seat #" + seatNumber);
             }
         }
-        System.out.println("size " + selectedSeats.size());
         repaint();
     }
 
@@ -794,36 +765,12 @@ public class RestoAppPage extends JFrame {
 
         if (selectedTableIndex != -1) {
             if (!selectedTables.contains(tables.get(selectedTableIndex))) {
-                System.out.println("list");
-                System.out.println("index " + selectedTableIndex);
                 selectedTables.add(tables.get(selectedTableIndex));
                 selectedTablesList.addItem("Table #" + selectedTableNumber);
             }
         }
-        System.out.println("size " + selectedTables.size());
         repaint();
     }
-
-    protected void addSeatToBillButtonActionPerformed(ActionEvent evt) {
-        try {
-            selectedSeatsToBill = new ArrayList<>();
-            int selectedSeatIndexSel2 = 0;
-
-            if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
-                if (!(seats.get(selectedSeatIndex)).equals(selectedSeatsToBill.get(selectedSeatIndexSel2))) {
-                    selectedSeatsToBill.add(seats.get(selectedSeatIndex));
-                    selectedSeatsListForBill.addItem("Table" + selectedTableNumber + ", Seat" + selectedSeatIndex);
-                    listModel.addElement(RestoAppController.getSpecificSeat(tables.get(selectedTableIndex), selectedSeatIndex));
-                    selectedSeatIndexSel2++;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //refreshData();
-        repaint();
-    }
-
 
     protected void clearSeatButtonActionPerformed(ActionEvent evt) {
         selectedSeats = new ArrayList<Seat>();
@@ -850,7 +797,6 @@ public class RestoAppPage extends JFrame {
             List<Seat> seatsToOrder = new ArrayList<>();
             for (Seat aSeat : selectedSeats) {
                 seatsToOrder.add(aSeat);
-                System.out.println("seat");
             }
 
             try {
@@ -913,18 +859,6 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         new OrderPage();
-
-    }
-
-    protected void billButtonActionPerformed(ActionEvent evt) throws InvalidInputException {
-        List<Seat> seatList = new ArrayList<Seat>();
-        for (int i = 0; i < seatListToBeBilled.getModel().getSize(); i++) {
-            seatList.add(seatListToBeBilled.getModel().getElementAt(i));
-        }
-        //new MenuPage();
-
-        error = null;
-        new BillPage(seatList);
 
     }
 
@@ -1028,6 +962,24 @@ public class RestoAppPage extends JFrame {
         repaint();
     }
 
+    protected void issueBillButtonActionPerformed(ActionEvent evt) {
+        error = null;
+
+        if (selectedSeats.isEmpty()) {
+            error = "Select the tables first to start order";
+        } else {
+            try {
+
+                RestoAppController.issueBill(selectedSeats);
+
+            } catch (RuntimeException | InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+        refreshData();
+        repaint();
+    }
+
     //***
     //  protected void AddSeatToOrderItemButtonActionPerformed(ActionEvent evt) {
     //everytime pressed add to list selectedSeatsToOrderList
@@ -1093,8 +1045,6 @@ public class RestoAppPage extends JFrame {
             reservedStatusLabel.setText("Reservation Status:");
             tableStatusLabel.setText("Table Status: ");
 
-
-            selectedSeatsListForBill.removeAllItems();
             orderItemName.setText("");
             orderItemQuantityTextField.setText("");
             orderItemCategory.getItemAt(0);
@@ -1168,8 +1118,8 @@ public class RestoAppPage extends JFrame {
                 seats = new ArrayList<Seat>();
                 selectedSeatsList.removeAllItems();
                 selectedSeats = new ArrayList<Seat>();
-                selectedTablesList.removeAllItems();
                 selectedTables = new ArrayList<Table>();
+                selectedTablesList.removeAllItems();
             }
 
             tableList.setSelectedIndex(selectedTableIndex);
