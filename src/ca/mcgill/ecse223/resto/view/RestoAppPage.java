@@ -495,16 +495,14 @@ public class RestoAppPage extends JFrame {
                 orderButtonActionPerformed(evt);
             }
         });
-        /*
-         cancelSeatButton = new JButton("Cancel Seat");
-         cancelSeatButton.addActionListener(new java.awt.event.ActionListener() {
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
-         cancelSeatButtonActionPerformed(evt);
-         }
-         });
 
-         });
-*/
+        cancelSeatButton = new JButton("Cancel Seat");
+        cancelSeatButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cancelSeatButtonActionPerformed(evt);
+            }
+        });
+
 
         // horizontal line elements
         JSeparator horizontalLineTop = new JSeparator();
@@ -608,6 +606,7 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(seatStatusLabel)
                                 .addComponent(addSeatButton)
                                 .addComponent(clearSeatButton)
+                                .addComponent(cancelSeatButton)
                         )
                 )
         );
@@ -659,7 +658,8 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(contactNameLabel)
                                 .addComponent(contactNameTextField)
                                 .addComponent(orderItemLabel)
-                                .addComponent(orderItemName))
+                                .addComponent(orderItemName)
+                                .addComponent(cancelSeatButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(xLocationLabel)
@@ -730,17 +730,14 @@ public class RestoAppPage extends JFrame {
 
         error = null;
 
-        if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for creating!";
-        } else {
-            try {
-                RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()),
-                        Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()),
-                        Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
-            } catch (RuntimeException | InvalidInputException e) {
-                error = e.getMessage();
-            }
+        try {
+            RestoAppController.createTable(Integer.parseInt(numberOfSeatsTextField.getText()),
+                    Integer.parseInt(xLocationTextField.getText()), Integer.parseInt(yLocationTextField.getText()),
+                    Integer.parseInt(widthTextField.getText()), Integer.parseInt(lengthTextField.getText()));
+        } catch (RuntimeException | InvalidInputException e) {
+            error = e.getMessage();
         }
+
         refreshData();
         repaint();
     }
@@ -993,29 +990,24 @@ public class RestoAppPage extends JFrame {
         repaint();
     }
 
-    //***
-    //  protected void AddSeatToOrderItemButtonActionPerformed(ActionEvent evt) {
-    //everytime pressed add to list selectedSeatsToOrderList
-    //
-    //}
-    
-    /*
-     
-     protected void cancelSeatButtonActionPerformed(ActionEvent evt) {
-     
-     error = null;
-     
-     if (selectseat < 0){
-     error = "An seat must be specified for cancelling its order items. ";
-     }
-     
-     try{
-     RestoAppController.cancelOrderItemForSeat(seat);
-     } catch(InvalidInputException e){
-     error = e.getMessage();
-     }
-     }
-*/
+
+    protected void cancelSeatButtonActionPerformed(ActionEvent evt) {
+
+        error = null;
+
+        if (selectedSeatIndex < 0) {
+            error = "An seat must be specified for cancelling its order items. ";
+        }
+
+        try {
+            RestoAppController.cancelOrderItemForSeat(seats.get(selectedSeatIndex));
+        } catch (InvalidInputException e) {
+            error = e.getMessage();
+        }
+
+        refreshData();
+        repaint();
+    }
 
     private void refreshData() {
         // error
@@ -1127,7 +1119,7 @@ public class RestoAppPage extends JFrame {
                 reservationDate.setText("No reservations");
             }
 
-            if(selectedTableIndex < 0) {
+            if (selectedTableIndex < 0) {
                 seats = new ArrayList<Seat>();
                 seatList.removeAllItems();
                 selectedSeats = new ArrayList<Seat>();
