@@ -917,7 +917,7 @@ public class RestoAppPage extends JFrame {
 
         error = null;
 
-        if (selectedReservationIndex < 0 && selectedTableIndex < 0) {
+        if (selectedReservationIndex < 0 || selectedTableIndex < 0) {
             error = "A table and its reservation needs to be specified for deleting!";
         } else {
 
