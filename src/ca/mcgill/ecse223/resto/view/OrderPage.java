@@ -256,7 +256,7 @@ public class OrderPage extends JFrame {
         } else {
 
             try {
-                RestoAppController.cancelOrderItem(items.get(selectedItemIndex));
+                RestoAppController.cancelOrderItem(items.get(selectedItemIndex), selectedTable);
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -269,12 +269,13 @@ public class OrderPage extends JFrame {
 
         if (selectedTableIndex < 0) {
             error = "A table must be specified for cancelling its order items. ";
-        }
+        } else {
 
-        try {
-            RestoAppController.cancelOrder(selectedTable);
-        } catch (InvalidInputException e) {
-            error = e.getMessage();
+            try {
+                RestoAppController.cancelOrder(selectedTable);
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
         }
         refreshData();
     }
@@ -282,14 +283,15 @@ public class OrderPage extends JFrame {
     protected void cancelOrderButtonActionPerformed(ActionEvent evt) {
         error = null;
 
-        if (selectedOrderIndex < 0 || selectedTableIndex < 0) {
+        if (selectedOrderIndex < 0) {
             error = "An order and its corresponding table must be specified for cancelling its order items. ";
-        }
+        } else {
 
-        try {
-            RestoAppController.cancelOrder(orders.get(selectedOrderIndex));
-        } catch (InvalidInputException e) {
-            error = e.getMessage();
+            try {
+                RestoAppController.cancelOrder(orders.get(selectedOrderIndex));
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
         }
         refreshData();
     }

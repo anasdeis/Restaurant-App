@@ -323,15 +323,36 @@ public class RestoAppPage extends JFrame {
 
                 if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
                     Table table = tables.get(selectedTableIndex);
-                    if (table.hasOrders() && currentOrders.contains(table.getOrder(table.numberOfOrders() - 1))) {
-                        List<Bill> bills = table.getOrder(table.numberOfOrders() - 1).getBills();
-                        Seat seat = seats.get(selectedSeatIndex);
-                        if (seat.hasBills() && bills.contains(seat.getBill(seat.numberOfBills() - 1))) {
-                            seatStatusLabel.setText("Billed");
-                        } else {
-                            seatStatusLabel.setText("Not billed");
+                    Seat seat = seats.get(selectedSeatIndex);
+                    List<Order> currentOrdersList = RestoApplication.getRestoApp().getCurrentOrders();
+                    boolean current = false;
+
+                    if (seat.hasOrderItems()) {
+                        Order lastOrder = seat.getTable().getOrder(seat.getTable().numberOfOrders() - 1);
+                        if (currentOrdersList.contains(lastOrder)) {
+                            List<OrderItem> orderItems = seat.getOrderItems();
+                            for (OrderItem orderItem : orderItems) {
+                                Order order = orderItem.getOrder();
+                                if (lastOrder.equals(order)) {
+                                    current = true;
+                                    seatStatusLabel.setText("Occupied");
+                                }
+                            }
                         }
                     }
+
+                    if(!current){
+                        seatStatusLabel.setText("Vacant");
+                    }
+
+                    if (table.hasOrders() && currentOrders.contains(table.getOrder(table.numberOfOrders() - 1))) {
+                        List<Bill> bills = table.getOrder(table.numberOfOrders() - 1).getBills();
+
+                        if (seat.hasBills() && bills.contains(seat.getBill(seat.numberOfBills() - 1))) {
+                            seatStatusLabel.setText("Billed");
+                        }
+                    }
+
                 } else {
                     refreshData();
                 }
@@ -795,16 +816,19 @@ public class RestoAppPage extends JFrame {
     }
 
     protected void addOrderItemButtonActionPerformed(ActionEvent evt) {
-        error = null;
+        error = "";
 
         if (selectedSeats.isEmpty()) {
-            error = "Select seats first to order items";
+            error = "Select seats first to order items ";
+        }
+        if (orderItemCategory.getSelectedIndex() <= 0) {
+            error += "Select an item category";
         } else {
 
             String itemName = orderItemName.getText().trim();
             String itemCategory = (orderItemCategory.getItemAt(orderItemCategory.getSelectedIndex())).toString();
             String quantity = orderItemQuantityTextField.getText().trim();
-            List<Seat> seatsToOrder = new ArrayList<>();
+            List<Seat> seatsToOrder = new ArrayList<Seat>();
             for (Seat aSeat : selectedSeats) {
                 seatsToOrder.add(aSeat);
             }
@@ -976,7 +1000,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedSeats.isEmpty()) {
-            error = "Select the tables first to start order";
+            error = "Select the tables first to start issue bill";
         } else {
             try {
 
@@ -995,14 +1019,15 @@ public class RestoAppPage extends JFrame {
 
         error = null;
 
-        if (selectedSeatIndex < 0) {
-            error = "An seat must be specified for cancelling its order items. ";
-        }
+        if (selectedSeatIndex < 0 || selectedTableIndex < 0) {
+            error = "An seat and its table must be specified for cancelling its order items. ";
+        } else {
 
-        try {
-            RestoAppController.cancelOrderItemForSeat(seats.get(selectedSeatIndex));
-        } catch (InvalidInputException e) {
-            error = e.getMessage();
+            try {
+                RestoAppController.cancelOrderItemForSeat(seats.get(selectedSeatIndex));
+            } catch (InvalidInputException e) {
+                error = e.getMessage();
+            }
         }
 
         refreshData();
