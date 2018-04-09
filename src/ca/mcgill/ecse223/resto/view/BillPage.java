@@ -16,135 +16,102 @@ import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.Seat;
 
 public class BillPage extends JFrame {
-	private String error = null;
+    private String error = null;
     private JLabel errorMessage;
     private JComboBox<String> orderItemList;
     private JComboBox<String> orderList;
-
+    
     private JLabel orderItemsLabel;
-    private JLabel orderItemDetailsLabel;
+    private JLabel totalLabel;
+    //private JLabel orderItemDetailsLabel;
     
     public BillPage() {
-    	 setTitle("Bills");
-         getContentPane().setLayout(null);
-         setSize(453, 394);
-
-         orderItemList = new JComboBox<String>();
-         orderItemsLabel = new JLabel("Order Item(s): ");
-         orderItemDetailsLabel = new JLabel("Order Item details");
-         errorMessage = new JLabel();
-         errorMessage.setForeground(Color.RED);
-
-    	 error = null;
-         orderItemList.removeAllItems();
-         GroupLayout layout = new GroupLayout(getContentPane());
-         getContentPane().setLayout(layout);
-         layout.setAutoCreateGaps(true);
-         layout.setAutoCreateContainerGaps(true);
-         layout.setHorizontalGroup(layout.createParallelGroup()
-                 .addGroup(layout.createSequentialGroup()
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(errorMessage))
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(orderItemsLabel)
-                                 .addComponent(orderItemDetailsLabel)      
-                         )
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(orderItemList)   
-                         )
-                 )
-         );
-         
-         layout.setVerticalGroup(layout.createParallelGroup()
-
-                 .addGroup(layout.createSequentialGroup()
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(errorMessage)
-                                 .addComponent(orderItemsLabel)
-                                 .addComponent(orderItemList)
-                         )
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(orderItemDetailsLabel)
-                         )
-                         ));
-         pack();
-         setVisible(true);
-         
-       
-
-
-         refreshData();
-         
+        
     }
     
     public BillPage(List<Seat> selectedSeats) throws InvalidInputException {
-    	 setTitle("Bills");
-         getContentPane().setLayout(null);
-         setSize(453, 394);
-
-         orderItemList = new JComboBox<String>();
-         orderItemsLabel = new JLabel("Order Item(s): ");
-         orderItemDetailsLabel = new JLabel("Order Item details");
-         errorMessage = new JLabel();
-         errorMessage.setForeground(Color.RED);
-
-    	 error = null;
-         orderItemList.removeAllItems();
-		  int i = 1;
-		  for (Seat seat : selectedSeats) {
-		       for (Bill bill : seat.getBills()) {
-		           for (OrderItem item : bill.getOrder().getOrderItems()) {
-		             	orderItemList.addItem(i++ + ". " + item.getPricedMenuItem()
-		                .getMenuItem().getName()  + " , Quantity: " + item.getQuantity() + " , Price: " + item.getPricedMenuItem().getPrice());
-		           
-		           }
-		             	}
-		             }
-         
-         
-         GroupLayout layout = new GroupLayout(getContentPane());
-         getContentPane().setLayout(layout);
-         layout.setAutoCreateGaps(true);
-         layout.setAutoCreateContainerGaps(true);
-         layout.setHorizontalGroup(layout.createParallelGroup()
-                 .addGroup(layout.createSequentialGroup()
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(errorMessage))
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(orderItemsLabel)    
-                         )
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(orderItemList)   
-                         )
-                 )
-         );
-         
-         layout.setVerticalGroup(layout.createParallelGroup()
-
-                 .addGroup(layout.createSequentialGroup()
-                         .addGroup(layout.createParallelGroup()
-                                 .addComponent(errorMessage)
-                                 .addComponent(orderItemsLabel)
-                                 .addComponent(orderItemList)
-                         )
-                         ));
-         pack();
-     
-         setVisible(true);
-       
-         refreshData();
-         
-     }
-
+        setTitle("Bills");
+        getContentPane().setLayout(null);
+        setSize(453, 394);
+        double total = 0;
+        
+        orderItemList = new JComboBox<String>();
+        orderItemsLabel = new JLabel("Order Item(s): ");
+        totalLabel = new JLabel("Total: ");
+        errorMessage = new JLabel();
+        errorMessage.setForeground(Color.RED);
+        
+        error = null;
+        orderItemList.removeAllItems();
+        int i = 1;
+        /*
+         for (Seat seat : selectedSeats) {
+         for (Bill bill : seat.getBills()) {
+         for (OrderItem item : bill.getOrder().getOrderItems()) {
+         orderItemList.addItem(i++ + ". " + item.getPricedMenuItem()
+         .getMenuItem().getName()  + " , Quantity: " + item.getQuantity() + " , Price: " + item.getPricedMenuItem().getPrice());
+         }
+         */
+        for (Seat seat : selectedSeats) {
+            for (OrderItem item : seat.getOrderItems()) {
+                orderItemList.addItem(i++ + ". " + item.getPricedMenuItem()
+                                      .getMenuItem().getName()  + " , Quantity: " + item.getQuantity() + " , Price: $" + item.getPricedMenuItem().getPrice());
+                total = total + item.getQuantity() * item.getPricedMenuItem().getPrice();
+                
+            }
+        }
+        totalLabel.setText("Total: $" + total);
+        
+        
+        
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
+        layout.setHorizontalGroup(layout.createParallelGroup()
+                                  .addGroup(layout.createSequentialGroup()
+                                            .addGroup(layout.createParallelGroup()
+                                                      .addComponent(errorMessage))
+                                            .addGroup(layout.createParallelGroup()
+                                                      .addComponent(orderItemsLabel)
+                                                      .addComponent(totalLabel)
+                                                      )
+                                            .addGroup(layout.createParallelGroup()
+                                                      .addComponent(orderItemList)
+                                                      )
+                                            )
+                                  );
+        
+        layout.setVerticalGroup(layout.createParallelGroup()
+                                
+                                .addGroup(layout.createSequentialGroup()
+                                          .addGroup(layout.createParallelGroup()
+                                                    .addComponent(errorMessage))
+                                          .addGroup(layout.createParallelGroup()
+                                                    .addComponent(orderItemsLabel)
+                                                    .addComponent(orderItemList)
+                                                    )
+                                          .addGroup(layout.createParallelGroup()
+                                                    .addComponent(totalLabel)
+                                                    )));
+        pack();
+        
+        setVisible(true);
+        
+        refreshData();
+        
+    }
+    
     
     protected void refreshData() {
         errorMessage.setText(error);
         if (error == null || error.length() == 0) {
+            //totalLabel.setText("Total: ");
             orderList.removeAllItems();
             
         }
         pack();
     }
-
+    
 }
 
