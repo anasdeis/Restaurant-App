@@ -457,7 +457,12 @@ public class RestoAppPage extends JFrame {
         issueBill = new JButton("Issue Bill");
         issueBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                issueBillButtonActionPerformed(evt);
+                try {
+                    issueBillButtonActionPerformed(evt);
+                } catch (InvalidInputException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -996,16 +1001,30 @@ public class RestoAppPage extends JFrame {
         repaint();
     }
 
-    protected void issueBillButtonActionPerformed(ActionEvent evt) {
+    protected void issueBillButtonActionPerformed(ActionEvent evt) throws InvalidInputException {
         error = null;
-
+        
         if (selectedSeats.isEmpty()) {
             error = "Select the tables first to start issue bill";
         } else {
             try {
-
                 RestoAppController.issueBill(selectedSeats);
-
+                /*
+                 for (Seat seat : selectedSeats) {
+                 System.out.println("Seats: ");
+                 System.out.println(seat.toString());
+                 for (Bill bill : seat.getBills()) {
+                 System.out.println("Bill of each seat: ");
+                 System.out.println(bill.toString());
+                 for (OrderItem item : bill.getOrder().getOrderItems()) {
+                 System.out.println("seat of order item: ");
+                 System.out.println(item.getSeats());
+                 }
+                 }
+                 }
+                 */
+                new BillPage(selectedSeats);
+                
             } catch (RuntimeException | InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -1013,8 +1032,6 @@ public class RestoAppPage extends JFrame {
         refreshData();
         repaint();
     }
-
-
     protected void cancelSeatButtonActionPerformed(ActionEvent evt) {
 
         error = null;
