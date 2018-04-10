@@ -108,7 +108,7 @@ public class OrderPage extends JFrame {
 
                                     items.add(orderItem);
                                     orderItemList.addItem(i++ + ". " + orderItem.getPricedMenuItem()
-                                            .getMenuItem().getName() + " â€” " + numberOfSeats + " seat(s)");
+                                            .getMenuItem().getName() + " — " + numberOfSeats + " seat(s)");
 
                                 }
 
@@ -150,7 +150,7 @@ public class OrderPage extends JFrame {
 
                 if (selectedOrderIndex != -1) {
                     Order order = orders.get(selectedOrderIndex);
-                    orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
+                    orderDateLabel.setText(order.getDate().toString() + " — " + order.getTime().toString());
                 } else {
                     refreshData();
                 }
@@ -326,7 +326,7 @@ public class OrderPage extends JFrame {
                     list.add(table.getNumber());
                 }
                 orders.add(order);
-                orderList.addItem("Order #" + (order.getNumber()) + " â€” Table(s): " + list.toString());
+                orderList.addItem("Order #" + (order.getNumber()) + " - Table(s): " + list.toString());
             }
 
             if (orders.isEmpty() || orders == null) {
