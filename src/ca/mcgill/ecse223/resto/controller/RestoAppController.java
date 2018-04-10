@@ -981,10 +981,18 @@ public class RestoAppController {
                 }
             }
         }
-
         if (menuItem == null) {
             error += "Please enter a valid menu item to order";
+            throw new InvalidInputException(error);
         }
+    
+        if(itemCategory.toString() != "") {
+  			if(!menuItem.getItemCategory().toString().equals(itemCategory.replaceAll("\\s", ""))) {
+  				throw new InvalidInputException(itemName + " is in "+ menuItem.getItemCategory().toString());
+  			}
+    	}
+        
+       
 
         if (seats == null || seats.isEmpty()) {
             error += "Please enter the seats to order for";

@@ -1199,7 +1199,7 @@ public class RestoAppPage extends JFrame {
                     list.add(table.getNumber());
                 }
                 orders.add(order);
-                ordersList.addItem("Order #" + order.getNumber() + " â€” Table(s): " + list.toString());
+                ordersList.addItem("Order #" + order.getNumber() + " – Table(s): " + list.toString());
             }
 
             if (orders.isEmpty() || orders == null) {
@@ -1232,7 +1232,7 @@ public class RestoAppPage extends JFrame {
                             list.add(table.getNumber());
                         }
                         reservations.add(reservation);
-                        reservationList.addItem("Reservation #" + reservationIndex++ + " â€” Table(s) " + list.toString());
+                        reservationList.addItem("Reservation #" + reservationIndex++ + " – Table(s) " + list.toString());
                     }
                 }
             }
