@@ -245,7 +245,7 @@ public class RestoAppPage extends JFrame {
 
         // Waiter
         userLabel = new JLabel("User: ");
-        userNameLabel = new JLabel(RestoAppController.getCurrentUser());
+        userNameLabel = new JLabel();
         userNameLabel.setForeground(Color.BLUE);
         waiterNameLabel = new JLabel("Waiter Name: ");
         waiterEmailAddressLabel = new JLabel ("Waiter Email Address: ");
@@ -273,8 +273,6 @@ public class RestoAppPage extends JFrame {
 		        selectedWaiterIndex = cb.getSelectedIndex();
 			}
 		});
-        
-        
         
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -799,6 +797,7 @@ public class RestoAppPage extends JFrame {
                         		.addComponent(loginWaiterButton))
                         .addGroup(layout.createParallelGroup()
                         		.addComponent(addWaiterButton))
+                        .addGroup(layout.createParallelGroup())
 
                         .addComponent(horizontalLineBottom)
 
@@ -1229,6 +1228,9 @@ public class RestoAppPage extends JFrame {
             	RestoAppController.login(waiter);
             }
         }
+        
+        userNameLabel.setText(RestoAppController.getCurrentUser());
+        
     	refreshData();
     	repaint();
     }
@@ -1293,9 +1295,9 @@ public class RestoAppPage extends JFrame {
             }
             
             waiterList.removeAllItems();
-//            for (Waiter waiter : RestoAppController.getWaiters()) {
-//                waiterList.addItem(waiter.getWaiterName());
-//            }
+            for (Waiter waiter : RestoAppController.getWaiters()) {
+                waiterList.addItem(waiter.getWaiterName());
+            }
 
 			selectedWaiterIndex = -1;
             waiterList.setSelectedIndex(selectedWaiterIndex);
