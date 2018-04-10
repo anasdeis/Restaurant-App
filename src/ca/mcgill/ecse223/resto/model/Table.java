@@ -302,10 +302,9 @@ public class Table implements Serializable {
                     // removed from the order item
                     List<Seat> sharedSeats = i.getSeats();
                     List<Seat> copyOfSeats = new ArrayList<Seat>(sharedSeats);
-                    List<Seat> currentTableSeats = this.getCurrentSeats();
 
                     for (Seat seat : copyOfSeats) {
-                        if (currentTableSeats.contains(seat)) {
+                        if (this.getCurrentSeats().contains(seat)) {
                             if (!i.removeSeat(seat)) {
                                 if (i.numberOfSeats() == 1) {
                                     i.delete();
@@ -325,10 +324,9 @@ public class Table implements Serializable {
                     // removed from the order item
                     List<Seat> sharedSeatsList = i.getSeats();
                     List<Seat> copyOfSeatsList = new ArrayList<Seat>(sharedSeatsList);
-                    List<Seat> currentTableSeatsList = this.getCurrentSeats();
 
                     for (Seat seat : copyOfSeatsList) {
-                        if (currentTableSeatsList.contains(seat)) {
+                        if (this.getCurrentSeats().contains(seat)) {
                             if (!i.removeSeat(seat)) {
                                 if (i.numberOfSeats() == 1) {
                                     i.delete();
@@ -360,15 +358,13 @@ public class Table implements Serializable {
                 // delete all order items of the table (if an order item is shared, then only the seat(s) of this table are
                 // removed from the order item
 
-                List<Seat> currentTableSeats = this.getCurrentSeats();
-
                 try {
                     List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
                     for (OrderItem orderitem : orderItemsList) {
                         List<Seat> sharedSeats = orderitem.getSeats();
                         List<Seat> copyOfSeats = new ArrayList<Seat>(sharedSeats);
                         for (Seat seat : copyOfSeats) {
-                            if (currentTableSeats.contains(seat)) {
+                            if (this.getCurrentSeats().contains(seat)) {
                                 if (!orderitem.removeSeat(seat)) {
                                     if (orderitem.numberOfSeats() == 1) {
                                         orderitem.delete();
@@ -403,10 +399,9 @@ public class Table implements Serializable {
                 // another bill for the current order, then the seat is first removed from the other bill and if no seats
                 // are left for the bill, the bill is deleted
 
-                List<Bill> billsList = o.getBills();
                 if (s.hasBills()) {
                     Bill seatBill = s.getBill(s.numberOfBills() - 1);
-                    if (billsList.contains(seatBill)) {
+                    while (o.getBills().contains(seatBill)) {
                         if (!seatBill.removeIssuedForSeat(s)) {
                             if (seatBill.numberOfIssuedForSeats() == 1) {
                                 seatBill.delete();
@@ -444,8 +439,8 @@ public class Table implements Serializable {
                     Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
                     List<Bill> bills = lastOrder.getBills();
 
-                    if (!seatBill.equals(b)) {
-                        if (bills.contains(seatBill)) {
+                    if (!s.getBills().equals(b)) {
+                        while (bills.contains(seatBill)) {
                             if (!seatBill.removeIssuedForSeat(s)) {
                                 if (seatBill.numberOfIssuedForSeats() == 1) {
                                     seatBill.delete();

@@ -322,13 +322,13 @@ public class RestoAppPage extends JFrame {
                 List<Order> currentOrders = RestoApplication.getRestoApp().getCurrentOrders();
 
                 if (selectedSeatIndex != -1 && selectedTableIndex != -1) {
-                    Table table = tables.get(selectedTableIndex);
                     Seat seat = seats.get(selectedSeatIndex);
+                    Table table = seat.getTable();
                     List<Order> currentOrdersList = RestoApplication.getRestoApp().getCurrentOrders();
                     boolean current = false;
 
                     if (seat.hasOrderItems()) {
-                        Order lastOrder = seat.getTable().getOrder(seat.getTable().numberOfOrders() - 1);
+                        Order lastOrder = table.getOrder(table.numberOfOrders() - 1);
                         if (currentOrdersList.contains(lastOrder)) {
                             List<OrderItem> orderItems = seat.getOrderItems();
                             for (OrderItem orderItem : orderItems) {
@@ -1005,26 +1005,11 @@ public class RestoAppPage extends JFrame {
         error = null;
         
         if (selectedSeats.isEmpty()) {
-            error = "Select the tables first to start issue bill";
+            error = "Select the tables first to issue bill";
         } else {
             try {
                 RestoAppController.issueBill(selectedSeats);
-                /*
-                 for (Seat seat : selectedSeats) {
-                 System.out.println("Seats: ");
-                 System.out.println(seat.toString());
-                 for (Bill bill : seat.getBills()) {
-                 System.out.println("Bill of each seat: ");
-                 System.out.println(bill.toString());
-                 for (OrderItem item : bill.getOrder().getOrderItems()) {
-                 System.out.println("seat of order item: ");
-                 System.out.println(item.getSeats());
-                 }
-                 }
-                 }
-                 */
                 new BillPage(selectedSeats);
-                
             } catch (RuntimeException | InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -1095,7 +1080,7 @@ public class RestoAppPage extends JFrame {
             seatStatusLabel.setText("");
             orderItemName.setText("");
             orderItemQuantityTextField.setText("");
-            orderItemCategory.getItemAt(0);
+            orderItemCategory.setSelectedIndex(0);
             // select table - also combo box for table visualization
             tables = new ArrayList<Table>();
             tableList.removeAllItems();
@@ -1118,7 +1103,7 @@ public class RestoAppPage extends JFrame {
                     list.add(table.getNumber());
                 }
                 orders.add(order);
-                ordersList.addItem("Order #" + order.getNumber() + " ; Table(s): " + list.toString());
+                ordersList.addItem("Order #" + order.getNumber() + " — Table(s): " + list.toString());
             }
 
             if (orders.isEmpty() || orders == null) {

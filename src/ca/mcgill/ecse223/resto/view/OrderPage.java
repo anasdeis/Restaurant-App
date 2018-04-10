@@ -108,7 +108,7 @@ public class OrderPage extends JFrame {
 
                                     items.add(orderItem);
                                     orderItemList.addItem(i++ + ". " + orderItem.getPricedMenuItem()
-                                            .getMenuItem().getName() + " (" + numberOfSeats + " seat(s))");
+                                            .getMenuItem().getName() + " — " + numberOfSeats + " seat(s)");
 
                                 }
 
@@ -256,7 +256,7 @@ public class OrderPage extends JFrame {
         } else {
 
             try {
-                RestoAppController.cancelOrderItem(items.get(selectedItemIndex), selectedTable);
+                RestoAppController.cancelOrderItem(items.get(selectedItemIndex));
             } catch (InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -326,7 +326,7 @@ public class OrderPage extends JFrame {
                     list.add(table.getNumber());
                 }
                 orders.add(order);
-                orderList.addItem("Order #" + (order.getNumber()) + " ; Table(s): " + list.toString());
+                orderList.addItem("Order #" + (order.getNumber()) + " — Table(s): " + list.toString());
             }
 
             if (orders.isEmpty() || orders == null) {
