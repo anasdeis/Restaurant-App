@@ -1136,7 +1136,7 @@ public class RestoAppPage extends JFrame {
                             list.add(table.getNumber());
                         }
                         reservations.add(reservation);
-                        reservationList.addItem("Reservation #" + reservationIndex++ + " ; Table(s) " + list.toString());
+                        reservationList.addItem("Reservation #" + reservationIndex++ + " — Table(s) " + list.toString());
                     }
                 }
             }

@@ -51,7 +51,7 @@ public class BillPage extends JFrame {
                 Order itemorder = item.getOrder();
                 if (itemorder.equals(order)) {
                     orderItemList.addItem(i++ + ". " + item.getPricedMenuItem()
-                            .getMenuItem().getName() + " , Quantity: " + item.getQuantity() + " , Price: $"
+                            .getMenuItem().getName() + " — Quantity: " + item.getQuantity() + " — Price: $"
                             + item.getPricedMenuItem().getPrice());
                     total = total + item.getQuantity() * item.getPricedMenuItem().getPrice();
                 }

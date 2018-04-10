@@ -1,8 +1,13 @@
 package ca.mcgill.ecse223.resto.application;
 
+import ca.mcgill.ecse223.resto.model.Reservation;
 import ca.mcgill.ecse223.resto.model.RestoApp;
 import ca.mcgill.ecse223.resto.persistence.PersistenceObjectStream;
 import ca.mcgill.ecse223.resto.view.RestoAppPage;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class RestoApplication {
 
@@ -39,11 +44,16 @@ public class RestoApplication {
 	public static RestoApp load() {
 		PersistenceObjectStream.setFilename(filename);
 		ra = (RestoApp) PersistenceObjectStream.deserialize();
+		List<Reservation> reservations = new ArrayList<Reservation>(ra.getReservations());
+
+		for(Reservation reservation: reservations){
+			if(reservation.getDate().getTime() < Calendar.getInstance().getTime().getTime()){
+				reservation.delete();
+			}
+		}
 
 		if (ra == null) {
 			ra = new RestoApp();
-		} else {
-			//ra.reinitialize();
 		}
 
 		return ra;
