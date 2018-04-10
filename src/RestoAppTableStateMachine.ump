@@ -8,9 +8,9 @@ class Table {
          addToOrder(Order o) / {
             boolean success = o.addTable(this);
             if (!success){
-                System.out.println("Warning! Cannot start an order for table #" + this.getNumber() + " at the moment. ");
+                System.out.println("Warning! Failed to add table #" + this.getNumber() + " to order. ");
             }
-         } -> NothingOrdered; 
+         } -> NothingOrdered;
       }
       NothingOrdered {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
@@ -21,13 +21,15 @@ class Table {
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
             boolean isAdded = i.addSeat(s);
             if (!isAdded){
-                System.out.println("Warning! This orderItem has already been added. ");
+                System.out.println("Warning! This orderItem has already been added to specified seat. ");
             }
          } -> Ordered;
          endOrder(Order o) / {
             if (!o.removeTable(this)) {
                if (o.numberOfTables() == 1) {
                   o.delete();
+               } else {
+                      System.out.println("Warning! Failed to end order for table #" + this.getNumber());
                }
             }
          } -> Available;
@@ -36,61 +38,138 @@ class Table {
          orderItem(int quantity, Order o, Seat s, PricedMenuItem i) [quantityIsPositive(quantity)] / {
             // create a new order item with the provided quantity, order, seat, and priced menu item
             new OrderItem(quantity, i, o, s);
-         } -> Ordered; 
+         } -> Ordered;
          addToOrderItem(OrderItem i, Seat s) / {
             // add provided seat to provided order item unless seat has already been added, in which case nothing needs to be done
-            boolean isAdded1 = i.addSeat(s);
-            if (!isAdded1){
-                System.out.println("Warning! This orderItem has already been added. ");
+            boolean wasAdded = i.addSeat(s);
+            if (!wasAdded){
+                System.out.println("Warning! This orderItem has already been added to specified seat. ");
             }
          } -> Ordered;
          cancelOrderItem(OrderItem i) [iIsLastItem(i)] / {
-            // delete order item
-            i.delete();
+            // delete order item unless the order item is shared in which case only the seat(s) of this table are
+            // removed from the order item
+                List<Seat> sharedSeats = i.getSeats();
+                List<Seat> copyOfSeats = new ArrayList<Seat>(sharedSeats);
+
+                for(Seat seat : copyOfSeats) {
+                  if (this.getCurrentSeats().contains(seat)) {
+                    if (!i.removeSeat(seat)) {
+                      if (i.numberOfSeats() == 1) {
+                        i.delete();
+                      } else {
+                       System.out.println("Warning! Failed in removing a seat from the order item");
+                    }
+                  }
+                }
+               }
          } -> NothingOrdered;
          cancelOrderItem(OrderItem i) [!iIsLastItem(i)] / {
-            // delete order item
-            i.delete();
+            // delete order item unless the order item is shared in which case only the seat(s) of this table are
+            // removed from the order item
+                List<Seat> sharedSeatsList = i.getSeats();
+                List<Seat> copyOfSeatsList = new ArrayList<Seat>(sharedSeatsList);
+
+                for(Seat seat : copyOfSeatsList) {
+                  if (this.getCurrentSeats().contains(seat)) {
+                    if (!i.removeSeat(seat)) {
+                      if (i.numberOfSeats() == 1) {
+                        i.delete();
+                      } else {
+                          System.out.println("Warning! Failed in removing a seat from the order item");
+                    }
+                  }
+                }
+               }
          } -> Ordered;
          cancelOrder() / {
-            // delete all order items of the table
-            try {
-            List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
-            for(OrderItem orderitem : orderItemsList){
-                orderitem.delete();
-            }
+            // delete all order items of the table (if an order item is shared, then only the seat(s) of this table are
+            // removed from the order item
+
+                            try {
+                                List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+                                for (OrderItem orderitem : orderItemsList) {
+                                    List<Seat> sharedSeats = orderitem.getSeats();
+                                    List<Seat> copyOfSeats = new ArrayList<Seat>(sharedSeats);
+                                    for (Seat seat : copyOfSeats) {
+                                        if (this.getCurrentSeats().contains(seat)) {
+                                            if (!orderitem.removeSeat(seat)) {
+                                                if (orderitem.numberOfSeats() == 1) {
+                                                    orderitem.delete();
+                                                } else {
+                                                    System.out.println("Warning! Failed in removing a seat from an order item");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
             }catch(InvalidInputException e){
-                throw (new InvalidInputException(e.getMessage()));
+                e.printStackTrace();
                 }
-            
+
          } -> NothingOrdered;
          billForSeat(Order o, Seat s) / {
-         // TODO
+
             // create a new bill with the provided order and seat; if the provided seat is already assigned to
             // another bill for the current order, then the seat is first removed from the other bill and if no seats
             // are left for the bill, the bill is deleted
+
+                            if (s.hasBills()) {
+                                Bill seatBill = s.getBill(s.numberOfBills() - 1);
+                                while (o.getBills().contains(seatBill)) {
+                                    if (!seatBill.removeIssuedForSeat(s)) {
+                                        if (seatBill.numberOfIssuedForSeats() == 1) {
+                                            seatBill.delete();
+                                        } else {
+                                            System.out.println("Warning! The provided seat failed to remove a bill.");
+                                        }
+                                    }
+                                }
+                            }
+
+            new Bill(o, this.getRestoApp(), s);
          } -> Ordered;
          addToBill(Bill b, Seat s) / {
-         // TODO
             // add provided seat to provided bill unless seat has already been added, in which case nothing needs
             // to be done; if the provided seat is already assigned to another bill for the current order, then the
             // seat is first removed from the other bill and if no seats are left for the bill, the bill is deleted
+
+            if (s.hasBills()) {
+                                Bill seatBill = s.getBill(s.numberOfBills() - 1);
+                                Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
+                                List<Bill> bills = lastOrder.getBills();
+
+                                if (!s.getBills().contains(b)) {
+                                    while (bills.contains(seatBill)) {
+                                        if (!seatBill.removeIssuedForSeat(s)) {
+                                            if (seatBill.numberOfIssuedForSeats() == 1) {
+                                                seatBill.delete();
+                                            } else {
+                                                System.out.println("Warning! The provided seat failed to remove a bill.");
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+             boolean success = s.addBill(b);
+             if (!success){
+                 System.out.println("Warning! Failed to add provided seat to provided bill. ");
+             }
          } -> Ordered;
          endOrder(Order o) [allSeatsBilled()] / {
          } -> Available;
       }
    }
-   
+
    // check that the provided quantity is an integer greater than 0
    private boolean quantityIsPositive(int quantity) {
 
       if (quantity > 0){
         return true;
-
-      } else {
-      return false;
-
       }
+
+      return false;
    }
 
    // check that the provided order item is the last item of the current order of the table
@@ -98,27 +177,39 @@ class Table {
 
       try {
           List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+
           if (orderItemsList.size() == 1){
-          return true;
-      }
+               return true;
+          }
+
       }catch(InvalidInputException e){
-          throw (new InvalidInputException(e.getMessage()));
+          e.printStackTrace();
       }
-
-     
-
       return false;
    }
 
-   // check that all seats of the table have a bill that belongs to the current order of the table 
+   // check that all seats of the table have a bill that belongs to the current order of the table
    private boolean allSeatsBilled() {
 
-      List<Seat> currentSeats = this.getCurrentSeats();
       Order lastOrder = this.getOrder(this.numberOfOrders() - 1);
-      if(lastOrder.numberOfBills() == currentSeats.size()){
-          return true;
-      }
+      List<Bill> bills = lastOrder.getBills();
 
-      return false;
+           try {
+                       List<OrderItem> orderItemsList = RestoAppController.getOrderItems(this);
+                       for (OrderItem orderitem : orderItemsList) {
+                           List<Seat> sharedSeats = orderitem.getSeats();
+                           for (Seat seat : sharedSeats) {
+                               if (!seat.hasBills() || !bills.contains(seat.getBill(seat.numberOfBills() - 1))) {
+                                   System.out.println("Warning! All occupied seats of table #" + this.getNumber() + "" +
+                                           " must have a bill");
+                                   return false;
+                               }
+                           }
+                       }
+
+          } catch (InvalidInputException e){
+            e.printStackTrace();
+          }
+          return true;
    }
 }

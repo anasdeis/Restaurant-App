@@ -1,5 +1,6 @@
 package ca.mcgill.ecse223.resto.view;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.JDialog;
@@ -60,7 +61,8 @@ public class MenuDisplay extends JFrame {
 
 			if (currentPMI != null) {
 				double price = currentPMI.getPrice();
-				currentItems.add(name + ": " + price);
+				DecimalFormat df = new DecimalFormat("####0.00");
+				currentItems.add(name + ": " + df.format(price));
 			} else { // if the PriceMenuItem is null, this item is discontinued and is no longer on
 						// the current menu
 				// discontinuedItems.add(name);
