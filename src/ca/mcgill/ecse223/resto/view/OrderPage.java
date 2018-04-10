@@ -45,6 +45,11 @@ public class OrderPage extends JFrame {
 
     private List<Order> orders;
     private List<OrderItem> items;
+    
+    // Waiter
+    private JLabel assignedWaiterLabel;
+    private JButton assignWaiterButton;
+
 
     JSeparator horizontalLineTop = new JSeparator();
     JSeparator horizontalLineBottom = new JSeparator();
@@ -147,13 +152,24 @@ public class OrderPage extends JFrame {
 
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedOrderIndex = cb.getSelectedIndex();
-
+                
                 if (selectedOrderIndex != -1) {
-                    Order order = orders.get(selectedOrderIndex);
+                	
+                    try {
+                        Order order = orders.get(selectedOrderIndex);
+    					assignedWaiterLabel.setText("Assigned Waiter : " + RestoAppController.getOrdersWaiter(order));
+    				} catch (InvalidInputException e) {
+    					error = e.getMessage();
+    				}
+                	
+                	Order order = orders.get(selectedOrderIndex);
+                    orders.get(selectedOrderIndex);
                     orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
                 } else {
                     refreshData();
                 }
+                
+                refreshData();
             }
         });
 
@@ -173,6 +189,14 @@ public class OrderPage extends JFrame {
         cancelOrderButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelOrderButtonActionPerformed(evt);
+            }
+        });
+        
+        assignedWaiterLabel = new JLabel("Assigned Waiter: ");
+        assignWaiterButton = new JButton("Assign Waiter");
+        assignWaiterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assignWaiterButtonActionPerformed(evt);
             }
         });
 
@@ -203,10 +227,12 @@ public class OrderPage extends JFrame {
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(cancelItemButton)
-                                .addComponent(orderDateLabel)
                                 .addComponent(orderList)
                                 .addComponent(cancelOrderButton)
-                        )
+                                .addComponent(orderDateLabel)
+                                .addComponent(assignWaiterButton)
+                                .addComponent(assignedWaiterLabel)
+                        )                       
                 )
         );
 
@@ -243,7 +269,12 @@ public class OrderPage extends JFrame {
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(cancelOrderButton)
-                        )));
+                        )
+                        .addGroup(layout.createParallelGroup())
+                        		.addComponent(assignWaiterButton)
+                        .addGroup(layout.createParallelGroup())
+                        		.addComponent(assignedWaiterLabel)
+                		));
         pack();
     }
 
@@ -294,6 +325,13 @@ public class OrderPage extends JFrame {
             }
         }
         refreshData();
+    }
+    
+    protected void assignWaiterButtonActionPerformed(ActionEvent evt) {
+
+    	
+    	RestoAppController.assignWaiter(orders.get(selectedOrderIndex));
+    	refreshData();
     }
 
     protected void refreshData() {
