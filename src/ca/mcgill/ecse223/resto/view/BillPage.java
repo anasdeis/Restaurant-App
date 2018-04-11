@@ -3,15 +3,13 @@ package ca.mcgill.ecse223.resto.view;
 import java.awt.Color;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import ca.mcgill.ecse223.resto.controller.InvalidInputException;
 import ca.mcgill.ecse223.resto.model.*;
 
 public class BillPage extends JFrame {
@@ -41,6 +39,7 @@ public class BillPage extends JFrame {
 
         orderItemList.removeAllItems();
         int i = 1;
+        List<OrderItem> list = new ArrayList<OrderItem>();
 
         for (Seat seat : selectedSeats) {
 
@@ -49,11 +48,12 @@ public class BillPage extends JFrame {
 
             for (OrderItem item : seat.getOrderItems()) {
                 Order itemorder = item.getOrder();
-                if (itemorder.equals(order)) {
+                if (itemorder.equals(order) && !list.contains(item)) {
+                    list.add(item);
                     orderItemList.addItem(i++ + ". " + item.getPricedMenuItem()
-                            .getMenuItem().getName() + " — Quantity: " + item.getQuantity() + " — Price: $"
-                            + item.getPricedMenuItem().getPrice());
-                    total = total + item.getQuantity() * item.getPricedMenuItem().getPrice();
+                            .getMenuItem().getName() + " / Quantity: " + item.getQuantity() + " / Shared by " +
+                            item.getSeats().size() + " / Price: $" + item.getPricedMenuItem().getPrice());
+                    total = total + (item.getQuantity() * (item.getPricedMenuItem().getPrice()) / (item.getSeats().size()));
                 }
             }
         }
