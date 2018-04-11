@@ -44,12 +44,14 @@ public class MenuPage extends JFrame {
 	private JLabel arrow3label;
 	private JButton btnAddItem;
 	private JButton btnRemoveItem;
-	
+	private int width = 453;
+	private int height = 394;
+	private int messageHeight = 20;
 	
 	MenuPage() {
 		setTitle("Menu");
 		getContentPane().setLayout(null);
-		setSize(453, 394);
+		setSize(width,height);
 		setVisible(true);
 
 		btnAppetizer = new JButton("Appetizer");
@@ -251,7 +253,7 @@ public class MenuPage extends JFrame {
 			RestoAppController.addMenuItem(nameTextField.getText(), selected, priceTextField.getText());
 			String message = "Successfully added " + nameTextField.getText() + " as a " + selected;
 			JDialog successMessage = new JDialog(this, message, false);
-			successMessage.setSize(500, 20);
+			successMessage.setSize(width, messageHeight);
 			successMessage.setLocationRelativeTo(this);
 			successMessage.setVisible(true);
 			clearFields();
@@ -259,7 +261,7 @@ public class MenuPage extends JFrame {
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 			JDialog er = new JDialog(this, error, false);
-			er.setSize(325, 20);
+			er.setSize(453, messageHeight);
 			er.setLocationRelativeTo(this);
 			er.setVisible(true);
 		}
@@ -273,14 +275,14 @@ public class MenuPage extends JFrame {
 			RestoAppController.removeMenuItem(nameTextField.getText(), selected);
 			String message = "Successfully removed " + nameTextField.getText()+ " from "+ selected;
 			JDialog successMessage = new JDialog(this, message, false);
-			successMessage.setSize(500, 20);
+			successMessage.setSize(width, messageHeight);
 			successMessage.setLocationRelativeTo(this);
 			successMessage.setVisible(true);
 			clearFields();
 		} catch (InvalidInputException e) {
 			error = e.getMessage();
 			JDialog er = new JDialog(this, error, false);
-			er.setSize(325, 20);
+			er.setSize(width, messageHeight);
 			er.setLocationRelativeTo(this);
 			er.setVisible(true);
 		}
@@ -300,14 +302,14 @@ public class MenuPage extends JFrame {
 			String message = RestoAppController.updateMenuItem(oldName, newName,oldCategory, newCategory, oldPrice, newPrice);
 			//String message = "Successfully updated "+ oldName+ " to " + newName+ " ("+ selected+")"+": " + price;
 			JDialog successMessage = new JDialog(this, message, false);
-			successMessage.setSize(500, 20);
+			successMessage.setSize(width, messageHeight);
 			successMessage.setLocationRelativeTo(this);
 			successMessage.setVisible(true);
 			clearFields();
-		} catch (InvalidInputException e) {
+		} catch (Exception e) {
 			error = e.getMessage();
 			JDialog er = new JDialog(this, error, false);
-			er.setSize(325, 20);
+			er.setSize(width, messageHeight);
 			er.setLocationRelativeTo(this);
 			er.setVisible(true);
 		}
