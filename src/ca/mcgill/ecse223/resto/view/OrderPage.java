@@ -3,6 +3,8 @@ package ca.mcgill.ecse223.resto.view;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.awt.Color;
 
@@ -42,6 +44,7 @@ public class OrderPage extends JFrame {
     //private Integer cbSelectedItemIndex;
 
     private List<Table> tables;
+    private List<Seat> seats;
 
     private List<Order> orders;
     private List<OrderItem> items;
@@ -94,6 +97,13 @@ public class OrderPage extends JFrame {
                     for (Table table : tables) {
                         if (tableNumber.equals(table.getNumber())) {
                             selectedTable = table;
+                            seats = new ArrayList<Seat>();
+                            List<Order> currentOrdersList = RestoApplication.getRestoApp().getCurrentOrders();
+                            List<Seat> seatsInTable = table.getCurrentSeats();
+
+                            for (Seat seat : seatsInTable) {
+                                seats.add(seat);
+                            }
 
                             try {
                                 items = new ArrayList<OrderItem>();
@@ -104,11 +114,25 @@ public class OrderPage extends JFrame {
                                 for (OrderItem orderItem : orderItems) {
 
                                     List<Seat> orderItemSeats = orderItem.getSeats();
+                                    List<Integer> list = new ArrayList<Integer>();
                                     int numberOfSeats = orderItemSeats.size();
+                                    int j = 0;
+
+                                    for (Seat seat : orderItemSeats) {
+                                        if (seat.getTable().equals(selectedTable)) {
+                                            j = 0;
+                                            for (Seat seat1 : seats) {
+                                                j++;
+                                                if (seat1.equals(seat)) {
+                                                    list.add(j);
+                                                }
+                                            }
+                                        }
+                                    }
 
                                     items.add(orderItem);
-                                    orderItemList.addItem(i++ + ". " + orderItem.getPricedMenuItem()
-                                            .getMenuItem().getName() + " — " + numberOfSeats + " seat(s)");
+                                    orderItemList.addItem("Seat#" + list.toString() + " : " + orderItem.getPricedMenuItem()
+                                            .getMenuItem().getName() + " for " + numberOfSeats + " seat(s)");
 
                                 }
 
@@ -150,7 +174,7 @@ public class OrderPage extends JFrame {
 
                 if (selectedOrderIndex != -1) {
                     Order order = orders.get(selectedOrderIndex);
-                    orderDateLabel.setText(order.getDate().toString() + " — " + order.getTime().toString());
+                    orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
                 } else {
                     refreshData();
                 }
@@ -304,13 +328,24 @@ public class OrderPage extends JFrame {
             orderNumberLabel.setText("Order Number: ");
             orderDateLabel.setText("");
 
-            tableList.removeAllItems();
-
             // select table - also combo box for table visualization
             tables = new ArrayList<Table>();
-            List<Table> currentTables = RestoAppController.getTables();
-            for (Table table : currentTables) {
-                tableList.addItem(table.getNumber() + "");
+            tableList.removeAllItems();
+            List<Integer> tablesNumbers = new ArrayList<Integer>();
+
+            for (Table table : RestoAppController.getTables()) {
+                tables.add(table);
+                tablesNumbers.add(table.getNumber());
+            }
+
+            try {
+                Collections.sort(tablesNumbers);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                error += e.getMessage();
+            }
+            for (int tablenumber : tablesNumbers) {
+                tableList.addItem("" + tablenumber);
             }
 
             // select order - also combo box for order visualization
@@ -326,7 +361,7 @@ public class OrderPage extends JFrame {
                     list.add(table.getNumber());
                 }
                 orders.add(order);
-                orderList.addItem("Order #" + (order.getNumber()) + " - Table(s): " + list.toString());
+                orderList.addItem("Order #" + (order.getNumber()) + " for table(s): " + list.toString());
             }
 
             if (orders.isEmpty() || orders == null) {

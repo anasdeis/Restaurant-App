@@ -341,7 +341,7 @@ public class RestoAppPage extends JFrame {
                         }
                     }
 
-                    if(!current){
+                    if (!current) {
                         seatStatusLabel.setText("Vacant");
                     }
 
@@ -457,12 +457,7 @@ public class RestoAppPage extends JFrame {
         issueBill = new JButton("Issue Bill");
         issueBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                try {
-                    issueBillButtonActionPerformed(evt);
-                } catch (InvalidInputException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                issueBillButtonActionPerformed(evt);
             }
         });
 
@@ -501,14 +496,14 @@ public class RestoAppPage extends JFrame {
             }
         });
 
-        addSeatButton = new JButton("Add Seat");
+        addSeatButton = new JButton("Select Seat");
         addSeatButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addSeatButtonActionPerformed(evt);
             }
         });
 
-        addTableButton = new JButton("Add Table");
+        addTableButton = new JButton("Select Table");
         addTableButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addTableButtonActionPerformed(evt);
@@ -773,7 +768,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for removing!";
+            error = "A table must be specified for removing. ";
         } else {
             try {
                 RestoAppController.removeTable(tables.get(selectedTableIndex));
@@ -824,10 +819,10 @@ public class RestoAppPage extends JFrame {
         error = "";
 
         if (selectedSeats.isEmpty()) {
-            error = "Select seats first to order items ";
+            error = "Select seats first to order items. ";
         }
         if (orderItemCategory.getSelectedIndex() <= 0) {
-            error += "Select an item category";
+            error += "Select an item category. ";
         } else {
 
             String itemName = orderItemName.getText().trim();
@@ -853,7 +848,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for moving!";
+            error = "A table must be specified for moving. ";
         } else {
             try {
                 RestoAppController.moveTable(tables.get(selectedTableIndex),
@@ -872,7 +867,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedTableIndex < 0) {
-            error = "Table needs to be selected for updating!";
+            error = "A table must be specified for updating. ";
         } else {
             try {
                 RestoAppController.updateTable(tables.get(selectedTableIndex),
@@ -906,7 +901,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedReservationIndex < 0) {
-            error = "Reservation needs to be selected for deleting!";
+            error = "A reservation must be specified for deleting. ";
         } else {
             try {
                 RestoAppController.endReservation(reservations.get(selectedReservationIndex));
@@ -923,7 +918,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedReservationIndex < 0 || selectedTableIndex < 0) {
-            error = "A table and its reservation needs to be specified for deleting!";
+            error = "A table and its reservation needs to be specified for deleting. ";
         } else {
 
             try {
@@ -942,7 +937,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedTables.isEmpty()) {
-            error = "Select the tables first to reserve";
+            error = "Select the tables first to reserve. ";
         } else {
             try {
                 String myDate = dateTextField.getText();
@@ -968,7 +963,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedTables.isEmpty()) {
-            error = "Select the tables first to start order";
+            error = "Select the tables first to start order. ";
         } else {
             try {
 
@@ -986,7 +981,7 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedOrderIndex < 0) {
-            error = "Order needs to be selected to end it!";
+            error = "An order must be specified to end it. ";
 
         } else {
             try {
@@ -1001,11 +996,11 @@ public class RestoAppPage extends JFrame {
         repaint();
     }
 
-    protected void issueBillButtonActionPerformed(ActionEvent evt) throws InvalidInputException {
+    protected void issueBillButtonActionPerformed(ActionEvent evt) {
         error = null;
-        
+
         if (selectedSeats.isEmpty()) {
-            error = "Select the tables first to issue bill";
+            error = "Select the tables first to issue bill. ";
         } else {
             try {
                 RestoAppController.issueBill(selectedSeats);
@@ -1017,12 +1012,13 @@ public class RestoAppPage extends JFrame {
         refreshData();
         repaint();
     }
+
     protected void cancelSeatButtonActionPerformed(ActionEvent evt) {
 
         error = null;
 
         if (selectedSeatIndex < 0 || selectedTableIndex < 0) {
-            error = "An seat and its table must be specified for cancelling its order items. ";
+            error = "A seat and its table must be specified for cancelling its order items. ";
         } else {
 
             try {
@@ -1084,10 +1080,21 @@ public class RestoAppPage extends JFrame {
             // select table - also combo box for table visualization
             tables = new ArrayList<Table>();
             tableList.removeAllItems();
+            List<Integer> tablesNumbers = new ArrayList<Integer>();
 
             for (Table table : RestoAppController.getTables()) {
                 tables.add(table);
-                tableList.addItem("" + table.getNumber());
+                tablesNumbers.add(table.getNumber());
+            }
+
+            try {
+                Collections.sort(tablesNumbers);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+                error += e.getMessage();
+            }
+            for (int tablenumber : tablesNumbers) {
+                tableList.addItem("" + tablenumber);
             }
 
             // select order - also combo box for order visualization
@@ -1103,7 +1110,7 @@ public class RestoAppPage extends JFrame {
                     list.add(table.getNumber());
                 }
                 orders.add(order);
-                ordersList.addItem("Order #" + order.getNumber() + " – Table(s): " + list.toString());
+                ordersList.addItem("Order #" + order.getNumber() + " for table(s): " + list.toString());
             }
 
             if (orders.isEmpty() || orders == null) {
@@ -1136,7 +1143,7 @@ public class RestoAppPage extends JFrame {
                             list.add(table.getNumber());
                         }
                         reservations.add(reservation);
-                        reservationList.addItem("Reservation #" + reservationIndex++ + " – Table(s) " + list.toString());
+                        reservationList.addItem("Reservation #" + reservationIndex++ + " for table(s) " + list.toString());
                     }
                 }
             }
