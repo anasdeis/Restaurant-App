@@ -14,6 +14,11 @@ class RestoApp {
    1 <@>- * Bill bills;
    1 <@>- * Waiter waiters;
    0..1 -> 0..1 Waiter logedOnWaiter; // subsets waiter
+   public void reinitialize(){
+	  if(this.waiters == null){
+		  waiters = new ArrayList<Waiter>();
+	  }
+  }
 }
 
 class Reservation {

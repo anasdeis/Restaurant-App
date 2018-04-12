@@ -71,12 +71,6 @@ public class RestoApp implements Serializable
     Reservation aReservation = reservations.get(index);
     return aReservation;
   }
-  
-  public void reinitialize(){
-	  if(this.waiters == null){
-		  waiters = new ArrayList<Waiter>();
-	  }
-  }
 
   /**
    * sorted by date and time
@@ -944,6 +938,13 @@ public class RestoApp implements Serializable
     }
     
     logedOnWaiter = null;
+  }
+
+  // line 18 "../../../../../RestoApp v3.ump"
+   public void reinitialize(){
+    if(this.waiters == null){
+		  waiters = new ArrayList<Waiter>();
+	  }
   }
   
   //------------------------
