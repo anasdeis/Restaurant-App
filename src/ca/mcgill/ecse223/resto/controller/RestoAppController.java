@@ -1237,4 +1237,16 @@ public class RestoAppController {
         }
     	
     }
+    
+    public static void assignWaiter(Order aOrder) throws Exception{
+    	
+        RestoApp ra = RestoApplication.getRestoApp();
+        try {
+        	aOrder.setWaiter(ra.getLogedOnWaiter());
+        	RestoApplication.save();
+        } catch (RuntimeException e) {
+            throw new Exception(e.getMessage());
+        }
+    	
+    }
 }

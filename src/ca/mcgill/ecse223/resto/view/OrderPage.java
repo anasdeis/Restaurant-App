@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.resto.view;
 
 import javax.swing.*;
+
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import ca.mcgill.ecse223.resto.model.Order;
 import ca.mcgill.ecse223.resto.model.OrderItem;
 import ca.mcgill.ecse223.resto.model.Seat;
 import ca.mcgill.ecse223.resto.model.Table;
+import ca.mcgill.ecse223.resto.model.Waiter;
 
 public class OrderPage extends JFrame {
     private String error = null;
@@ -47,6 +49,10 @@ public class OrderPage extends JFrame {
 
     private List<Order> orders;
     private List<OrderItem> items;
+    
+    // Waiter
+    private JLabel assignedWaiterLabel;
+    private JButton assignWaiterButton;
 
     JSeparator horizontalLineTop = new JSeparator();
     JSeparator horizontalLineBottom = new JSeparator();
@@ -165,12 +171,34 @@ public class OrderPage extends JFrame {
                 }
             }
         });
+        
+        assignedWaiterLabel = new JLabel("Assigned Waiter: ");
+        assignWaiterButton = new JButton("Assign Waiter");
+        assignWaiterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assignWaiterButtonActionPerformed(evt);
+            }
+        });
+        
         orderList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
 
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
                 selectedOrderIndex = cb.getSelectedIndex();
 
+                if(selectedOrderIndex != -1){
+                    try {
+                        Order order = orders.get(selectedOrderIndex);
+    					assignedWaiterLabel.setText("Assigned Waiter : " + order.getWaiter().getWaiterName());
+    				} catch (Exception e) {
+    					error = e.getMessage();
+    				}
+                	
+                	Order order = orders.get(selectedOrderIndex);
+                    orders.get(selectedOrderIndex);
+                    orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
+                }
+                
                 if (selectedOrderIndex != -1) {
                     Order order = orders.get(selectedOrderIndex);
                     orderDateLabel.setText(order.getDate().toString() + " " + order.getTime().toString());
@@ -219,6 +247,8 @@ public class OrderPage extends JFrame {
                                 .addComponent(quantityLabel)
                                 .addComponent(orderNumberLabel)
                                 .addComponent(horizontalLineBottom)
+                                .addComponent(assignedWaiterLabel)
+                                
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(orderItemList)
@@ -229,6 +259,7 @@ public class OrderPage extends JFrame {
                                 .addComponent(orderDateLabel)
                                 .addComponent(orderList)
                                 .addComponent(cancelOrderButton)
+                                .addComponent(assignWaiterButton)
                         )
                 )
         );
@@ -263,6 +294,10 @@ public class OrderPage extends JFrame {
                                 .addComponent(horizontalLineBottom)
                                 .addComponent(orderListLabel)
                                 .addComponent(orderList)
+                        )
+                        .addGroup(layout.createParallelGroup()
+                                .addComponent(assignedWaiterLabel)
+                                .addComponent(assignWaiterButton)
                         )
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(cancelOrderButton)
@@ -317,6 +352,16 @@ public class OrderPage extends JFrame {
             }
         }
         refreshData();
+    }
+    
+    protected void assignWaiterButtonActionPerformed(ActionEvent evt) {
+
+    	try {
+			RestoAppController.assignWaiter(orders.get(selectedOrderIndex));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	refreshData();
     }
 
     protected void refreshData() {
@@ -375,6 +420,7 @@ public class OrderPage extends JFrame {
             tableList.setSelectedIndex(selectedTableIndex);
             orderItemList.setSelectedIndex(selectedItemIndex);
             orderList.setSelectedIndex(selectedOrderIndex);
+            assignedWaiterLabel.setText("Assigned Waiter: ");
         }
         pack();
     }
