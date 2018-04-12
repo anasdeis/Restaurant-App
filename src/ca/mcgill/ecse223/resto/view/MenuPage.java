@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.resto.view;
 
 import javax.swing.JFrame;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -47,6 +48,7 @@ public class MenuPage extends JFrame {
 	private int width = 453;
 	private int height = 394;
 	private int messageHeight = 20;
+	private JButton btnHelp;
 	
 	MenuPage() {
 		setTitle("Menu");
@@ -55,24 +57,29 @@ public class MenuPage extends JFrame {
 		setVisible(true);
 
 		btnAppetizer = new JButton("Appetizer");
+		btnAppetizer.setToolTipText("Displays the appetizer items");
 		btnAppetizer.setBounds(144, 13, 144, 25);
 		getContentPane().add(btnAppetizer);
 
 		btnMain = new JButton("Main");
+		btnMain.setToolTipText("Displays the main items");
 		btnMain.setBounds(144, 51, 144, 25);
 		getContentPane().add(btnMain);
 
 		btnDessert = new JButton("Dessert");
+		btnDessert.setToolTipText("Displays the dessert items");
 		btnDessert.setBounds(144, 89, 144, 25);
 		getContentPane().add(btnDessert);
 
 		btnAlcoholicBeverage = new JButton("Alcoholic Beverage");
+		btnAlcoholicBeverage.setToolTipText("Displays the alcoholic beverages");
 		btnAlcoholicBeverage.setBounds(144, 127, 144, 25);
 		getContentPane().add(btnAlcoholicBeverage);
 
 		
 
 		btnNonAlcoholicBeverage = new JButton("Non Alcoholic Beverage");
+		btnNonAlcoholicBeverage.setToolTipText("Displays the non acoholic beverages");
 		btnNonAlcoholicBeverage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -161,6 +168,17 @@ public class MenuPage extends JFrame {
 		newCategoryComboBox.setFont(new Font("Arial Narrow", Font.BOLD, 13));
 		newCategoryComboBox.setBounds(253, 253, 140, 22);
 		getContentPane().add(newCategoryComboBox);
+		
+		JButton btnDiscontinuedItems = new JButton("Discontinued");
+		btnDiscontinuedItems.setToolTipText("Displays the items that have been removed from the menu with most recent (2) prices");
+		btnDiscontinuedItems.setFont(new Font("Arial Narrow", Font.PLAIN, 9));
+		btnDiscontinuedItems.setBounds(350, 0, 85, 16);
+		getContentPane().add(btnDiscontinuedItems);
+		
+		btnHelp = new JButton("HELP");
+		btnHelp.setFont(new Font("Arial Narrow", Font.BOLD, 10));
+		btnHelp.setBounds(0, 0, 68, 16);
+		getContentPane().add(btnHelp);
 		newCategoryComboBox.addItem("");
 		newCategoryComboBox.addItem("Appetizer");
 		newCategoryComboBox.addItem("Main");
@@ -168,6 +186,20 @@ public class MenuPage extends JFrame {
 		newCategoryComboBox.addItem("Alcoholic Beverage");
 		newCategoryComboBox.addItem("Non Alcoholic Beverage");
 		
+		btnHelp.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnHelpActionPerformed(evt);
+			}
+
+			private void btnHelpActionPerformed(ActionEvent evt) {
+				JFrame helpFrame = new JFrame();
+				helpFrame.add(new JLabel(new ImageIcon("./image/help.png")));
+				helpFrame.pack();
+				helpFrame.setVisible(true);
+				helpFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				helpFrame.setTitle("Help");
+			}
+		});
 		
 
 		btnAppetizer.addActionListener(new java.awt.event.ActionListener() {
@@ -224,6 +256,17 @@ public class MenuPage extends JFrame {
 
 			}
 		});
+		
+		btnDiscontinuedItems.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				btnDiscontinuedItemsActionPerformed(evt);
+			}
+
+			private void btnDiscontinuedItemsActionPerformed(ActionEvent evt) {
+				new DiscontinuedMenuDisplay();
+
+			}
+		});
 
 		btnAddItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,6 +287,7 @@ public class MenuPage extends JFrame {
 			}
 
 		});
+		
 
 	}
 

@@ -22,8 +22,6 @@ public class MenuDisplay extends JFrame {
 	MenuDisplay(String category) {
 		// setResizable(false);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(1000, 600);
-
 		ArrayList<MenuItem> menuItems = null;
 
 		try {
@@ -54,7 +52,7 @@ public class MenuDisplay extends JFrame {
 		JList<Object> itemList;
 
 		ArrayList<String> currentItems = new ArrayList<>();
-		// ArrayList <String> discontinuedItems = new ArrayList<>();
+	//	ArrayList <String> discontinuedItems = new ArrayList<>();
 		for (int i = 0; i < menuItems.size(); i++) {
 			String name = menuItems.get(i).getName();
 			PricedMenuItem currentPMI = menuItems.get(i).getCurrentPricedMenuItem();
@@ -65,8 +63,8 @@ public class MenuDisplay extends JFrame {
 				currentItems.add(name + ": " + df.format(price));
 			} else { // if the PriceMenuItem is null, this item is discontinued and is no longer on
 						// the current menu
-				// discontinuedItems.add(name);
-				currentItems.add(name + "*");
+			//	discontinuedItems.add(name);
+				//currentItems.add(name + "*");
 			}
 
 		}
