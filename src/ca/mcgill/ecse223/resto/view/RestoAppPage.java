@@ -101,7 +101,7 @@ public class RestoAppPage extends JFrame {
     int selectedReservationIndex = -1;
 
     private JComboBox<String> reservationList;
-    private List<Reservation> reservations;
+    private List<Reservation> reservationslist;
 
     //Orders
     private JButton startOrderButton;
@@ -119,6 +119,7 @@ public class RestoAppPage extends JFrame {
 
     private List<Order> orders;
     private List<Table> selectedTables;
+    List<Reservation> reservations;
 
     //Add Order
     private JButton addOrderItemButton;
@@ -277,6 +278,13 @@ public class RestoAppPage extends JFrame {
         orderItemCategory.addItem("Non Alcoholic Beverage");
         orderItemCategory.setToolTipText("Item category of the item to add/remove");
 
+        reservationslist = new ArrayList<Reservation>(RestoApplication.getRestoApp().getReservations());
+
+        for (Reservation reservation : reservationslist) {
+            if (reservation.getDate().getTime() < Calendar.getInstance().getTime().getTime()) {
+                reservation.delete();
+            }
+        }
 
         // Waiter
         userLabel = new JLabel("User: ");

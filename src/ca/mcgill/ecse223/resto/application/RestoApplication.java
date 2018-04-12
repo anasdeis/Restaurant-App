@@ -11,56 +11,49 @@ import java.util.List;
 
 public class RestoApplication {
 
-	private static String filename = "menu.resto";
+    private static String filename = "menu.resto";
 
-	private static RestoApp ra;
+    private static RestoApp ra;
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// start UI
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				RestoAppPage restoAppPage = new RestoAppPage();
-				restoAppPage.setVisible(true);
-			}
-		});
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+        // start UI
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                RestoAppPage restoAppPage = new RestoAppPage();
+                restoAppPage.setVisible(true);
+            }
+        });
 
-	}
+    }
 
-	public static RestoApp getRestoApp() {
-		if (ra == null) {
+    public static RestoApp getRestoApp() {
+        if (ra == null) {
 
-			ra = load();
-		}
-		return ra;
-	}
+            ra = load();
+        }
+        return ra;
+    }
 
-	public static void save() {
-		PersistenceObjectStream.serialize(ra);
-	}
+    public static void save() {
+        PersistenceObjectStream.serialize(ra);
+    }
 
-	public static RestoApp load() {
-		PersistenceObjectStream.setFilename(filename);
-		ra = (RestoApp) PersistenceObjectStream.deserialize();
-		List<Reservation> reservations = new ArrayList<Reservation>(ra.getReservations());
+    public static RestoApp load() {
+        PersistenceObjectStream.setFilename(filename);
+        ra = (RestoApp) PersistenceObjectStream.deserialize();
 
-		for(Reservation reservation: reservations){
-			if(reservation.getDate().getTime() < Calendar.getInstance().getTime().getTime()){
-				reservation.delete();
-			}
-		}
+        if (ra == null) {
+            ra = new RestoApp();
+        }
 
-		if (ra == null) {
-			ra = new RestoApp();
-		}
+        return ra;
+    }
 
-		return ra;
-	}
-
-	public static void setFilename(String newFilename) {
-		filename = newFilename;
-	}
+    public static void setFilename(String newFilename) {
+        filename = newFilename;
+    }
 
 }
