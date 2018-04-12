@@ -13,3 +13,4 @@ representations.aird
 /.settings/
 .DS_Store
 /RemoteSystemsTempFiles/
+*.resto
