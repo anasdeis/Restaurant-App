@@ -152,9 +152,19 @@ public class RestoAppPage extends JFrame {
     // Bill
     private JButton issueBill;
 
-    //User
+    // Waiter
     private JLabel userLabel;
     private JLabel userNameLabel;
+    private JLabel waiterNameLabel;
+    private JLabel waiterEmailAddressLabel;
+    private JLabel waiterPhoneNumberLabel;
+    private JButton addWaiterButton;
+    private JTextField waiterNameTextField;
+    private JTextField waiterPhoneNumberTextField;
+    private JTextField waiterEmailAddressTextField;
+    private JComboBox<String> waiterList;
+    private JButton loginWaiterButton;
+    private Integer selectedWaiterIndex = -1;
 
     /**
      * Creates new form RestoAppPage
@@ -268,10 +278,42 @@ public class RestoAppPage extends JFrame {
         orderItemCategory.setToolTipText("Item category of the item to add/remove");
 
 
-        //User
+        // Waiter
         userLabel = new JLabel("User: ");
-        userNameLabel = new JLabel("ANAS BOSS");
+        try {
+			userNameLabel = new JLabel(RestoAppController.getCurrentUser());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
         userNameLabel.setForeground(Color.BLUE);
+        waiterNameLabel = new JLabel("Waiter Name: ");
+        waiterEmailAddressLabel = new JLabel ("Waiter Email Address: ");
+        waiterPhoneNumberLabel = new JLabel("Waiter Phone Number: ");
+        waiterNameTextField = new JTextField();
+        waiterPhoneNumberTextField = new JTextField();
+        waiterEmailAddressTextField = new JTextField();
+        addWaiterButton = new JButton("Add Waiter");
+        addWaiterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createWaiterButtonActionPerformed(evt);
+            }
+        });
+        loginWaiterButton = new JButton("Login");
+        loginWaiterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginWaiterButtonActionPerformed(evt);
+            }
+        });
+        
+        waiterList = new JComboBox<String>(new String[0]);
+		waiterList.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+		        JComboBox<String> cb = (JComboBox<String>) evt.getSource();
+		        selectedWaiterIndex = cb.getSelectedIndex();
+			}
+		});
+        
+        
         tableList.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 JComboBox<String> cb = (JComboBox<String>) evt.getSource();
@@ -544,6 +586,9 @@ public class RestoAppPage extends JFrame {
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(userLabel)
+                                .addComponent(waiterNameLabel)
+                                .addComponent(waiterPhoneNumberLabel)
+                                .addComponent(waiterEmailAddressLabel)
                                 .addComponent(numberOfSeatsLabel)
                                 .addComponent(widthLabel)
                                 .addComponent(lengthLabel)
@@ -554,6 +599,10 @@ public class RestoAppPage extends JFrame {
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(userNameLabel)
+                             	.addComponent(waiterNameTextField)
+                        		.addComponent(waiterPhoneNumberTextField)
+                        		.addComponent(waiterEmailAddressTextField)
+                        		.addComponent(addWaiterButton)
                                 .addComponent(numberOfSeatsTextField)
                                 .addComponent(widthTextField)
                                 .addComponent(lengthTextField)
@@ -573,7 +622,9 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(tableLocationXLabel)
                                 .addComponent(tableLocationYLabel)
                                 .addComponent(addTableButton)
-                                .addComponent(clearTableButton))
+                                .addComponent(clearTableButton)
+                                .addComponent(waiterList)
+                                .addComponent(loginWaiterButton))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(tableList)
@@ -734,8 +785,20 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(endOrderButton))
 
                         .addGroup(layout.createParallelGroup()
+                        		.addComponent(waiterNameLabel)
+                                .addComponent(waiterNameTextField)
                                 .addComponent(startOrderButton)
                                 .addComponent(deleteTableReservationButton))
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(waiterPhoneNumberLabel)
+                        		.addComponent(waiterPhoneNumberTextField)
+                        		.addComponent(waiterList))
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(waiterEmailAddressLabel)
+                        		.addComponent(waiterEmailAddressTextField)
+                        		.addComponent(loginWaiterButton))
+                        .addGroup(layout.createParallelGroup()
+                        		.addComponent(addWaiterButton))
 
 
                         .addComponent(horizontalLineBottom)
@@ -1031,6 +1094,45 @@ public class RestoAppPage extends JFrame {
         refreshData();
         repaint();
     }
+    
+    protected void createWaiterButtonActionPerformed(ActionEvent evt) {
+
+        error = null;
+
+        try {
+        	String name = waiterNameTextField.getText();
+        	String phoneNumber = waiterPhoneNumberTextField.getText();
+        	String emailAddress = waiterEmailAddressTextField.getText();  	
+            RestoAppController.createWaiter(name, phoneNumber, emailAddress);
+        	
+        } catch (Exception e) {
+            error = e.getMessage();
+        }
+
+        refreshData();
+        repaint();
+    }
+    
+    protected void loginWaiterButtonActionPerformed(ActionEvent evt) {
+
+        error = null;
+
+        try {
+        	String waiterToLogin = waiterList.getItemAt(selectedWaiterIndex);
+            for (Waiter waiter : RestoAppController.getWaiters()) {
+                if(waiter.getWaiterName().equals(waiterToLogin)){
+                	RestoAppController.login(waiter);
+                }
+            }
+            
+            userNameLabel.setText(RestoAppController.getCurrentUser());
+        } catch (Exception e) {
+            error = e.getMessage();
+        }
+
+        refreshData();
+        repaint();
+    }
 
     private void refreshData() {
         // error
@@ -1168,6 +1270,23 @@ public class RestoAppPage extends JFrame {
             seatList.setSelectedIndex(selectedSeatIndex);
 
         }
+        
+        //Waiter
+        waiterNameTextField.setText("");
+        waiterPhoneNumberTextField.setText("");
+        waiterEmailAddressTextField.setText("");
+        
+        waiterList.removeAllItems();
+        try {
+			for (Waiter waiter : RestoAppController.getWaiters()) {
+			    waiterList.addItem(waiter.getWaiterName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		selectedWaiterIndex = -1;
+        waiterList.setSelectedIndex(selectedWaiterIndex);
 
     }
 }
