@@ -71,6 +71,12 @@ public class RestoApp implements Serializable
     Reservation aReservation = reservations.get(index);
     return aReservation;
   }
+  
+  public void reinitialize(){
+	  if(this.waiters == null){
+		  waiters = new ArrayList<Waiter>();
+	  }
+  }
 
   /**
    * sorted by date and time
