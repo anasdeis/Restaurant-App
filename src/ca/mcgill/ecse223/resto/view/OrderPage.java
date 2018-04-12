@@ -356,11 +356,15 @@ public class OrderPage extends JFrame {
     
     protected void assignWaiterButtonActionPerformed(ActionEvent evt) {
 
-    	try {
-			RestoAppController.assignWaiter(orders.get(selectedOrderIndex));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        if(selectedOrderIndex < 0){
+            error = "An order needs to be specified to assign a waiter to it. ";
+        } else {
+            try {
+                RestoAppController.assignWaiter(orders.get(selectedOrderIndex));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     	refreshData();
     }
 
