@@ -1200,7 +1200,7 @@ public class RestoAppController {
     	
         RestoApp ra = RestoApplication.getRestoApp();
         try {
-        	
+            RestoApplication.save();
             return ra.getWaiters();
 
         } catch (RuntimeException e) {
@@ -1214,6 +1214,7 @@ public class RestoAppController {
         RestoApp ra = RestoApplication.getRestoApp();
         try {
         	if(ra.hasLogedOnWaiter()){
+                RestoApplication.save();
         		return ra.getLogedOnWaiter().getWaiterName();
         	}
         	else{
@@ -1223,7 +1224,6 @@ public class RestoAppController {
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
-    	
     }
     
     public static void login(Waiter waiter) throws Exception{
@@ -1232,7 +1232,6 @@ public class RestoAppController {
         try {
         	ra.setLogedOnWaiter(waiter);
         	RestoApplication.save();
-
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
