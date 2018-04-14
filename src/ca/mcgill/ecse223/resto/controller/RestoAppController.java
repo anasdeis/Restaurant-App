@@ -561,6 +561,40 @@ public class RestoAppController {
         }
     }
 
+    public static void issueBill(Table table) throws InvalidInputException {
+
+        if (table == null) {
+            throw (new InvalidInputException("A table has to be specified to issue bill. "));
+        }
+
+        List<Seat> seats = table.getCurrentSeats();
+
+        try {
+            issueBill(seats);
+            RestoApplication.save();
+        } catch (InvalidInputException | RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
+    public static void issueBill(Order order) throws InvalidInputException {
+
+        if (order == null) {
+            throw (new InvalidInputException("An order has to be specified to issue bill. "));
+        }
+
+        List<Table> tables = order.getTables();
+
+        try {
+            for (Table table : tables) {
+                issueBill(table);
+            }
+            RestoApplication.save();
+        } catch (InvalidInputException | RuntimeException e) {
+            throw (new InvalidInputException(e.getMessage()));
+        }
+    }
+
     public static int generateTableNumber() {
         List<Table> tables = RestoApplication.getRestoApp().getCurrentTables();
         HashMap<Integer, Table> tablesList = new HashMap<Integer, Table>();
@@ -1169,9 +1203,9 @@ public class RestoAppController {
 
         return orderItemsFromTable;
     }
-    
-    public static void createWaiter(String name, String emailAddress, String phoneNumber) throws Exception{
-    	
+
+    public static void createWaiter(String name, String emailAddress, String phoneNumber) throws Exception {
+
         RestoApp ra = RestoApplication.getRestoApp();
         String error = "";
         if (name.length() <= 0) {
@@ -1187,17 +1221,17 @@ public class RestoAppController {
             throw new InvalidInputException(error.trim());
         }
         try {
-        	ra.addWaiter(name, emailAddress, phoneNumber);
+            ra.addWaiter(name, emailAddress, phoneNumber);
             RestoApplication.save();
 
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
-    	
+
     }
-    
-    public static List<Waiter> getWaiters() throws Exception{
-    	
+
+    public static List<Waiter> getWaiters() throws Exception {
+
         RestoApp ra = RestoApplication.getRestoApp();
         try {
             RestoApplication.save();
@@ -1206,47 +1240,46 @@ public class RestoAppController {
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
-    	
+
     }
-    
-    public static String getCurrentUser() throws Exception{
-    	
+
+    public static String getCurrentUser() throws Exception {
+
         RestoApp ra = RestoApplication.getRestoApp();
         try {
-        	if(ra.hasLogedOnWaiter()){
+            if (ra.hasLogedOnWaiter()) {
                 RestoApplication.save();
-        		return ra.getLogedOnWaiter().getWaiterName();
-        	}
-        	else{
-        		return "";
-        	}
+                return ra.getLogedOnWaiter().getWaiterName();
+            } else {
+                return "";
+            }
 
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
     }
-    
-    public static void login(Waiter waiter) throws Exception{
-    	
+
+    public static void login(Waiter waiter) throws Exception {
+
         RestoApp ra = RestoApplication.getRestoApp();
         try {
-        	ra.setLogedOnWaiter(waiter);
-        	RestoApplication.save();
+            ra.setLogedOnWaiter(waiter);
+            RestoApplication.save();
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
-    	
+
     }
-    
-    public static void assignWaiter(Order aOrder) throws Exception{
-    	
+
+    public static void assignWaiter(Order aOrder) throws Exception {
+
         RestoApp ra = RestoApplication.getRestoApp();
         try {
-        	aOrder.setWaiter(ra.getLogedOnWaiter());
-        	RestoApplication.save();
+            aOrder.setWaiter(ra.getLogedOnWaiter());
+            RestoApplication.save();
         } catch (RuntimeException e) {
             throw new Exception(e.getMessage());
         }
-    	
+
     }
 }

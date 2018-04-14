@@ -434,7 +434,7 @@ public class Table implements Serializable
 
                             if (s.hasBills()) {
                                 Bill seatBill = s.getBill(s.numberOfBills() - 1);
-                                while (o.getBills().contains(seatBill)) {
+                                if (o.getBills().contains(seatBill)) {
                                     if (!seatBill.removeIssuedForSeat(s)) {
                                         if (seatBill.numberOfIssuedForSeats() == 1) {
                                             seatBill.delete();
@@ -475,7 +475,7 @@ public class Table implements Serializable
                                 List<Bill> bills = lastOrder.getBills();
 
                                 if (!s.getBills().contains(b)) {
-                                    while (bills.contains(seatBill)) {
+                                    if (bills.contains(seatBill)) {
                                         if (!seatBill.removeIssuedForSeat(s)) {
                                             if (seatBill.numberOfIssuedForSeats() == 1) {
                                                 seatBill.delete();

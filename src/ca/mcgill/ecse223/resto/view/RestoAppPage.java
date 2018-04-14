@@ -152,6 +152,8 @@ public class RestoAppPage extends JFrame {
 
     // Bill
     private JButton issueBill;
+    private JButton issueBillTable;
+    private JButton issueBillOrder;
 
     // Waiter
     private JLabel userLabel;
@@ -504,10 +506,24 @@ public class RestoAppPage extends JFrame {
             }
         });
 
-        issueBill = new JButton("Issue Bill");
+        issueBill = new JButton("Issue Bill Seats");
         issueBill.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 issueBillButtonActionPerformed(evt);
+            }
+        });
+
+        issueBillTable = new JButton("Issue Bill Table");
+        issueBillTable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueBillTableButtonActionPerformed(evt);
+            }
+        });
+
+        issueBillOrder = new JButton("Issue Bill Order");
+        issueBillOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                issueBillOrderButtonActionPerformed(evt);
             }
         });
 
@@ -586,7 +602,7 @@ public class RestoAppPage extends JFrame {
         layout.setAutoCreateContainerGaps(true);
         layout.setHorizontalGroup(layout.createParallelGroup()
 
-                .addGroup(layout.createParallelGroup().addComponent(displayApp, 1000, 1000, 1000)
+                .addGroup(layout.createParallelGroup().addComponent(displayApp, 1250, 1250, 1250)
 
                         .addComponent(errorMessage).addComponent(horizontalLineTop).addComponent(horizontalLineBottom))
 
@@ -678,9 +694,11 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(orderItemQuantityTextField)
                                 .addComponent(addOrderItemButton)
                                 .addComponent(issueBill)
+                                .addComponent(issueBillTable)
                                 .addComponent(ordersList)
                                 .addComponent(orderDate)
-                                .addComponent(endOrderButton))
+                                .addComponent(endOrderButton)
+                                .addComponent(issueBillOrder))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(seatStatusLabel)
@@ -767,7 +785,8 @@ public class RestoAppPage extends JFrame {
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(moveTableButton)
                                 .addComponent(dateLabel)
-                                .addComponent(dateTextField))
+                                .addComponent(dateTextField)
+                                .addComponent(issueBillTable))
 
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(newTableNumberLabel)
@@ -796,23 +815,26 @@ public class RestoAppPage extends JFrame {
                                 .addComponent(waiterNameLabel)
                                 .addComponent(waiterNameTextField)
                                 .addComponent(startOrderButton)
-                                .addComponent(deleteTableReservationButton))
+                                .addComponent(deleteTableReservationButton)
+                                .addComponent(issueBillOrder))
+
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(waiterPhoneNumberLabel)
                                 .addComponent(waiterPhoneNumberTextField)
                                 .addComponent(waiterList))
+
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(waiterEmailAddressLabel)
                                 .addComponent(waiterEmailAddressTextField)
                                 .addComponent(loginWaiterButton))
+
                         .addGroup(layout.createParallelGroup()
                                 .addComponent(addWaiterButton))
-
 
                         .addComponent(horizontalLineBottom)
 
                         .addGroup(layout.createParallelGroup()
-                                .addComponent(displayApp, 450, 450, 450))));
+                                .addComponent(displayApp, 350, 350, 350))));
         pack();
 
     }
@@ -1071,11 +1093,52 @@ public class RestoAppPage extends JFrame {
         error = null;
 
         if (selectedSeats.isEmpty()) {
-            error = "Select the tables first to issue bill. ";
+            error = "Select the seats first to issue bill. ";
         } else {
             try {
                 RestoAppController.issueBill(selectedSeats);
                 new BillPage(selectedSeats);
+            } catch (RuntimeException | InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+        refreshData();
+        repaint();
+    }
+
+    protected void issueBillTableButtonActionPerformed(ActionEvent evt) {
+        error = null;
+
+        if (selectedTableIndex < 0) {
+            error = "A table has to be specified first to issue bill. ";
+        } else {
+            try {
+                RestoAppController.issueBill(tables.get(selectedTableIndex));
+                new BillPage(tables.get(selectedTableIndex).getCurrentSeats());
+            } catch (RuntimeException | InvalidInputException e) {
+                error = e.getMessage();
+            }
+        }
+        refreshData();
+        repaint();
+    }
+
+    protected void issueBillOrderButtonActionPerformed(ActionEvent evt) {
+        error = null;
+
+        if (selectedOrderIndex < 0) {
+            error = "An order has to be specified to first to issue bill. ";
+        } else {
+
+            List<Table> tables = orders.get(selectedOrderIndex).getTables();
+            List<Seat> seats = new ArrayList<Seat>();
+
+            try {
+                for (Table table : tables) {
+                    seats.addAll(table.getCurrentSeats());
+                }
+                RestoAppController.issueBill(orders.get(selectedOrderIndex));
+                new BillPage(seats);
             } catch (RuntimeException | InvalidInputException e) {
                 error = e.getMessage();
             }
@@ -1125,7 +1188,7 @@ public class RestoAppPage extends JFrame {
 
         error = null;
 
-        if(selectedWaiterIndex < 0){
+        if (selectedWaiterIndex < 0) {
             error = "A waiter has to be specified to login.";
         } else {
 
