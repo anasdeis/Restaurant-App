@@ -193,7 +193,7 @@ public class MenuPage extends JFrame {
 
 			private void btnHelpActionPerformed(ActionEvent evt) {
 				JFrame helpFrame = new JFrame();
-				helpFrame.add(new JLabel(new ImageIcon("./image/help.png")));
+				helpFrame.add(new JLabel(new ImageIcon("./image/menuHelp.png")));
 				helpFrame.pack();
 				helpFrame.setVisible(true);
 				helpFrame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
