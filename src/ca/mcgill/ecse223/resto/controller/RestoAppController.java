@@ -708,6 +708,7 @@ public class RestoAppController {
         String error = "";
         RestoApp ra = RestoApplication.getRestoApp();
         Menu menu = ra.getMenu();
+        String tempCategoryString = category.replaceAll("\\s", "");
 
         if (name == null || name.isEmpty()) {
             throw new InvalidInputException("Name cannot be empty");
@@ -732,7 +733,7 @@ public class RestoAppController {
                     newMenuItem = createNewItem(name, category, menu);
                 } else {
                     newMenuItem = menu.getMenuItem(existedAt);
-                    String tempCategoryString = category.replaceAll("\\s", "");
+                  
                     if (!newMenuItem.getItemCategory().toString().equals(tempCategoryString)) {
                         throw new InvalidInputException(
                                 name + " has already existed in " + newMenuItem.getItemCategory());
@@ -745,9 +746,21 @@ public class RestoAppController {
         } else {
             // if price not inputed by user, item is not currentPricedItem
         	if(existedAt == -1) {
-        		MenuItem newMenuItem = createNewItem(name, category, menu);
+        		throw new InvalidInputException("New item. Input a price");
+        		//MenuItem newMenuItem = createNewItem(name, category, menu);
         	}else {
-        		throw new InvalidInputException(name + " has already existed in " + menu.getMenuItem(existedAt).getItemCategory());
+        		MenuItem returningItem = menu.getMenuItem(existedAt);
+        		if (returningItem.getCurrentPricedMenuItem() == null) {
+        			List<PricedMenuItem> pmi = returningItem.getPricedMenuItems();
+        			if(pmi.size()!=0) { //already had a price before
+        				if(returningItem.getItemCategory().toString().equals(tempCategoryString)) {
+        					returningItem.setCurrentPricedMenuItem(pmi.get(pmi.size()-1));
+        				}else {
+        					throw new InvalidInputException(name + " was in " + returningItem.getItemCategory().toString());
+        				}
+        				
+        			}
+        		}
         	}
             
         }
@@ -924,13 +937,7 @@ public class RestoAppController {
         }
 
         message = message + "Successfully updated " + oldName;
-        if (!(newName.isEmpty() || newName == null)) {
-            boolean duplicate = menuItem.setName(newName);
-            message = message + " as " + newName;
-            if (!duplicate) {
-                throw new InvalidInputException("Cannot set name to " + newName);
-            }
-        }
+        
 
         if (!(newPrice == null || newPrice.isEmpty())) {
 
@@ -967,6 +974,14 @@ public class RestoAppController {
             }
             menuItem.setItemCategory(category);
             message = message + " into " + newCategory;
+        }
+        
+        if (!(newName.isEmpty() || newName == null)) {
+            boolean duplicate = menuItem.setName(newName);
+            message = message + ", now called: " + newName;
+            if (!duplicate) {
+                throw new InvalidInputException("Cannot set name to " + newName);
+            }
         }
 
         try {
