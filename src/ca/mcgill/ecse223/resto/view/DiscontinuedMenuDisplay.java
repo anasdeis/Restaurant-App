@@ -35,8 +35,8 @@ public class DiscontinuedMenuDisplay  extends JFrame {
 				if(pricedMenuItems.size()==1) {
 					price1 = pricedMenuItems.get(0).getPrice();
 				}else if(pricedMenuItems.size()==2){
-					price1 = pricedMenuItems.get(0).getPrice();
-					price2 = pricedMenuItems.get(1).getPrice();			
+					price1 = pricedMenuItems.get(1).getPrice();
+					price2 = pricedMenuItems.get(0).getPrice();			
 				}else if(pricedMenuItems.size()==0){
 					noPrice = true ;
 								
@@ -47,7 +47,12 @@ public class DiscontinuedMenuDisplay  extends JFrame {
 				}
 
 				DecimalFormat df = new DecimalFormat ("####0.00");
-				display = name + "("+ category+ ")";
+				if(current.getItemCategory().equals(MenuItem.ItemCategory.AlcoholicBeverage)) {
+					display = name + "("+ category+ current.getItemCategory().toString().charAt(1)+ ")"; //(Al)
+				}else {
+					display = name + "("+ category+ ")";
+				}
+				
 				if (noPrice) {
 					display = display +" price unknown";
 				}
