@@ -22,6 +22,7 @@ public class DiscontinuedMenuDisplay  extends JFrame {
 		JList<Object> itemList;
 		List<MenuItem> menuItems = RestoApplication.getRestoApp().getMenu().getMenuItems();
 		String display="";
+		boolean noPrice = false;
 		ArrayList<String> discontinuedItems = new ArrayList<>();
 		for(int i =0; i< menuItems.size();i++) {
 			MenuItem current = menuItems.get(i);
@@ -36,6 +37,9 @@ public class DiscontinuedMenuDisplay  extends JFrame {
 				}else if(pricedMenuItems.size()==2){
 					price1 = pricedMenuItems.get(0).getPrice();
 					price2 = pricedMenuItems.get(1).getPrice();			
+				}else if(pricedMenuItems.size()==0){
+					noPrice = true ;
+								
 				}else {
 					//if it has history of more than 2 prices, only show the most recent 2
 					price1 = pricedMenuItems.get(pricedMenuItems.size()-1).getPrice();
@@ -43,8 +47,12 @@ public class DiscontinuedMenuDisplay  extends JFrame {
 				}
 
 				DecimalFormat df = new DecimalFormat ("####0.00");
+				display = name + "("+ category+ ")";
+				if (noPrice) {
+					display = display +" price unknown";
+				}
 				if (price1!=0) {
-					display = name+ "("+category+") was " + df.format(price1);
+					display = display + " was " + df.format(price1);
 				}
 				if (price2!=0) {
 					display = display + "; "+df.format(price2);

@@ -744,7 +744,12 @@ public class RestoAppController {
             }
         } else {
             // if price not inputed by user, item is not currentPricedItem
-            MenuItem newMenuItem = createNewItem(name, category, menu);
+        	if(existedAt == -1) {
+        		MenuItem newMenuItem = createNewItem(name, category, menu);
+        	}else {
+        		throw new InvalidInputException(name + " has already existed in " + menu.getMenuItem(existedAt).getItemCategory());
+        	}
+            
         }
 
         try {
