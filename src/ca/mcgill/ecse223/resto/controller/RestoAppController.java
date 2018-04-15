@@ -610,9 +610,7 @@ public class RestoAppController {
         }
 
         while (fail) {
-            System.out.println("test");
             if (tablesList.get(tableNumber) == null && !Table.hasWithNumber(tableNumber)) {
-                System.out.println("test2");
                 fail = false;
             } else {
                 tableNumber++;
